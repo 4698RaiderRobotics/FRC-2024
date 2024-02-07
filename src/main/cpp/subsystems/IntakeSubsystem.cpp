@@ -9,8 +9,11 @@ IntakeSubsystem::IntakeSubsystem() = default;
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {}
 
-void IntakeSubsystem::ShootGamePiece() {
-    if(m_shooter.AtSpeed()) {
-        
-    }
+void IntakeSubsystem::SpinIntake(double speed) {
+    // Spin motors
+}
+
+bool IntakeSubsystem::GetBeamBreak() {
+    // Get Beam Break value
+    return true;
 }

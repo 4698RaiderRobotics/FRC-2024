@@ -7,15 +7,13 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
-#include "subsystems/ShooterSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/SwerveDriveSubsystem.h"
 
-#include "commands/SpinShooter.h"
-#include "commands/ChangeShooterAngle.h"
-
-class ShootGamePiece
+class PickUpNote
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
-                                 ShootGamePiece> {
+                                 PickUpNote> {
  public:
-  ShootGamePiece(ShooterSubsystem* shooter, IntakeSubsystem* intake);
+  PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm);
 };

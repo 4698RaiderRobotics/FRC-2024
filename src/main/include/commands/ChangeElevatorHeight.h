@@ -7,7 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/ArmSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
 
 /**
  * An example command.
@@ -16,10 +16,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class ChangeArmAngle
-    : public frc2::CommandHelper<frc2::Command, ChangeArmAngle> {
+class ChangeElevatorHeight
+    : public frc2::CommandHelper<frc2::Command, ChangeElevatorHeight> {
  public:
-  ChangeArmAngle(ArmSubsystem* arm, units::degree_t angle);
+  ChangeElevatorHeight(ElevatorSubsystem* elevator, units::meter_t height);
 
   void Initialize() override;
 
@@ -28,8 +28,8 @@ class ChangeArmAngle
   void End(bool interrupted) override;
 
   bool IsFinished() override;
- 
+
  private:
-  ArmSubsystem* m_arm;
-  units::degree_t m_angle;
+  ElevatorSubsystem* m_elevator;
+  units::meter_t m_height;
 };

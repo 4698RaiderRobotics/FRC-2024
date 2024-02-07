@@ -5,6 +5,7 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
+
 #include <frc/controller/ArmFeedforward.h>
 #include <frc/controller/PIDController.h>
 #include <frc/trajectory/TrapezoidProfile.h>
@@ -23,10 +24,13 @@ class ShooterSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
+  // Changes the setpoint for the shooter angle
   void GoToAngle(units::degree_t shooterAngleGoal);
 
+  // Spins the shooter at a speed
   void Spin(double speed);
 
+  // Checks if the shooter is at the right speed
   bool AtSpeed();
 
  private:
@@ -38,9 +42,9 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   AbsoluteEncoder m_shooterEnc{deviceIDs::kShooterEncoderID, physical::kShooterAbsoluteOffset};
 
   frc::PIDController m_shooterPID{pidf::kShooterP, pidf::kShooterI, pidf::kShooterD};
-  frc::ArmFeedforward m_shooterFeedforward{units::volt_t{ pidf::kShooterS }, units::volt_t{ pidf::kShooterG }, 
-                                        units::unit_t<frc::ArmFeedforward::kv_unit> { pidf::kShooterV }, 
-                                        units::unit_t<frc::ArmFeedforward::ka_unit> { pidf::kShooterA } };
+  frc::ArmFeedforward m_shooterFeedforward{units::volt_t{pidf::kShooterS}, units::volt_t{pidf::kShooterG}, 
+                                        units::unit_t<frc::ArmFeedforward::kv_unit> {pidf::kShooterV}, 
+                                        units::unit_t<frc::ArmFeedforward::ka_unit> {pidf::kShooterA}};
   
   frc::TrapezoidProfile<units::degrees> m_shooterProfile{{physical::kShooterMaxSpeed, physical::kShooterMaxAcceleration}};
   frc::TrapezoidProfile<units::degrees>::State m_shooterGoal;

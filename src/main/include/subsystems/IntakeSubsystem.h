@@ -6,8 +6,6 @@
 
 #include <frc2/command/SubsystemBase.h>
 
-#include "subsystems/ShooterSubsystem.h"
-
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
   IntakeSubsystem();
@@ -17,10 +15,15 @@ class IntakeSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  void ShootGamePiece();
+  // Spins the intake at a specific speed
+  void SpinIntake(double speed);
+
+  // Gets the value of the beam break
+  bool GetBeamBreak();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  ShooterSubsystem m_shooter;
+
+  bool hasNote = false;
 };

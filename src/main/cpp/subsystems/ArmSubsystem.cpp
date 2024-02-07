@@ -7,4 +7,13 @@
 ArmSubsystem::ArmSubsystem() = default;
 
 // This method will be called once per scheduler run
-void ArmSubsystem::Periodic() {}
+void ArmSubsystem::Periodic() {
+    
+}
+
+void ArmSubsystem::GoToAngle(units::degree_t armAngleGoal) {
+    m_armAngleGoal = armAngleGoal;
+
+    if(m_armAngleGoal > physical::kArmMaxAngle) {m_armAngleGoal = physical::kArmMaxAngle;}
+    if(m_armAngleGoal < physical::kArmMinAngle) {m_armAngleGoal = physical::kArmMinAngle;}
+}
