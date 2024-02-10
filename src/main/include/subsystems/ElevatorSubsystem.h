@@ -23,6 +23,8 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
 
   void GoToHeight(units::meter_t elevatorHeightGoal);
 
+  void HomeElevator();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -37,4 +39,5 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   frc::TrapezoidProfile<units::meters>::State m_elevatorSetpoint{};
 
   units::meter_t m_elevatorHeightGoal = 0_m;
+  units::meter_t m_elevatorPosition;
 };

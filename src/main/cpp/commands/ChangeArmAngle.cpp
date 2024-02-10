@@ -4,8 +4,8 @@
 
 #include "commands/ChangeArmAngle.h"
 
-ChangeArmAngle::ChangeArmAngle(ArmSubsystem* arm, units::degree_t angle)
- : m_arm{arm}, m_angle{angle} {
+ChangeArmAngle::ChangeArmAngle(ArmSubsystem* arm, units::degree_t armAngle, units::degree_t wristAngle)
+ : m_arm{arm}, m_armAngle{armAngle}, m_wristAngle{wristAngle} {
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements({arm});
 }
@@ -15,7 +15,7 @@ void ChangeArmAngle::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
 void ChangeArmAngle::Execute() {
-  m_arm->GoToAngle(m_angle);
+  m_arm->GoToAngle(m_armAngle, m_wristAngle);
 }
 
 // Called once the command ends or is interrupted.

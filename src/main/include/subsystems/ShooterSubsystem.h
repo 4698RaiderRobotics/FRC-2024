@@ -11,6 +11,7 @@
 #include <frc/trajectory/TrapezoidProfile.h>
 
 #include <rev/CANSparkFlex.h>
+#include <rev/CANSparkMax.h>
 
 #include "Constants.h"
 #include "AbsoluteEncoder.h"
@@ -36,10 +37,13 @@ class ShooterSubsystem : public frc2::SubsystemBase {
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  rev::CANSparkFlex m_topShooterMotor{14, rev::CANSparkFlex::MotorType::kBrushless};
-  rev::CANSparkFlex m_bottomShooterMotor{15, rev::CANSparkFlex::MotorType::kBrushless};
+  rev::CANSparkFlex m_topShooterMotor{deviceIDs::kTopShooterID, rev::CANSparkFlex::MotorType::kBrushless};
+  rev::CANSparkFlex m_bottomShooterMotor{deviceIDs::kBottomShooterID, rev::CANSparkFlex::MotorType::kBrushless};
+
+  rev::CANSparkMax m_angleShooterMotor{deviceIDs::kShooterAngleID, rev::CANSparkMax::MotorType::kBrushless};
 
   AbsoluteEncoder m_shooterEnc{deviceIDs::kShooterEncoderID, physical::kShooterAbsoluteOffset};
+  
 
   frc::PIDController m_shooterPID{pidf::kShooterP, pidf::kShooterI, pidf::kShooterD};
   frc::ArmFeedforward m_shooterFeedforward{units::volt_t{pidf::kShooterS}, units::volt_t{pidf::kShooterG}, 

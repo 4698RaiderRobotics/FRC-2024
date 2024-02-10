@@ -10,7 +10,7 @@ IntakeSubsystem::IntakeSubsystem() = default;
 void IntakeSubsystem::Periodic() {}
 
 void IntakeSubsystem::SpinIntake(double speed) {
-    // Spin motors
+    m_intakeMotor.Set(speed);
 }
 
 bool IntakeSubsystem::GetBeamBreak() {

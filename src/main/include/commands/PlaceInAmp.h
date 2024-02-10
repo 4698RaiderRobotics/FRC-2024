@@ -7,14 +7,14 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
-#include "subsystems/SwerveDriveSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/ShooterSubsystem.h"
 #include "subsystems/ArmSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/SwerveDriveSubsystem.h"
 
-class ShootNote
+class PlaceInAmp
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
-                                 ShootNote> {
+                                 PlaceInAmp> {
  public:
-  ShootNote(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, ArmSubsystem* arm, units::degree_t shooterAngle);
+  PlaceInAmp(SwerveDriveSubsystem* swerveDrive, ElevatorSubsystem* elevator, IntakeSubsystem* intake, ArmSubsystem* arm);
 };

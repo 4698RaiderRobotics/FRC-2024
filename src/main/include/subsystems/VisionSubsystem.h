@@ -6,6 +6,8 @@
 
 #include <frc2/command/SubsystemBase.h>
 
+//#include <photonlib/PhotonCamera.h>
+
 class VisionSubsystem : public frc2::SubsystemBase {
  public:
   VisionSubsystem();
@@ -18,4 +20,6 @@ class VisionSubsystem : public frc2::SubsystemBase {
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
+
+  //photonlib::PhotonCamera camera{"photonvision"};
 };

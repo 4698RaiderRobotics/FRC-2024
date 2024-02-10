@@ -4,6 +4,8 @@
 
 #include "commands/PickUpNote.h"
 
+#include "Constants.h"
+
 #include "commands/ChangeArmAngle.h"
 #include "commands/IntakeNote.h"
 
@@ -16,8 +18,8 @@ PickUpNote::PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, Arm
   AddCommands(
     // Limelight data
     // Drive to note
-    ChangeArmAngle(arm, 45_deg),
+    ChangeArmAngle(arm, physical::kArmGroundPickUpAngle, physical::kWristGroundPickUpAngle),
     IntakeNote(intake),
-    ChangeArmAngle(arm, 90_deg)
+    ChangeArmAngle(arm, physical::kArmPassiveAngle, physical::kWristPassiveAngle)
   );
 }

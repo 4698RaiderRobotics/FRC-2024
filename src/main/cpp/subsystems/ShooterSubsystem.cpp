@@ -8,6 +8,8 @@ ShooterSubsystem::ShooterSubsystem() {
     m_topShooterMotor.SetInverted(true);
     m_bottomShooterMotor.SetInverted(true);
     m_bottomShooterMotor.Follow(m_topShooterMotor);
+
+    m_angleShooterMotor.EnableVoltageCompensation(12);
 };
 
 // This method will be called once per scheduler run
@@ -16,7 +18,12 @@ void ShooterSubsystem::Periodic() {
 
     m_shooterGoal = {m_shooterAngleGoal, 0_deg_per_s};
 
-    m_shooterSetpoint = m_shooterProfile.Calculate(20_ms, m_shooterSetpoint, m_shooterGoal);
+    m_shooterSetpoint = m_shooterProfile.Calculate(physical::kDt, m_shooterSetpoint, m_shooterGoal);
+
+    double shooterOutput = m_shooterPID.Calculate(m_shooterPosition.value(), m_shooterSetpoint.position.value());
+    double shooterFFOutput = m_shooterFeedforward.Calculate(m_shooterSetpoint.position, m_shooterSetpoint.velocity).value();
+
+    m_angleShooterMotor.Set(shooterOutput + shooterFFOutput / 12);
 }
 
 void ShooterSubsystem::GoToAngle(units::degree_t shooterAngleGoal) {
