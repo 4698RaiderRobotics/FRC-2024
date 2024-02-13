@@ -4,17 +4,31 @@
 
 #include "subsystems/ShooterSubsystem.h"
 
+#include <frc/DriverStation.h>
+
 ShooterSubsystem::ShooterSubsystem() {
     m_topShooterMotor.SetInverted(true);
     m_bottomShooterMotor.SetInverted(true);
     m_bottomShooterMotor.Follow(m_topShooterMotor);
+
+    ctre::phoenix6::configs::CANcoderConfiguration absoluteEncoderConfigs{};
+    absoluteEncoderConfigs.MagnetSensor.MagnetOffset = physical::kShooterAbsoluteOffset;
+    m_shooterAngleEncoder.GetConfigurator().Apply(absoluteEncoderConfigs, 50_ms);
 
     m_angleShooterMotor.EnableVoltageCompensation(12);
 };
 
 // This method will be called once per scheduler run
 void ShooterSubsystem::Periodic() {
-    m_shooterPosition = m_shooterEnc.GetPosition();
+    m_shooterPosition = m_shooterAngleEncoder.GetPosition().GetValueAsDouble() * 360_deg;
+
+    if ( frc::DriverStation::IsDisabled() ) {
+        m_shooterSetpoint.position = m_shooterPosition;
+        m_shooterSetpoint.velocity = 0_deg_per_s;
+        m_shooterAngleGoal = m_shooterPosition;
+
+        return;
+    }
 
     m_shooterGoal = {m_shooterAngleGoal, 0_deg_per_s};
 
@@ -39,5 +53,5 @@ void ShooterSubsystem::Spin(double speed) {
 }
 
 bool ShooterSubsystem::AtSpeed() {
-    return m_topShooterMotor.GetAppliedOutput() >= m_shooterSpeed;
+    return m_topEncoder.GetVelocity() / 6784.0 >= m_shooterSpeed;
 }

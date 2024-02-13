@@ -28,6 +28,7 @@ ShootNote::ShootNote(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, In
     SpinShooter(shooter, physical::kShooterSpeed),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.5);}, {intake}),
     frc2::WaitCommand(0.1_s),
-    frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake})
+    frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
+    ChangeArmAngle(arm, physical::kArmPassiveAngle, physical::kWristPassiveAngle)
   );
 }

@@ -8,6 +8,8 @@
 
 #include <rev/CANSparkMax.h>
 
+#include "Constants.h"
+
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
   IntakeSubsystem();
