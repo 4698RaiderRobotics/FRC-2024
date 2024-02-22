@@ -5,6 +5,7 @@
 #include "commands/PlaceInAmp.h"
 
 #include "commands/ChangeArmAngle.h"
+#include "commands/ChangeWristAngle.h"
 #include "commands/ChangeElevatorHeight.h"
 
 #include "Constants.h"
@@ -22,11 +23,11 @@ PlaceInAmp::PlaceInAmp(SwerveDriveSubsystem* swerveDrive, ElevatorSubsystem* ele
   AddCommands(
     // Drive to amp
     ChangeElevatorHeight(elevator, physical::kElevatorAmpHeight),
-    ChangeArmAngle(arm, physical::kArmAmpAngle, physical::kWristAmpAngle),
+    frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmAmpAngle), ChangeWristAngle(arm, physical::kWristAmpAngle)),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.5);}, {intake}),
     frc2::WaitCommand(0.1_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
-    ChangeArmAngle(arm, physical::kArmPassiveAngle, physical::kWristPassiveAngle),
+    frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmPassiveAngle), ChangeWristAngle(arm, physical::kWristPassiveAngle)),
     ChangeElevatorHeight(elevator, 0_m)
   );
 }

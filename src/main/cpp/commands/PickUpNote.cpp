@@ -7,7 +7,10 @@
 #include "Constants.h"
 
 #include "commands/ChangeArmAngle.h"
+#include "commands/ChangeWristAngle.h"
 #include "commands/IntakeNote.h"
+
+#include <frc2/command/SequentialCommandGroup.h>
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.
 // For more information, see:
@@ -18,8 +21,8 @@ PickUpNote::PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, Arm
   AddCommands(
     // Limelight data
     // Drive to note
-    ChangeArmAngle(arm, physical::kArmGroundPickUpAngle, physical::kWristGroundPickUpAngle),
+    frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmGroundPickUpAngle), ChangeWristAngle(arm, physical::kWristGroundPickUpAngle)),
     IntakeNote(intake),
-    ChangeArmAngle(arm, physical::kArmPassiveAngle, physical::kWristPassiveAngle)
+    frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmPassiveAngle), ChangeWristAngle(arm, physical::kWristPassiveAngle))
   );
 }

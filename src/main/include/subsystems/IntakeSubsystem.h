@@ -7,6 +7,7 @@
 #include <frc2/command/SubsystemBase.h>
 
 #include <rev/CANSparkMax.h>
+#include <frc/DigitalInput.h>
 
 #include "Constants.h"
 
@@ -29,9 +30,9 @@ class IntakeSubsystem : public frc2::SubsystemBase {
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
-  // Beam Break Sensor
-
   rev::CANSparkMax m_intakeMotor{deviceIDs::kIntakeID, rev::CANSparkMax::MotorType::kBrushless};
+
+  frc::DigitalInput m_beamBreak{0};
 
  public:
   bool hasNote = false;

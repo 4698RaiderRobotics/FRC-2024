@@ -4,6 +4,8 @@
 
 #include "commands/IntakeNote.h"
 
+#include <frc/Timer.h>
+
 IntakeNote::IntakeNote(IntakeSubsystem* intake)
  : m_intake{intake} {
   // Use addRequirements() here to declare subsystem dependencies.
@@ -13,6 +15,7 @@ IntakeNote::IntakeNote(IntakeSubsystem* intake)
 // Called when the command is initially scheduled.
 void IntakeNote::Initialize() {
   m_intake->SpinIntake(physical::kIntakeSpeed);
+  m_startTime = frc::Timer::GetFPGATimestamp();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -26,5 +29,5 @@ void IntakeNote::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool IntakeNote::IsFinished() {
-  return m_intake->GetBeamBreak();
+  return frc::Timer::GetFPGATimestamp() - m_startTime > 3_s;
 }

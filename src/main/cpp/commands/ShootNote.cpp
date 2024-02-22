@@ -9,9 +9,11 @@
 #include "commands/ChangeShooterAngle.h"
 #include "commands/SpinShooter.h"
 #include "commands/ChangeArmAngle.h"
+#include "commands/ChangeWristAngle.h"
 
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/WaitCommand.h>
+#include <frc2/command/ParallelCommandGroup.h>
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.
@@ -23,12 +25,13 @@ ShootNote::ShootNote(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, In
   AddCommands(
     // AprilTag data
     // Drive to location + spin
-    ChangeShooterAngle(shooter, shooterAngle),
-    ChangeArmAngle(arm, physical::kArmShootingAngle, physical::kWristShootingAngle),
-    SpinShooter(shooter, physical::kShooterSpeed),
+    frc2::ParallelCommandGroup(ChangeShooterAngle(shooter, shooterAngle),
+                               frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmShootingAngle), 
+                                                            ChangeWristAngle(arm, physical::kWristShootingAngle)),
+                               SpinShooter(shooter, physical::kShooterSpeed)),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.5);}, {intake}),
-    frc2::WaitCommand(0.1_s),
+    frc2::WaitCommand(0.5_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
-    ChangeArmAngle(arm, physical::kArmPassiveAngle, physical::kWristPassiveAngle)
+    frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmPassiveAngle), ChangeWristAngle(arm, physical::kWristPassiveAngle))
   );
 }

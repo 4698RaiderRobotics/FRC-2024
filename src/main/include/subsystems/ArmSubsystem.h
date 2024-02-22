@@ -11,6 +11,7 @@
 #include <frc/trajectory/TrapezoidProfile.h>
 
 #include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 #include "Constants.h"
 #include "AbsoluteEncoder.h"
@@ -24,28 +25,35 @@ class ArmSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  void GoToAngle(units::degree_t armAngleGoal, units::degree_t wristAngleGoal);
+  void GoToArmAngle(units::degree_t armAngleGoal);
+
+  void GoToWristAngle(units::degree_t wristAngleGoal);
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
-  ctre::phoenix6::hardware::CANcoder m_armEncoder{deviceIDs::kArmEncoderID};
-  AbsoluteEncoder m_wristEncoder{deviceIDs::kWristEncoderID};
+  ctre::phoenix6::hardware::TalonFX m_wristMotor{deviceIDs::kWristMotorID};
+  ctre::phoenix6::hardware::CANcoder m_wristEncoder{deviceIDs::kWristEncoderID};
+  ctre::phoenix6::controls::MotionMagicDutyCycle m_wristPositionDC{0_deg};
+  ctre::phoenix6::StatusSignal<units::turn_t> wristPos = m_wristMotor.GetPosition();
+  ctre::phoenix6::StatusSignal<units::turns_per_second_t> wristVel = m_wristMotor.GetVelocity();
+  ctre::phoenix6::StatusSignal<double> wristPosReference = m_wristMotor.GetClosedLoopReference();
+  ctre::phoenix6::StatusSignal<double> wristVelReference = m_wristMotor.GetClosedLoopReferenceSlope();
 
-
-  frc::PIDController m_wristPID{ pidf::kWristP, pidf::kWristI, pidf::kWristD };
-  frc::ArmFeedforward m_wristFeedforward{ units::volt_t{ pidf::kWristS }, units::volt_t{ pidf::kWristG }, 
-                                        units::unit_t<frc::ArmFeedforward::kv_unit> { pidf::kWristV }, 
-                                        units::unit_t<frc::ArmFeedforward::ka_unit> { pidf::kWristA } };
-
-  frc::TrapezoidProfile<units::degrees> m_wristProfile{{physical::kWristMaxSpeed, physical::kWristMaxAcceleration}};
   frc::TrapezoidProfile<units::degrees>::State m_wristGoal;
-  frc::TrapezoidProfile<units::degrees>::State m_wristSetpoint;
 
-  units::degree_t m_wristAngleGoal;
-  units::degree_t m_wristPosition;
+  units::degree_t m_wristAngle;
+  
 
+
+  ctre::phoenix6::hardware::TalonFX m_armMotor{deviceIDs::kArmMotorID};
+  ctre::phoenix6::hardware::CANcoder m_armEncoder{deviceIDs::kArmEncoderID};
+  ctre::phoenix6::controls::MotionMagicDutyCycle m_armPositionDC{0_deg};
+  ctre::phoenix6::StatusSignal<units::turn_t> armPos = m_armMotor.GetPosition();
+  ctre::phoenix6::StatusSignal<units::turns_per_second_t> armVel = m_armMotor.GetRotorVelocity();
+  ctre::phoenix6::StatusSignal<double> armPosReference = m_armMotor.GetClosedLoopReference();
+  ctre::phoenix6::StatusSignal<double> armVelReference = m_armMotor.GetClosedLoopReferenceSlope();
 
   frc::PIDController m_armPID{pidf::kArmP, pidf::kArmI, pidf::kArmD};
   frc::ArmFeedforward m_armFeedforward{units::volt_t{pidf::kArmS}, units::volt_t{pidf::kArmG}, 
@@ -56,6 +64,6 @@ class ArmSubsystem : public frc2::SubsystemBase {
   frc::TrapezoidProfile<units::degrees>::State m_armGoal;
   frc::TrapezoidProfile<units::degrees>::State m_armSetpoint{};
 
-  units::degree_t m_armAngleGoal;
-  units::degree_t m_armPosition;
+  units::degree_t m_armAngle;
+  units::degree_t phi;
 };

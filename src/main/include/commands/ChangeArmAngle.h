@@ -19,7 +19,7 @@
 class ChangeArmAngle
     : public frc2::CommandHelper<frc2::Command, ChangeArmAngle> {
  public:
-  ChangeArmAngle(ArmSubsystem* arm, units::degree_t armAngle, units::degree_t wristAngle);
+  ChangeArmAngle(ArmSubsystem* arm, units::degree_t armAngle);
 
   void Initialize() override;
 
@@ -32,5 +32,4 @@ class ChangeArmAngle
  private:
   ArmSubsystem* m_arm;
   units::degree_t m_armAngle;
-  units::degree_t m_wristAngle;
 };

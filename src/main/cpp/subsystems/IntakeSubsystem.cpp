@@ -15,5 +15,5 @@ void IntakeSubsystem::SpinIntake(double speed) {
 
 bool IntakeSubsystem::GetBeamBreak() {
     // Get Beam Break value
-    return true;
+    return m_beamBreak.Get();
 }

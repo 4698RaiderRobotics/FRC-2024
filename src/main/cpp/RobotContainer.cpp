@@ -6,9 +6,13 @@
 
 #include <frc2/command/Commands.h>
 #include <frc2/command/RunCommand.h>
+#include <frc2/command/SequentialCommandGroup.h>
 
 #include "commands/SpinShooter.h"
 #include "commands/ChangeShooterAngle.h"
+#include "commands/ChangeArmAngle.h"
+#include "commands/ChangeWristAngle.h"
+#include "commands/IntakeNote.h"
 
 RobotContainer::RobotContainer() {
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
@@ -30,6 +34,14 @@ void RobotContainer::ConfigureBindings() {
 
   // Sets the shooter angle to 60 when the X button is pressed
   m_operatorController.X().OnTrue(ChangeShooterAngle(&m_shooter, 60_deg).ToPtr());
+
+  m_operatorController.RightBumper().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 10_deg), ChangeWristAngle(&m_arm, -60_deg)).ToPtr());
+
+  m_operatorController.LeftBumper().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 135_deg), ChangeWristAngle(&m_arm, 0_deg)).ToPtr());
+
+  m_operatorController.RightTrigger().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 135_deg), ChangeWristAngle(&m_arm, 170_deg)).ToPtr());
+
+  m_operatorController.LeftTrigger().OnTrue(IntakeNote(&m_intake).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

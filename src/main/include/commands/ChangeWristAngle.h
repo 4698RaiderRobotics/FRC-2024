@@ -7,9 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
-#include "subsystems/IntakeSubsystem.h"
-
-#include "Constants.h"
+#include "subsystems/ArmSubsystem.h"
 
 /**
  * An example command.
@@ -18,10 +16,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class IntakeNote
-    : public frc2::CommandHelper<frc2::Command, IntakeNote> {
+class ChangeWristAngle
+    : public frc2::CommandHelper<frc2::Command, ChangeWristAngle> {
  public:
-  IntakeNote(IntakeSubsystem* intake);
+  ChangeWristAngle(ArmSubsystem* arm, units::degree_t wristAngle);
 
   void Initialize() override;
 
@@ -30,7 +28,8 @@ class IntakeNote
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+
  private:
-  IntakeSubsystem* m_intake;
-  units::second_t m_startTime;
+  ArmSubsystem* m_arm;
+  units::degree_t m_wristAngle;
 };
