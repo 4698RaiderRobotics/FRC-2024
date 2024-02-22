@@ -33,4 +33,6 @@ class IntakeNote
  private:
   IntakeSubsystem* m_intake;
   units::second_t m_startTime;
+  double startPos;
+  bool beamHasBroken = false;
 };

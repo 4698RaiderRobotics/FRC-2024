@@ -105,7 +105,7 @@ namespace physical {
     // Minimum height for the elevator position
     constexpr units::meter_t kElevatorMinHeight = 0_m;
 
-    constexpr double kIntakeSpeed = 0.25;
+    constexpr double kIntakeSpeed = 0.1;
 
     constexpr double kShooterSpeed = 0.25;
 

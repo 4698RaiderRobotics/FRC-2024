@@ -19,7 +19,14 @@ void IntakeNote::Initialize() {
 }
 
 // Called repeatedly when this Command is scheduled to run
-void IntakeNote::Execute() {}
+void IntakeNote::Execute() {
+  if (!beamHasBroken) {
+    startPos = m_intake->GetRotations();
+    if(m_intake->IsBeamBroken()) {
+      beamHasBroken = true;
+    }
+  }
+}
 
 // Called once the command ends or is interrupted.
 void IntakeNote::End(bool interrupted) {
@@ -29,5 +36,5 @@ void IntakeNote::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool IntakeNote::IsFinished() {
-  return frc::Timer::GetFPGATimestamp() - m_startTime > 3_s;
+  return frc::Timer::GetFPGATimestamp() - m_startTime > 10_s || m_intake->GetRotations() - startPos > 30;
 }
