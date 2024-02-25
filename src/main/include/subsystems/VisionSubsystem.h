@@ -5,8 +5,12 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
+#include <frc/apriltag/AprilTagFieldLayout.h>
 
-//#include <photonlib/PhotonCamera.h>
+#include <photon/PhotonCamera.h>
+#include <photon/PhotonPoseEstimator.h>
+
+#include "Constants.h"
 
 class VisionSubsystem : public frc2::SubsystemBase {
  public:
@@ -17,9 +21,15 @@ class VisionSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
+  std::pair<frc::Pose2d, units::second_t> GetGlobalEstimatedPose();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
-  //photonlib::PhotonCamera camera{"photonvision"};
+  photon::PhotonCamera m_camera{"photonvision"};
+  photon::PhotonPoseEstimator m_robotPoseEstimator;
+
+ public:
+  frc::AprilTagFieldLayout aprilTagFieldLayout;
 };

@@ -14,7 +14,8 @@
 #include "commands/ChangeWristAngle.h"
 #include "commands/IntakeNote.h"
 
-RobotContainer::RobotContainer() {
+RobotContainer::RobotContainer() 
+: m_swerveDrive{&m_vision} {
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
     [this] {
       m_swerveDrive.ArcadeDrive(vx_axis.GetAxis(), vy_axis.GetAxis(), omega_axis.GetAxis());

@@ -7,6 +7,7 @@
 #include <units/acceleration.h>
 #include <units/angular_velocity.h>
 #include <units/angular_acceleration.h>
+#include <frc/geometry/Transform3d.h>
 
 namespace pidf {
     constexpr double kShooterP = 0.02;
@@ -63,6 +64,9 @@ namespace deviceIDs {
 }
 
 namespace physical {
+
+    const frc::Transform3d kRobotToCam = frc::Transform3d();
+
     // Maximum velocity for the shooter angle TrapezoidProfile
     constexpr units::degrees_per_second_t kShooterMaxSpeed = 360_deg_per_s;
     // Maximum acceleration for the shooter angle TrapezoidProfile
