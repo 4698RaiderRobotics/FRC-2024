@@ -14,6 +14,7 @@
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/controller/HolonomicDriveController.h>
 #include <ctre/phoenix/sensors/PigeonIMU.h>
+#include <ctre/phoenix6/Pigeon2.hpp>
 #include <frc/geometry/Pose2d.h>
 #include <units/time.h>
 using namespace units::literals;
@@ -63,7 +64,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
     wpi::array<frc::SwerveModuleState, 4U> m_desiredStates{ wpi::empty_array };
     wpi::array<frc::SwerveModuleState, 4U> m_actualStates{ wpi::empty_array };
 
-    ctre::phoenix::sensors::PigeonIMU m_gyro;
+    // ctre::phoenix::sensors::PigeonIMU m_gyro;
+    ctre::phoenix6::hardware::Pigeon2 m_gyro;
 
     // ctre::phoenix::sensors::PigeonIMU m_gyro{deviceIDs::kPigeonIMUID};
 

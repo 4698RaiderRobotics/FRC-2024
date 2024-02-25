@@ -16,9 +16,9 @@ using namespace swerve;
 
 SwerveModule::SwerveModule( const int turnMotorChannel, 
                            const int driveMotorChannel, const int absoluteEncoderChannel, const double absoluteEncoderOffset ) 
-                           : m_driveMotor{ driveMotorChannel },
-                           m_turnMotor{ turnMotorChannel },
-                           m_turnAbsEncoder{ absoluteEncoderChannel } 
+                           : m_driveMotor{driveMotorChannel, "Drivetrain"},
+                           m_turnMotor{turnMotorChannel, "Drivetrain"},
+                           m_turnAbsEncoder{absoluteEncoderChannel, "Drivetrain"} 
 {
     m_driveMotor.GetConfigurator().Apply(ctre::phoenix6::configs::TalonFXConfiguration{});
 

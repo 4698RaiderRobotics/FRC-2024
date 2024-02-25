@@ -21,7 +21,7 @@ SwerveDriveSubsystem::SwerveDriveSubsystem( )
                                deviceIDs::kBackLeftAbsoluteEncoderID, physical::kBackLeftAbsoluteOffset },
                  SwerveModule{ deviceIDs::kBackRightTurnMotorID, deviceIDs::kBackRightDriveMotorID, 
                                deviceIDs::kBackRightAbsoluteEncoderID, physical::kBackRightAbsoluteOffset } }
-    , m_gyro{deviceIDs::kPigeonIMUID} 
+    , m_gyro{deviceIDs::kPigeonIMUID, "Drivetrain"} 
     , m_kinematics{ frc::Translation2d{+( physical::kDriveBaseLength / 2 ), +( physical::kDriveBaseWidth / 2 )},
                     frc::Translation2d{+( physical::kDriveBaseLength / 2 ), -( physical::kDriveBaseWidth / 2 )},
                     frc::Translation2d{-( physical::kDriveBaseLength / 2 ), +( physical::kDriveBaseWidth / 2 )},
@@ -84,7 +84,7 @@ void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double
 void SwerveDriveSubsystem::Drive( frc::ChassisSpeeds speeds, bool fieldRelative ) {
     // An array of SwerveModuleStates computed from the ChassisSpeeds object
     m_desiredStates = m_kinematics.ToSwerveModuleStates( fieldRelative ? speeds.FromFieldRelativeSpeeds( 
-                    speeds.vx, speeds.vy, speeds.omega, frc::Rotation2d{ units::degree_t{ m_gyro.GetYaw() } } ) :
+                    speeds.vx, speeds.vy, speeds.omega, frc::Rotation2d{m_gyro.GetAngle() * 1_deg}) :
                     speeds );
     m_kinematics.DesaturateWheelSpeeds( &m_desiredStates, swerve::physical::kMaxDriveSpeed );
 }
@@ -142,7 +142,7 @@ void SwerveDriveSubsystem::Periodic( void ) {
 
     // Updates the odometry of the robot given the SwerveModules' states
     //needs to be an array
-    m_odometry.Update( frc::Rotation2d{ units::degree_t{ m_gyro.GetYaw() } },
+    m_odometry.Update( frc::Rotation2d{m_gyro.GetAngle() * 1_deg},
     {
          m_modules[0].GetPosition(),  m_modules[1].GetPosition(), 
          m_modules[2].GetPosition(),  m_modules[3].GetPosition() 
@@ -157,7 +157,7 @@ void SwerveDriveSubsystem::Periodic( void ) {
         LogSwerveStateArray( m_desiredLogEntry, m_desiredStates );
 
         // Log the gyro angle
-        m_gyroYawLogEntry.Append( m_gyro.GetYaw() );
+        m_gyroYawLogEntry.Append(m_gyro.GetAngle());
 
         // Log the Robot pose
         frc::Pose2d currentPose = m_odometry.GetPose();
@@ -174,18 +174,18 @@ frc::Pose2d SwerveDriveSubsystem::GetPose( void ) {
 
 // Resets the gyro to an angle
 void SwerveDriveSubsystem::ResetGyro( units::degree_t angle ) {
-    m_gyro.SetYaw( angle.value() );
+    m_gyro.SetYaw(angle);
 }
 
 // Resets the pose to a position
 void SwerveDriveSubsystem::ResetPose( frc::Translation2d position ) {
     m_odometry.ResetPosition(
-        frc::Rotation2d{   units::degree_t{ m_gyro.GetYaw() }  },
+        frc::Rotation2d{m_gyro.GetAngle() * 1_deg},
         {
             m_modules[0].GetPosition(),  m_modules[1].GetPosition(), 
             m_modules[2].GetPosition(),  m_modules[3].GetPosition() 
         },
-        frc::Pose2d{ position.X(), position.Y(), units::degree_t{ m_gyro.GetYaw() } }
+        frc::Pose2d{ position.X(), position.Y(), m_gyro.GetAngle() * 1_deg}
     );
 }
 
