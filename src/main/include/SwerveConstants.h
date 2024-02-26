@@ -82,9 +82,9 @@ namespace swerve {
         constexpr units::meter_t kDriveBaseWidth = 23.25_in * 1.08;
         constexpr units::meter_t kDriveBaseLength = 22.5_in * 1.08;
 
-        constexpr double kFrontLeftAbsoluteOffset = -0.413;
-        constexpr double kFrontRightAbsoluteOffset = -0.361;
-        constexpr double kBackLeftAbsoluteOffset = 0.102;
-        constexpr double kBackRightAbsoluteOffset = 0.180;
+        constexpr double kFrontLeftAbsoluteOffset = -0.322;
+        constexpr double kFrontRightAbsoluteOffset = 0.342;
+        constexpr double kBackLeftAbsoluteOffset = 0.097;
+        constexpr double kBackRightAbsoluteOffset = 0.39;
     }
 }

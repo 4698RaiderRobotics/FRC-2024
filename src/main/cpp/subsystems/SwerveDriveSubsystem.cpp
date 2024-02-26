@@ -147,7 +147,7 @@ void SwerveDriveSubsystem::Periodic( void ) {
          m_modules[0].GetPosition(),  m_modules[1].GetPosition(), 
          m_modules[2].GetPosition(),  m_modules[3].GetPosition() 
     });
-    m_odometry.AddVisionMeasurement(m_vision->GetGlobalEstimatedPose().first, m_vision->GetGlobalEstimatedPose().second);
+    //m_odometry.AddVisionMeasurement(m_vision->GetGlobalEstimatedPose().first, m_vision->GetGlobalEstimatedPose().second);
 
     if( m_logging ) {
         // Log the swerve states
