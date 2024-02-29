@@ -34,7 +34,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   rev::CANSparkMax m_intakeMotor{deviceIDs::kIntakeID, rev::CANSparkMax::MotorType::kBrushless};
 
-  rev::SparkRelativeEncoder m_intakeEncoder = m_intakeMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+  rev::SparkRelativeEncoder m_intakeEncoder = m_intakeMotor.GetEncoder();
 
   frc::DigitalInput m_beamBreak{0};   /* True when beam is NOT broken */
 

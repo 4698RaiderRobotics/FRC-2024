@@ -10,6 +10,8 @@
 #include <frc/controller/PIDController.h>
 #include <frc/trajectory/TrapezoidProfile.h>
 
+#include <rev/CANSparkFlex.h>
+
 #include "Constants.h"
 
 class ElevatorSubsystem : public frc2::SubsystemBase {
@@ -23,11 +25,15 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
 
   void GoToHeight(units::meter_t elevatorHeightGoal);
 
-  void HomeElevator();
+  void NudgeHeight(units::meter_t deltaHeight);
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
+
+  rev::CANSparkFlex m_elevatorMotor{deviceIDs::kElevatorID, rev::CANSparkFlex::MotorType::kBrushless};
+
+  rev::SparkRelativeEncoder m_elevatorEncoder = m_elevatorMotor.GetEncoder();
 
   frc::PIDController m_elevatorPID{pidf::kElevatorP, pidf::kElevatorI, pidf::kElevatorD};
   frc::ElevatorFeedforward m_elevatorFeedforward{units::volt_t{pidf::kElevatorS}, units::volt_t{pidf::kElevatorG}, 
@@ -38,6 +44,5 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   frc::TrapezoidProfile<units::meters>::State m_elevatorGoal;
   frc::TrapezoidProfile<units::meters>::State m_elevatorSetpoint{};
 
-  units::meter_t m_elevatorHeightGoal = 0_m;
   units::meter_t m_elevatorPosition;
 };

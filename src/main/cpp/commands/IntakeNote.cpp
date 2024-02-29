@@ -16,6 +16,7 @@ IntakeNote::IntakeNote(IntakeSubsystem* intake)
 void IntakeNote::Initialize() {
   m_intake->SpinIntake(physical::kIntakeSpeed);
   m_startTime = frc::Timer::GetFPGATimestamp();
+  beamHasBroken = false;
 }
 
 // Called repeatedly when this Command is scheduled to run

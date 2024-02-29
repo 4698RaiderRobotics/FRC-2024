@@ -41,7 +41,9 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   rev::CANSparkFlex m_topShooterMotor{deviceIDs::kTopShooterID, rev::CANSparkFlex::MotorType::kBrushless};
   rev::CANSparkFlex m_bottomShooterMotor{deviceIDs::kBottomShooterID, rev::CANSparkFlex::MotorType::kBrushless};
 
-  rev::SparkRelativeEncoder m_topEncoder = m_topShooterMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+  rev::SparkPIDController m_speedPID = m_topShooterMotor.GetPIDController();
+
+  rev::SparkRelativeEncoder m_topEncoder = m_topShooterMotor.GetEncoder();
 
   rev::CANSparkMax m_angleShooterMotor{deviceIDs::kShooterAngleID, rev::CANSparkMax::MotorType::kBrushless};
 

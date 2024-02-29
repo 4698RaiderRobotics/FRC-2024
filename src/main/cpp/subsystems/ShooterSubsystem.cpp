@@ -16,6 +16,13 @@ ShooterSubsystem::ShooterSubsystem() {
     m_shooterAngleEncoder.GetConfigurator().Apply(absoluteEncoderConfigs, 50_ms);
 
     m_angleShooterMotor.EnableVoltageCompensation(12);
+    m_angleShooterMotor.SetInverted(true);
+
+    m_speedPID.SetP(pidf::kSpeedP);
+    m_speedPID.SetI(pidf::kSpeedI);
+    m_speedPID.SetD(pidf::kSpeedD);
+    m_speedPID.SetFF(pidf::kSpeedFF);
+
 };
 
 // This method will be called once per scheduler run

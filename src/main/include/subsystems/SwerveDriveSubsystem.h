@@ -30,7 +30,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
   // declared private and exposed only through public methods.
   SwerveDriveSubsystem(VisionSubsystem *ll);
     
-    void ArcadeDrive( double xPercent, double yPercent, double omegaPercent, bool fieldRelative = true );
+    void ArcadeDrive( double xPercent, double yPercent, double omegaPercent, bool operatorRelative = true );
     void Drive( frc::ChassisSpeeds speeds, bool fieldRelative = true );
 
     void DriveTrajectory( frc::Trajectory::State trajState, const frc::Rotation2d &robotHeading );

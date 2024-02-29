@@ -72,13 +72,18 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(VisionSubsystem *ll)
 
 // ArcadeDrive drives with joystick inputs
 // This takes -1 to 1 inputs
-void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double omegaPercent, bool fieldRelative ) {
+void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double omegaPercent, bool operatorRelative ) {
     auto x = xPercent * swerve::physical::kMaxDriveSpeed;
     auto y = yPercent * swerve::physical::kMaxDriveSpeed;
     auto omega = omegaPercent * swerve::physical::kMaxTurnSpeed;
 
     frc::ChassisSpeeds speeds{ x, y, omega };
-    Drive( speeds, fieldRelative );
+
+    if(operatorRelative) {
+        speeds = speeds.FromFieldRelativeSpeeds( speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue());
+    }
+
+    Drive( speeds, false );
 }
 
 void SwerveDriveSubsystem::Drive( frc::ChassisSpeeds speeds, bool fieldRelative ) {

@@ -118,3 +118,11 @@ void ArmSubsystem::GoToWristAngle(units::degree_t wristAngleGoal) {
 
     m_wristGoal.position = wristAngleGoal;
 }
+
+void ArmSubsystem::NudgeArmAngle(units::degree_t deltaAngle) {
+    m_armGoal.position += deltaAngle;
+}
+
+void ArmSubsystem::NudgeWristAngle(units::degree_t deltaAngle) {
+    m_wristGoal.position += deltaAngle;
+}

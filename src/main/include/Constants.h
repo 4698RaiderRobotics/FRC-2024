@@ -38,14 +38,19 @@ namespace pidf {
     constexpr double kWristA = 0.0;
     constexpr double kWristS = 0.0;
 
-    constexpr double kElevatorP = 0.0;
+    constexpr double kElevatorP = 20.0;
     constexpr double kElevatorI = 0.0;
     constexpr double kElevatorD = 0.0;
 
-    constexpr double kElevatorG = 0.0;
-    constexpr double kElevatorV = 0.0;
+    constexpr double kElevatorG = 0.25;
+    constexpr double kElevatorV = 10.0;
     constexpr double kElevatorA = 0.0;
     constexpr double kElevatorS = 0.0;
+
+    constexpr double kSpeedP = 0.0;
+    constexpr double kSpeedI = 0.0;
+    constexpr double kSpeedD = 0.0;
+    constexpr double kSpeedFF = 0.0;
 }
 
 namespace deviceIDs {
@@ -55,6 +60,10 @@ namespace deviceIDs {
 
     constexpr int kArmMotorID = 21;
     constexpr int kWristMotorID = 22;
+
+    constexpr int kElevatorID = 18;
+
+    constexpr int kClimberID = 19;
 
     constexpr int kIntakeID = 20;
 
@@ -79,10 +88,10 @@ namespace physical {
 
     // Maximum velocity for the wrist MotionMagic profile
     // Units in rotations per second
-    constexpr double kWristMaxSpeed = 0.5;
+    constexpr double kWristMaxSpeed = 1;
     // Maximum acceleration for the wrist MotionMagic profile
     // Units in rotations per second squared
-    constexpr double kWristMaxAcceleration = 1;
+    constexpr double kWristMaxAcceleration = 2;
 
     // Maximum velocity for the elevator height TrapezoidProfile
     constexpr units::meters_per_second_t kElevatorMaxSpeed = 1_mps;
@@ -97,7 +106,7 @@ namespace physical {
     // Maximum angle for the arm position
     constexpr units::degree_t kArmMaxAngle = 160_deg;
     // Minimum angle for the arm position
-    constexpr units::degree_t kArmMinAngle = 0_deg;
+    constexpr units::degree_t kArmMinAngle = -20_deg;
 
     // Maximum angle for the wrist position
     constexpr units::degree_t kWristMaxAngle = 180_deg;
@@ -105,11 +114,11 @@ namespace physical {
     constexpr units::degree_t kWristMinAngle = -90_deg;
 
     // Maximum height for the elevator position
-    constexpr units::meter_t kElevatorMaxHeight = 1_m;
+    constexpr units::meter_t kElevatorMaxHeight = 20_in;
     // Minimum height for the elevator position
-    constexpr units::meter_t kElevatorMinHeight = 0_m;
+    constexpr units::meter_t kElevatorMinHeight = 0_in;
 
-    constexpr double kIntakeSpeed = 0.1;
+    constexpr double kIntakeSpeed = 1;
 
     constexpr double kShooterSpeed = 0.25;
 
@@ -136,7 +145,7 @@ namespace physical {
     // Angle for the wrist to place in amp
     constexpr units::degree_t kWristAmpAngle = 0_deg;
     // Angle for the arm to place in amp
-    constexpr units::degree_t kArmAmpAngle = 0_deg;
+    constexpr units::degree_t kArmAmpAngle = 135_deg;
 
     // Height for the elevator to place in amp
     constexpr units::meter_t kElevatorAmpHeight = 0_m;
@@ -144,9 +153,9 @@ namespace physical {
     // Height for the elevator to place in trap
     constexpr units::meter_t kElevatorTrapHeight = 0_m;
 
-    constexpr double kShooterAbsoluteOffset = 0.301;
-    constexpr double kWristAbsoluteOffset = 0.145;
-    constexpr double kArmAbsoluteOffset = 0.081;
+    constexpr double kShooterAbsoluteOffset = -0.305;
+    constexpr double kWristAbsoluteOffset = 0.166;
+    constexpr double kArmAbsoluteOffset = 0.13;
 
     constexpr units::second_t kDt = 20_ms;
 }

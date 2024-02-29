@@ -29,6 +29,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   void GoToWristAngle(units::degree_t wristAngleGoal);
 
+  void NudgeWristAngle(units::degree_t deltaAngle);
+
+  void NudgeArmAngle(units::degree_t deltaAngle);
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
