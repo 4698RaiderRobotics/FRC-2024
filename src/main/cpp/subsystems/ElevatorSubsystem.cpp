@@ -39,4 +39,11 @@ void ElevatorSubsystem::GoToHeight(units::meter_t elevatorHeightGoal) {
 
 void ElevatorSubsystem::NudgeHeight(units::meter_t deltaHeight) {
     m_elevatorGoal.position += deltaHeight;
+
+    if(m_elevatorGoal.position > physical::kElevatorMaxHeight) {m_elevatorGoal.position = physical::kElevatorMaxHeight;}
+    if(m_elevatorGoal.position < physical::kElevatorMinHeight) {m_elevatorGoal.position = physical::kElevatorMinHeight;}
+}
+
+units::meter_t ElevatorSubsystem::GetElevatorHeight() {
+    return m_elevatorPosition;
 }

@@ -41,42 +41,42 @@ ArmSubsystem::ArmSubsystem() {
     m_armMotor.GetConfigurator().Apply(armConfigs, 50_ms);
 
 
-    wristPosReference.SetUpdateFrequency(50_Hz);
-    wristVelReference.SetUpdateFrequency(50_Hz);
-    armPosReference.SetUpdateFrequency(50_Hz);
-    armVelReference.SetUpdateFrequency(50_Hz);
-    armVel.SetUpdateFrequency(50_Hz);
+    // wristPosReference.SetUpdateFrequency(50_Hz);
+    // wristVelReference.SetUpdateFrequency(50_Hz);
+    // armPosReference.SetUpdateFrequency(50_Hz);
+    // armVelReference.SetUpdateFrequency(50_Hz);
+    // armVel.SetUpdateFrequency(50_Hz);
 };
 
 // This method will be called once per scheduler run
 void ArmSubsystem::Periodic() {
 
-    wristPos.Refresh();
-    wristVel.Refresh();
-    wristPosReference.Refresh();
-    wristVelReference.Refresh();
+    // wristPos.Refresh();
+    // wristVel.Refresh();
+    // wristPosReference.Refresh();
+    // wristVelReference.Refresh();
 
-    armPos.Refresh();
-    armVel.Refresh();
-    armPosReference.Refresh();
-    armVelReference.Refresh();
+    // armPos.Refresh();
+    // armVel.Refresh();
+    // armPosReference.Refresh();
+    // armVelReference.Refresh();
 
     m_wristAngle = m_wristEncoder.GetPosition().GetValueAsDouble() * 360_deg;
     phi = m_armEncoder.GetPosition().GetValueAsDouble() * 360_deg;
 
     m_armAngle = m_wristAngle - phi;
 
-    frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
-    frc::SmartDashboard::PutNumber("Phi", phi.value());
-    frc::SmartDashboard::PutNumber("Arm Angle", m_armAngle.value());
+    // frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
+    // frc::SmartDashboard::PutNumber("Phi", phi.value());
+    // frc::SmartDashboard::PutNumber("Arm Angle", m_armAngle.value());
 
-    frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
-    frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);
-    frc::SmartDashboard::PutNumber("Wrist Motion Magic Vel", wristVelReference.GetValueAsDouble());
+    // frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
+    // frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);
+    // frc::SmartDashboard::PutNumber("Wrist Motion Magic Vel", wristVelReference.GetValueAsDouble());
 
-    frc::SmartDashboard::PutNumber("Arm Velocity", armVel.GetValueAsDouble() * 360 / 60 );
-    frc::SmartDashboard::PutNumber("Arm Setpoint Position", m_armSetpoint.position.value());
-    frc::SmartDashboard::PutNumber("Arm Setpoint Velocity", m_armSetpoint.velocity.value());
+    // frc::SmartDashboard::PutNumber("Arm Velocity", armVel.GetValueAsDouble() * 360 / 60 );
+    // frc::SmartDashboard::PutNumber("Arm Setpoint Position", m_armSetpoint.position.value());
+    // frc::SmartDashboard::PutNumber("Arm Setpoint Velocity", m_armSetpoint.velocity.value());
 
 
     if ( frc::DriverStation::IsDisabled() ) {
@@ -125,4 +125,12 @@ void ArmSubsystem::NudgeArmAngle(units::degree_t deltaAngle) {
 
 void ArmSubsystem::NudgeWristAngle(units::degree_t deltaAngle) {
     m_wristGoal.position += deltaAngle;
+}
+
+units::degree_t ArmSubsystem::GetArmAngle() {
+    return m_armAngle;
+}
+
+units::degree_t ArmSubsystem::GetWristAngle() {
+    return m_wristAngle;
 }

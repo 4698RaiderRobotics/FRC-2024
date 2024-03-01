@@ -45,6 +45,8 @@ void ShooterSubsystem::Periodic() {
     double shooterFFOutput = m_shooterFeedforward.Calculate(m_shooterSetpoint.position, m_shooterSetpoint.velocity).value();
 
     m_angleShooterMotor.Set(shooterOutput + shooterFFOutput / 12);
+
+    m_speedPID.SetReference(m_speed.value(), rev::CANSparkFlex::ControlType::kVelocity);
 }
 
 void ShooterSubsystem::GoToAngle(units::degree_t shooterAngleGoal) {
@@ -54,11 +56,11 @@ void ShooterSubsystem::GoToAngle(units::degree_t shooterAngleGoal) {
     if(m_shooterAngleGoal < physical::kShooterMinAngle) {m_shooterAngleGoal = physical::kShooterMinAngle;}
 }
 
-void ShooterSubsystem::Spin(double speed) {
-    m_topShooterMotor.Set(speed);
-    m_shooterSpeed = speed;
+void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
+    m_speed = speed;
+    
 }
 
 bool ShooterSubsystem::AtSpeed() {
-    return m_topEncoder.GetVelocity() / 6784.0 >= m_shooterSpeed;
+    return m_topEncoder.GetVelocity() >= m_speed.value();
 }

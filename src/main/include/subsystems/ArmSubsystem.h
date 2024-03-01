@@ -33,6 +33,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   void NudgeArmAngle(units::degree_t deltaAngle);
 
+  units::degree_t GetArmAngle();
+
+  units::degree_t GetWristAngle();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -40,10 +44,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
   ctre::phoenix6::hardware::TalonFX m_wristMotor{deviceIDs::kWristMotorID};
   ctre::phoenix6::hardware::CANcoder m_wristEncoder{deviceIDs::kWristEncoderID};
   ctre::phoenix6::controls::MotionMagicDutyCycle m_wristPositionDC{0_deg};
-  ctre::phoenix6::StatusSignal<units::turn_t> wristPos = m_wristMotor.GetPosition();
-  ctre::phoenix6::StatusSignal<units::turns_per_second_t> wristVel = m_wristMotor.GetVelocity();
-  ctre::phoenix6::StatusSignal<double> wristPosReference = m_wristMotor.GetClosedLoopReference();
-  ctre::phoenix6::StatusSignal<double> wristVelReference = m_wristMotor.GetClosedLoopReferenceSlope();
+  // ctre::phoenix6::StatusSignal<units::turn_t> wristPos = m_wristMotor.GetPosition();
+  // ctre::phoenix6::StatusSignal<units::turns_per_second_t> wristVel = m_wristMotor.GetVelocity();
+  // ctre::phoenix6::StatusSignal<double> wristPosReference = m_wristMotor.GetClosedLoopReference();
+  // ctre::phoenix6::StatusSignal<double> wristVelReference = m_wristMotor.GetClosedLoopReferenceSlope();
 
   frc::TrapezoidProfile<units::degrees>::State m_wristGoal;
 
@@ -54,10 +58,10 @@ class ArmSubsystem : public frc2::SubsystemBase {
   ctre::phoenix6::hardware::TalonFX m_armMotor{deviceIDs::kArmMotorID};
   ctre::phoenix6::hardware::CANcoder m_armEncoder{deviceIDs::kArmEncoderID};
   ctre::phoenix6::controls::MotionMagicDutyCycle m_armPositionDC{0_deg};
-  ctre::phoenix6::StatusSignal<units::turn_t> armPos = m_armMotor.GetPosition();
-  ctre::phoenix6::StatusSignal<units::turns_per_second_t> armVel = m_armMotor.GetRotorVelocity();
-  ctre::phoenix6::StatusSignal<double> armPosReference = m_armMotor.GetClosedLoopReference();
-  ctre::phoenix6::StatusSignal<double> armVelReference = m_armMotor.GetClosedLoopReferenceSlope();
+  // ctre::phoenix6::StatusSignal<units::turn_t> armPos = m_armMotor.GetPosition();
+  // ctre::phoenix6::StatusSignal<units::turns_per_second_t> armVel = m_armMotor.GetRotorVelocity();
+  // ctre::phoenix6::StatusSignal<double> armPosReference = m_armMotor.GetClosedLoopReference();
+  // ctre::phoenix6::StatusSignal<double> armVelReference = m_armMotor.GetClosedLoopReferenceSlope();
 
   frc::PIDController m_armPID{pidf::kArmP, pidf::kArmI, pidf::kArmD};
   frc::ArmFeedforward m_armFeedforward{units::volt_t{pidf::kArmS}, units::volt_t{pidf::kArmG}, 

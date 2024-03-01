@@ -27,6 +27,8 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
 
   void NudgeHeight(units::meter_t deltaHeight);
 
+  units::meter_t GetElevatorHeight();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

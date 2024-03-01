@@ -30,7 +30,7 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   void GoToAngle(units::degree_t shooterAngleGoal);
 
   // Spins the shooter at a speed
-  void Spin(double speed);
+  void Spin(units::revolutions_per_minute_t speed);
 
   // Checks if the shooter is at the right speed
   bool AtSpeed();
@@ -61,6 +61,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   units::degree_t m_shooterAngleGoal;
   units::degree_t m_shooterPosition;
+
+  units::revolutions_per_minute_t m_speed;
 
 
   double m_shooterSpeed;

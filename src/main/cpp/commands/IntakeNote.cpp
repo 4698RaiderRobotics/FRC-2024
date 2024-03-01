@@ -37,5 +37,5 @@ void IntakeNote::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool IntakeNote::IsFinished() {
-  return frc::Timer::GetFPGATimestamp() - m_startTime > 10_s || m_intake->GetRotations() - startPos > 30;
+  return frc::Timer::GetFPGATimestamp() - m_startTime > 10_s || m_intake->GetRotations() - startPos > 3;
 }

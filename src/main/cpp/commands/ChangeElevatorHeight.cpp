@@ -23,5 +23,5 @@ void ChangeElevatorHeight::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool ChangeElevatorHeight::IsFinished() {
-  return true;
+  return units::math::abs(m_height - m_elevator->GetElevatorHeight()) < 0.5_in;
 }

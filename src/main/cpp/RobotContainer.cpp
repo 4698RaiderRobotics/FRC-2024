@@ -15,6 +15,9 @@
 #include "commands/ChangeArmAngle.h"
 #include "commands/ChangeWristAngle.h"
 #include "commands/IntakeNote.h"
+#include "commands/PickUpNote.h"
+#include "commands/ShootNote.h"
+#include "commands/PlaceInAmp.h"
 
 RobotContainer::RobotContainer() 
 : m_swerveDrive{&m_vision} {
@@ -42,21 +45,24 @@ void RobotContainer::ConfigureBindings() {
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(180_deg); }, { &m_swerveDrive }).ToPtr());
 
   // Spins up the shooter while the A button is held
-  m_operatorController.A().OnTrue(SpinShooter(&m_shooter, 0.25).ToPtr()).OnFalse(SpinShooter(&m_shooter, 0.0).ToPtr());
+  m_operatorController.A().OnTrue(SpinShooter(&m_shooter, 1700_rpm).ToPtr()).OnFalse(SpinShooter(&m_shooter, 0_rpm).ToPtr());
 
   // Sets the shooter angle to 30 when the B button is pressed
-  m_operatorController.B().OnTrue(ChangeShooterAngle(&m_shooter, 30_deg).ToPtr());
+  m_operatorController.B().OnTrue(ChangeShooterAngle(&m_shooter, 40_deg).ToPtr());
 
-  // Sets the shooter angle to 60 when the X button is pressed
   m_operatorController.X().OnTrue(ChangeShooterAngle(&m_shooter, 60_deg).ToPtr());
 
-  m_operatorController.RightBumper().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, -25_deg), ChangeWristAngle(&m_arm, -20_deg)).ToPtr());
+  m_operatorController.RightBumper().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, -25_deg), ChangeWristAngle(&m_arm, -25_deg)).ToPtr());
 
   m_operatorController.LeftBumper().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 135_deg), ChangeWristAngle(&m_arm, 0_deg)).ToPtr());
 
-  m_operatorController.RightTrigger().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 145_deg), ChangeWristAngle(&m_arm, 160_deg)).ToPtr());
+  m_operatorController.RightStick().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 145_deg), ChangeWristAngle(&m_arm, 160_deg)).ToPtr());
 
-  m_operatorController.LeftTrigger().OnTrue(IntakeNote(&m_intake).ToPtr());
+  m_operatorController.LeftTrigger().OnTrue(PickUpNote(&m_swerveDrive, &m_intake, &m_arm).ToPtr());
+
+  m_operatorController.RightTrigger().OnTrue(ShootNote(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, 40_deg).ToPtr());
+
+  m_operatorController.LeftStick().OnTrue(IntakeNote(&m_intake).ToPtr());
 
   m_operatorController.Y().OnTrue(frc2::InstantCommand([this] {m_intake.SpinIntake(-1);}, {&m_intake}).ToPtr())
                           .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
@@ -64,6 +70,8 @@ void RobotContainer::ConfigureBindings() {
   frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kCircle).WhileTrue(frc2::RunCommand([this] {m_elevator.NudgeHeight(0.1_in);}, {&m_elevator}).ToPtr());
 
   frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kCross).WhileTrue(frc2::RunCommand([this] {m_elevator.NudgeHeight(-0.1_in);}, {&m_elevator}).ToPtr());
+
+  frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kSquare).OnTrue(PlaceInAmp(&m_swerveDrive, &m_elevator, &m_intake, &m_arm).ToPtr());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

@@ -27,11 +27,12 @@ ShootNote::ShootNote(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, In
     // Drive to location + spin
     frc2::ParallelCommandGroup(ChangeShooterAngle(shooter, shooterAngle),
                                frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmShootingAngle), 
-                                                            ChangeWristAngle(arm, physical::kWristShootingAngle)),
-                               SpinShooter(shooter, physical::kShooterSpeed)),
-    frc2::InstantCommand([this, intake] {intake->SpinIntake(0.5);}, {intake}),
+                                                            ChangeWristAngle(arm, physical::kWristShootingAngle))),
+    SpinShooter(shooter, physical::kShooterSpeed),
+    frc2::InstantCommand([this, intake] {intake->SpinIntake(-1);}, {intake}),
     frc2::WaitCommand(0.5_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
+    frc2::InstantCommand([this, shooter] {shooter->Spin(0_rpm);}, {shooter}),
     frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmPassiveAngle), ChangeWristAngle(arm, physical::kWristPassiveAngle))
   );
 }

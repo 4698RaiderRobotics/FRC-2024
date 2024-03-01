@@ -47,10 +47,10 @@ namespace pidf {
     constexpr double kElevatorA = 0.0;
     constexpr double kElevatorS = 0.0;
 
-    constexpr double kSpeedP = 0.0;
+    constexpr double kSpeedP = 0.001;
     constexpr double kSpeedI = 0.0;
     constexpr double kSpeedD = 0.0;
-    constexpr double kSpeedFF = 0.0;
+    constexpr double kSpeedFF = 0.00018;
 }
 
 namespace deviceIDs {
@@ -106,7 +106,7 @@ namespace physical {
     // Maximum angle for the arm position
     constexpr units::degree_t kArmMaxAngle = 160_deg;
     // Minimum angle for the arm position
-    constexpr units::degree_t kArmMinAngle = -20_deg;
+    constexpr units::degree_t kArmMinAngle = -25_deg;
 
     // Maximum angle for the wrist position
     constexpr units::degree_t kWristMaxAngle = 180_deg;
@@ -120,7 +120,7 @@ namespace physical {
 
     constexpr double kIntakeSpeed = 1;
 
-    constexpr double kShooterSpeed = 0.25;
+    constexpr units::revolutions_per_minute_t kShooterSpeed = 3000_rpm;
 
     // Angle for the shooter to shoot from speaker
     constexpr units::degree_t kShooterSpeakerAngle = 60_deg;
@@ -128,9 +128,9 @@ namespace physical {
     constexpr units::degree_t kShooterPodiumAngle = 30_deg;
 
     // Angle for the wrist to pick up off the ground
-    constexpr units::degree_t kWristGroundPickUpAngle = -60_deg;
+    constexpr units::degree_t kWristGroundPickUpAngle = -25_deg;
     // Angle for the arm to pick up off the ground
-    constexpr units::degree_t kArmGroundPickUpAngle = 10_deg;
+    constexpr units::degree_t kArmGroundPickUpAngle = -25_deg;
 
     // Angle for the wrist to rest at
     constexpr units::degree_t kWristPassiveAngle = 0_deg;
@@ -140,15 +140,15 @@ namespace physical {
     // Angle for the wrist to shoot from
     constexpr units::degree_t kWristShootingAngle = 160_deg;
     // Angle for the arm to shoot from
-    constexpr units::degree_t kArmShootingAngle = 135_deg;
+    constexpr units::degree_t kArmShootingAngle = 145_deg;
 
     // Angle for the wrist to place in amp
-    constexpr units::degree_t kWristAmpAngle = 0_deg;
+    constexpr units::degree_t kWristAmpAngle = 90_deg;
     // Angle for the arm to place in amp
-    constexpr units::degree_t kArmAmpAngle = 135_deg;
+    constexpr units::degree_t kArmAmpAngle = 45_deg;
 
     // Height for the elevator to place in amp
-    constexpr units::meter_t kElevatorAmpHeight = 0_m;
+    constexpr units::meter_t kElevatorAmpHeight = 10_in;
 
     // Height for the elevator to place in trap
     constexpr units::meter_t kElevatorTrapHeight = 0_m;

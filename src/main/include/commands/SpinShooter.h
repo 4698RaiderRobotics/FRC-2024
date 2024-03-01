@@ -19,7 +19,7 @@
 class SpinShooter
     : public frc2::CommandHelper<frc2::Command, SpinShooter> {
  public:
-  SpinShooter(ShooterSubsystem* shooter, double speed);
+  SpinShooter(ShooterSubsystem* shooter, units::revolutions_per_minute_t speed);
 
   void Initialize() override;
 
@@ -30,5 +30,6 @@ class SpinShooter
   bool IsFinished() override;
  private:
   ShooterSubsystem* m_shooter;
-  double m_speed;
+  units::revolutions_per_minute_t m_speed;
+  units::second_t m_startTime;
 };
