@@ -13,7 +13,6 @@
 #include <frc/estimator/SwerveDrivePoseEstimator.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/controller/HolonomicDriveController.h>
-#include <ctre/phoenix/sensors/PigeonIMU.h>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <frc/geometry/Pose2d.h>
 #include <units/time.h>

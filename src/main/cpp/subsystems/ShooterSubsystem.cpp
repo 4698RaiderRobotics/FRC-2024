@@ -63,14 +63,14 @@ void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
     
 }
 
-bool ShooterSubsystem::AtSpeed() {
+bool ShooterSubsystem::IsAtSpeed() {
     return m_topEncoder.GetVelocity() >= m_speed.value() - 200;
 }
 
-units::degree_t ShooterSubsystem::GetShooterAngle() {
+units::degree_t ShooterSubsystem::GetAngle() {
     return m_shooterPosition;
 }
 
-units::degree_t ShooterSubsystem::GetShooterGoal() {
-    return m_shooterGoal.position;
+bool ShooterSubsystem::IsAtGoal() {
+    return units::math::abs( m_shooterGoal.position - m_shooterPosition ) < 3_deg;
 }

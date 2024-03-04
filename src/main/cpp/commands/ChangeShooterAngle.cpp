@@ -23,5 +23,5 @@ void ChangeShooterAngle::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool ChangeShooterAngle::IsFinished() {
-  return (units::math::abs(m_angle - m_shooter->GetShooterAngle()) < 3_deg);
+  return m_shooter->IsAtGoal();
 }

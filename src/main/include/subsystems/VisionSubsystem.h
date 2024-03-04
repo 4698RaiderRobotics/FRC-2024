@@ -21,14 +21,15 @@ class VisionSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  // std::pair<frc::Pose2d, units::second_t> GetGlobalEstimatedPose();
+  std::pair<frc::Pose2d, units::second_t> GetGlobalEstimatedPose();
+
+  bool GetAprilTagPosition( int tagID, double &yaw, double &pitch );
 
  private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
-
-  // photon::PhotonCamera m_camera{"photonvision"};
+  photon::PhotonCamera m_camera{"photonvision1"};
   photon::PhotonPoseEstimator m_robotPoseEstimator;
+  photon::PhotonPipelineResult m_result;
+  units::second_t m_lastestTargetTime;
 
  public:
   frc::AprilTagFieldLayout aprilTagFieldLayout;

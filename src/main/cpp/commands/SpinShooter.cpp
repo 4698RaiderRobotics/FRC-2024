@@ -20,7 +20,7 @@ void SpinShooter::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void SpinShooter::Execute() {
   m_shooter->Spin(m_speed);
-  fmt::print("ShooterAtSpeed: {}\n", m_shooter->AtSpeed());
+  // fmt::print("ShooterAtSpeed: {}\n", m_shooter->IsAtSpeed());
 }
 
 // Called once the command ends or is interrupted.
@@ -28,5 +28,5 @@ void SpinShooter::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool SpinShooter::IsFinished() {
-  return m_shooter->AtSpeed() || frc::Timer::GetFPGATimestamp() - m_startTime > 4_s;
+  return m_shooter->IsAtSpeed() || frc::Timer::GetFPGATimestamp() - m_startTime > 4_s;
 }

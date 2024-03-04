@@ -37,6 +37,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   units::degree_t GetWristAngle();
 
+  bool IsAtGoal();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

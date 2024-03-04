@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <frc2/command/SubsystemBase.h>
 
 #include <frc/controller/ArmFeedforward.h>
@@ -16,6 +18,7 @@
 
 #include "Constants.h"
 #include "AbsoluteEncoder.h"
+#include "LUT.h"
 
 class ShooterSubsystem : public frc2::SubsystemBase {
  public:
@@ -33,11 +36,17 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   void Spin(units::revolutions_per_minute_t speed);
 
   // Checks if the shooter is at the right speed
-  bool AtSpeed();
+  bool IsAtSpeed();
 
-  units::degree_t GetShooterAngle();
+  units::degree_t GetAngle();
 
-  units::degree_t GetShooterGoal();
+  bool IsAtGoal();
+
+  units::degree_t GetShooter_ArmAngle()
+    { return arm_lut.lookup( m_shooterPosition.value() ) * 1_deg; }
+  units::degree_t GetShooter_WristAngle()
+    { return wrist_lut.lookup( m_shooterPosition.value() ) * 1_deg; }
+
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -68,6 +77,9 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   units::revolutions_per_minute_t m_speed;
 
-
   double m_shooterSpeed;
+
+    // Arm and Wrist lookup tables
+  LUT arm_lut{ {25.0, 45.0}, {145.0, 180.0} };
+  LUT wrist_lut{ {25.0, 45.0}, {150.0, 130.0} };
 };

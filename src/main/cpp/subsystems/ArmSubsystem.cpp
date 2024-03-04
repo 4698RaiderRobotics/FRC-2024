@@ -91,9 +91,6 @@ void ArmSubsystem::Periodic() {
         return;
     }
 
-    
-
-
     m_wristMotor.SetControl( m_wristPositionDC.WithPosition( m_wristGoal.position ) ); 
     
     m_armSetpoint = m_armProfile.Calculate(physical::kDt, m_armSetpoint, m_armGoal);
@@ -133,4 +130,9 @@ units::degree_t ArmSubsystem::GetArmAngle() {
 
 units::degree_t ArmSubsystem::GetWristAngle() {
     return m_wristAngle;
+}
+
+bool ArmSubsystem::IsAtGoal() {
+    return units::math::abs(m_wristAngle - m_wristGoal.position) < 5_deg &&
+           units::math::abs(m_armAngle - m_armGoal.position) < 5_deg;
 }
