@@ -14,21 +14,21 @@ VisionSubsystem::VisionSubsystem()
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
-    photon::PhotonPipelineResult result = m_camera.GetLatestResult();
+    // photon::PhotonPipelineResult result = m_camera.GetLatestResult();
 
-    bool hasTarget = result.HasTargets();
+    // bool hasTarget = result.HasTargets();
 
     
     
 }
 
-std::pair<frc::Pose2d, units::second_t> VisionSubsystem::GetGlobalEstimatedPose() {
-    units::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
-    auto result = m_robotPoseEstimator.Update();
-    if (result.has_value()) {
-        return std::make_pair<>(result->estimatedPose.ToPose2d(),
-                                currentTime - result->timestamp);
-    } else {
-        return std::make_pair(frc::Pose2d(), 0_ms);
-    }
-}
+// std::pair<frc::Pose2d, units::second_t> VisionSubsystem::GetGlobalEstimatedPose() {
+//     // units::millisecond_t currentTime = frc::Timer::GetFPGATimestamp();
+//     // auto result = m_robotPoseEstimator.Update();
+//     // if (result.has_value()) {
+//     //     return std::make_pair<>(result->estimatedPose.ToPose2d(),
+//     //                             currentTime - result->timestamp);
+//     // } else {
+//     //     return std::make_pair(frc::Pose2d(), 0_ms);
+//     // }
+// }

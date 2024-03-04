@@ -5,6 +5,7 @@
 #include "subsystems/ShooterSubsystem.h"
 
 #include <frc/DriverStation.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 ShooterSubsystem::ShooterSubsystem() {
     m_topShooterMotor.SetInverted(true);
@@ -29,15 +30,16 @@ ShooterSubsystem::ShooterSubsystem() {
 void ShooterSubsystem::Periodic() {
     m_shooterPosition = m_shooterAngleEncoder.GetPosition().GetValueAsDouble() * 360_deg;
 
+    frc::SmartDashboard::PutNumber("Shooter Position", m_shooterPosition.value());
+
     if ( frc::DriverStation::IsDisabled() ) {
         m_shooterSetpoint.position = m_shooterPosition;
         m_shooterSetpoint.velocity = 0_deg_per_s;
-        m_shooterAngleGoal = m_shooterPosition;
+        m_shooterGoal.position = m_shooterPosition;
+        m_shooterGoal.velocity = 0_deg_per_s;
 
         return;
     }
-
-    m_shooterGoal = {m_shooterAngleGoal, 0_deg_per_s};
 
     m_shooterSetpoint = m_shooterProfile.Calculate(physical::kDt, m_shooterSetpoint, m_shooterGoal);
 
@@ -50,10 +52,10 @@ void ShooterSubsystem::Periodic() {
 }
 
 void ShooterSubsystem::GoToAngle(units::degree_t shooterAngleGoal) {
-    m_shooterAngleGoal = shooterAngleGoal;
+    m_shooterGoal.position = shooterAngleGoal;
 
-    if(m_shooterAngleGoal > physical::kShooterMaxAngle) {m_shooterAngleGoal = physical::kShooterMaxAngle;}
-    if(m_shooterAngleGoal < physical::kShooterMinAngle) {m_shooterAngleGoal = physical::kShooterMinAngle;}
+    if(m_shooterGoal.position > physical::kShooterMaxAngle) {m_shooterGoal.position = physical::kShooterMaxAngle;}
+    if(m_shooterGoal.position < physical::kShooterMinAngle) {m_shooterGoal.position = physical::kShooterMinAngle;}
 }
 
 void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
@@ -62,5 +64,13 @@ void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
 }
 
 bool ShooterSubsystem::AtSpeed() {
-    return m_topEncoder.GetVelocity() >= m_speed.value();
+    return m_topEncoder.GetVelocity() >= m_speed.value() - 200;
+}
+
+units::degree_t ShooterSubsystem::GetShooterAngle() {
+    return m_shooterPosition;
+}
+
+units::degree_t ShooterSubsystem::GetShooterGoal() {
+    return m_shooterGoal.position;
 }

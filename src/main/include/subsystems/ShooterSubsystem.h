@@ -35,6 +35,10 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   // Checks if the shooter is at the right speed
   bool AtSpeed();
 
+  units::degree_t GetShooterAngle();
+
+  units::degree_t GetShooterGoal();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

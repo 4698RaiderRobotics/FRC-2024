@@ -38,6 +38,10 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   frc::DigitalInput m_beamBreak{0};   /* True when beam is NOT broken */
 
+  double m_startPos;
+
  public:
   bool hasNote = false;
+  bool centering = false;
+  bool isIndexed = false;
 };

@@ -20,7 +20,7 @@ void SpinShooter::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void SpinShooter::Execute() {
   m_shooter->Spin(m_speed);
-  fmt::print("ShooterAtSpeed: {}", m_shooter->AtSpeed());
+  fmt::print("ShooterAtSpeed: {}\n", m_shooter->AtSpeed());
 }
 
 // Called once the command ends or is interrupted.

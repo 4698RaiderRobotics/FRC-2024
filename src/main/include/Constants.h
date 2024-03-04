@@ -104,7 +104,7 @@ namespace physical {
     constexpr units::degree_t kShooterMinAngle = 15_deg;
 
     // Maximum angle for the arm position
-    constexpr units::degree_t kArmMaxAngle = 160_deg;
+    constexpr units::degree_t kArmMaxAngle = 180_deg;
     // Minimum angle for the arm position
     constexpr units::degree_t kArmMinAngle = -25_deg;
 
@@ -114,7 +114,7 @@ namespace physical {
     constexpr units::degree_t kWristMinAngle = -90_deg;
 
     // Maximum height for the elevator position
-    constexpr units::meter_t kElevatorMaxHeight = 20_in;
+    constexpr units::meter_t kElevatorMaxHeight = 25_in;
     // Minimum height for the elevator position
     constexpr units::meter_t kElevatorMinHeight = 0_in;
 
@@ -125,7 +125,7 @@ namespace physical {
     // Angle for the shooter to shoot from speaker
     constexpr units::degree_t kShooterSpeakerAngle = 60_deg;
     // Angle for the shooter to shoot from podium
-    constexpr units::degree_t kShooterPodiumAngle = 30_deg;
+    constexpr units::degree_t kShooterPodiumAngle = 22_deg;
 
     // Angle for the wrist to pick up off the ground
     constexpr units::degree_t kWristGroundPickUpAngle = -25_deg;
@@ -133,14 +133,14 @@ namespace physical {
     constexpr units::degree_t kArmGroundPickUpAngle = -25_deg;
 
     // Angle for the wrist to rest at
-    constexpr units::degree_t kWristPassiveAngle = 0_deg;
+    constexpr units::degree_t kWristPassiveAngle = 30_deg;
     // Angle for the arm to rest at
-    constexpr units::degree_t kArmPassiveAngle = 135_deg;
+    constexpr units::degree_t kArmPassiveAngle = 170_deg;
 
     // Angle for the wrist to shoot from
-    constexpr units::degree_t kWristShootingAngle = 160_deg;
+    constexpr units::degree_t kWristShootingAngle = 140_deg;
     // Angle for the arm to shoot from
-    constexpr units::degree_t kArmShootingAngle = 145_deg;
+    constexpr units::degree_t kArmShootingAngle = 170_deg;
 
     // Angle for the wrist to place in amp
     constexpr units::degree_t kWristAmpAngle = 90_deg;
@@ -153,9 +153,9 @@ namespace physical {
     // Height for the elevator to place in trap
     constexpr units::meter_t kElevatorTrapHeight = 0_m;
 
-    constexpr double kShooterAbsoluteOffset = -0.305;
-    constexpr double kWristAbsoluteOffset = 0.166;
-    constexpr double kArmAbsoluteOffset = 0.13;
+    constexpr double kShooterAbsoluteOffset = -0.346;
+    constexpr double kWristAbsoluteOffset = 0.256;
+    constexpr double kArmAbsoluteOffset = 0.194;
 
     constexpr units::second_t kDt = 20_ms;
 }

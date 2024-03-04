@@ -35,4 +35,5 @@ class IntakeNote
   units::second_t m_startTime;
   double startPos;
   bool beamHasBroken = false;
+  bool isFinished = false;
 };

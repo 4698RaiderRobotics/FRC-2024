@@ -16,5 +16,6 @@ class ShootNote
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
                                  ShootNote> {
  public:
-  ShootNote(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, ArmSubsystem* arm, units::degree_t shooterAngle);
+  ShootNote(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, ArmSubsystem* arm, 
+            units::degree_t shooterAngle, units::degree_t armAngle, units::degree_t wristAngle);
 };

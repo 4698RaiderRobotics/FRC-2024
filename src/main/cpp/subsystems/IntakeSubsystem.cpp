@@ -11,6 +11,20 @@ IntakeSubsystem::IntakeSubsystem() = default;
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
     frc::SmartDashboard::PutBoolean( "Beam Broken", IsBeamBroken() );
+
+    if(centering && IsBeamBroken()) {
+        SpinIntake(-0.3);
+        isIndexed = false;
+    } else if( centering && !IsBeamBroken()) {
+        centering = false;
+        SpinIntake(0.0);
+        isIndexed = true;
+        m_startPos = GetRotations();
+        SpinIntake(0.3);
+    } else if(isIndexed && GetRotations() - m_startPos > 1) {
+        isIndexed = false;
+        SpinIntake(0.0);
+    }
 }
 
 void IntakeSubsystem::SpinIntake(double speed) {

@@ -17,25 +17,25 @@ void IntakeNote::Initialize() {
   m_intake->SpinIntake(physical::kIntakeSpeed);
   m_startTime = frc::Timer::GetFPGATimestamp();
   beamHasBroken = false;
+  isFinished = false;
 }
 
 // Called repeatedly when this Command is scheduled to run
 void IntakeNote::Execute() {
-  if (!beamHasBroken) {
-    startPos = m_intake->GetRotations();
-    if(m_intake->IsBeamBroken()) {
-      beamHasBroken = true;
-    }
+  if (!beamHasBroken && m_intake->IsBeamBroken()) {
+    beamHasBroken = true;
+    isFinished = true;
   }
 }
 
 // Called once the command ends or is interrupted.
 void IntakeNote::End(bool interrupted) {
   m_intake->hasNote = true;
+  m_intake->centering = true;
   m_intake->SpinIntake(0.0);
 }
 
 // Returns true when the command should end.
 bool IntakeNote::IsFinished() {
-  return frc::Timer::GetFPGATimestamp() - m_startTime > 10_s || m_intake->GetRotations() - startPos > 3;
+  return frc::Timer::GetFPGATimestamp() - m_startTime > 10_s || isFinished;
 }

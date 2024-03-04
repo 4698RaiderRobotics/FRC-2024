@@ -66,9 +66,9 @@ void ArmSubsystem::Periodic() {
 
     m_armAngle = m_wristAngle - phi;
 
-    // frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
+    frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
     // frc::SmartDashboard::PutNumber("Phi", phi.value());
-    // frc::SmartDashboard::PutNumber("Arm Angle", m_armAngle.value());
+    frc::SmartDashboard::PutNumber("Arm Angle", m_armAngle.value());
 
     // frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
     // frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);
