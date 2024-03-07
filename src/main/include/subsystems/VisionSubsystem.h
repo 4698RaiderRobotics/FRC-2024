@@ -26,8 +26,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
   bool GetAprilTagPosition( int tagID, double &yaw, double &pitch );
 
  private:
-  photon::PhotonCamera m_camera{"photonvision1"};
-  photon::PhotonPoseEstimator m_robotPoseEstimator;
+  photon::PhotonCamera m_camera{"ShooterCam"};
+  photon::PhotonPoseEstimator *m_robotPoseEstimator;
   photon::PhotonPipelineResult m_result;
   units::second_t m_lastestTargetTime;
 

@@ -6,28 +6,44 @@
 
 #include "subsystems/IntakeSubsystem.h"
 
-IntakeSubsystem::IntakeSubsystem() = default;
+IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds)
+ : m_leds{leds} {
+
+};
 
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
     frc::SmartDashboard::PutBoolean( "Beam Broken", IsBeamBroken() );
 
+    if(hasNote) {
+        m_leds->SetColor(0, 255, 0);
+    } else {
+        m_leds->SetColor(0, 0, 0);
+    }
+
     if(centering && IsBeamBroken()) {
-        SpinIntake(-0.3);
+            // Start moving the note back out of the intake.
+        m_intakeMotor.Set(-0.2);
         isIndexed = false;
     } else if( centering && !IsBeamBroken()) {
+            // Not has been picked up but not indexed.
+        hasNote = true;
         centering = false;
-        SpinIntake(0.0);
+        m_intakeMotor.Set(0.0);
         isIndexed = true;
         m_startPos = GetRotations();
-        SpinIntake(0.3);
-    } else if(isIndexed && GetRotations() - m_startPos > 1) {
+        m_intakeMotor.Set(0.2);
+    } else if(isIndexed && GetRotations() - m_startPos > 1.5) {
+            // Note has been backed out to the resting position.
         isIndexed = false;
-        SpinIntake(0.0);
+        m_intakeMotor.Set(0.0);
     }
 }
 
 void IntakeSubsystem::SpinIntake(double speed) {
+    if(hasNote) {
+        hasNote = false;
+    }
     m_intakeMotor.Set(speed);
 }
 

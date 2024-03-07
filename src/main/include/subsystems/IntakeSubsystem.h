@@ -10,10 +10,11 @@
 #include <frc/DigitalInput.h>
 
 #include "Constants.h"
+#include "subsystems/LEDSubsystem.h"
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
-  IntakeSubsystem();
+  IntakeSubsystem(LEDSubsystem* leds);
 
   /**
    * Will be called periodically whenever the CommandScheduler runs.
@@ -31,6 +32,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
+
+  LEDSubsystem* m_leds;
 
   rev::CANSparkMax m_intakeMotor{deviceIDs::kIntakeID, rev::CANSparkMax::MotorType::kBrushless};
 

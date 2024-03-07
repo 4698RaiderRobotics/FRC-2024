@@ -8,6 +8,7 @@
 
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc/PowerDistribution.h>
 
 #include "RobotContainer.h"
 
@@ -29,7 +30,10 @@ class Robot : public frc::TimedRobot {
   void TestExit() override;
 
  private:
-  std::optional<frc2::CommandPtr> m_autonomousCommand;
+  frc2::Command* m_autonomousCommand;
 
   RobotContainer m_container;
+
+  frc::PowerDistribution m_pdp{ 1, frc::PowerDistribution::ModuleType::kRev };
+
 };

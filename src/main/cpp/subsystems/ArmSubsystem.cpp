@@ -43,7 +43,6 @@ ArmSubsystem::ArmSubsystem() {
 
     // wristPosReference.SetUpdateFrequency(50_Hz);
     // wristVelReference.SetUpdateFrequency(50_Hz);
-    // armPosReference.SetUpdateFrequency(50_Hz);
     // armVelReference.SetUpdateFrequency(50_Hz);
     // armVel.SetUpdateFrequency(50_Hz);
 };
@@ -132,7 +131,7 @@ units::degree_t ArmSubsystem::GetWristAngle() {
     return m_wristAngle;
 }
 
-bool ArmSubsystem::IsAtGoal() {
-    return units::math::abs(m_wristAngle - m_wristGoal.position) < 5_deg &&
-           units::math::abs(m_armAngle - m_armGoal.position) < 5_deg;
+bool ArmSubsystem::IsAtGoal( units::degree_t arm_tol ) {
+    return units::math::abs(m_wristAngle - m_wristGoal.position) < 3_deg &&
+           units::math::abs(m_armAngle - m_armGoal.position) < arm_tol;
 }

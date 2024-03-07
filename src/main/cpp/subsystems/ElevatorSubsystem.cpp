@@ -6,11 +6,13 @@
 
 #include <frc/DriverStation.h>
 
-ElevatorSubsystem::ElevatorSubsystem() = default;
+ElevatorSubsystem::ElevatorSubsystem() {
+    m_elevatorEncoder.SetPosition(0.0);
+};
 
 // This method will be called once per scheduler run
 void ElevatorSubsystem::Periodic() {
-    m_elevatorPosition = m_elevatorEncoder.GetPosition() / 45.0 * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
+    m_elevatorPosition = m_elevatorEncoder.GetPosition() / 15.0 * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
 
     if (frc::DriverStation::IsDisabled()) {
         m_elevatorSetpoint.position = m_elevatorPosition;

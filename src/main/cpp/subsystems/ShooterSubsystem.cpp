@@ -71,6 +71,10 @@ units::degree_t ShooterSubsystem::GetAngle() {
     return m_shooterPosition;
 }
 
+void ShooterSubsystem::Nudge( units::degree_t deltaAngle ) {
+     GoToAngle( m_shooterGoal.position + deltaAngle );
+}
+
 bool ShooterSubsystem::IsAtGoal() {
     return units::math::abs( m_shooterGoal.position - m_shooterPosition ) < 3_deg;
 }

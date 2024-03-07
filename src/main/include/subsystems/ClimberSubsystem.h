@@ -6,6 +6,11 @@
 
 #include <frc2/command/SubsystemBase.h>
 
+#include <rev/CANSparkFlex.h>
+#include <frc/DigitalInput.h>
+
+#include "Constants.h"
+
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
   ClimberSubsystem();
@@ -15,7 +20,27 @@ class ClimberSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
+  void SetSpeed(double speed);
+
+  void Home();
+
+  double GetRotations();
+
+  void Climb();
+
+  bool AtLimit();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
+
+  rev::CANSparkFlex m_climberMotor{deviceIDs::kClimberID, rev::CANSparkFlex::MotorType::kBrushless};
+
+  rev::SparkRelativeEncoder m_climberEncoder = m_climberMotor.GetEncoder();
+
+  frc::DigitalInput m_limit{1};
+
+  bool isZeroed{ false };
+  bool isHoming{ false };
+  bool isRaising{ false };
 };

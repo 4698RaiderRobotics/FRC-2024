@@ -30,7 +30,6 @@ void IntakeNote::Execute() {
 
 // Called once the command ends or is interrupted.
 void IntakeNote::End(bool interrupted) {
-  m_intake->hasNote = true;
   m_intake->centering = true;
   m_intake->SpinIntake(0.0);
 }

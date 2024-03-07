@@ -15,6 +15,7 @@
 #include <frc/controller/HolonomicDriveController.h>
 #include <ctre/phoenix6/Pigeon2.hpp>
 #include <frc/geometry/Pose2d.h>
+#include <frc/smartdashboard/Field2d.h>
 #include <units/time.h>
 using namespace units::literals;
 
@@ -74,4 +75,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
     wpi::log::DoubleArrayLogEntry m_poseLogEntry;
     wpi::log::DoubleLogEntry m_gyroYawLogEntry;
     bool m_logging{ false };
+
+  public:
+    frc::Field2d m_field;
+    frc::Trajectory exampleTraj;
 };

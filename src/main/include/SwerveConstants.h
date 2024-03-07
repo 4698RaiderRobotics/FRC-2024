@@ -8,8 +8,8 @@
 #include <units/angular_velocity.h>
 #include <units/angular_acceleration.h>
 
-// Turn on some tuning stuff.
-#define TUNING
+// Turn on/off some tuning stuff.
+#undef TUNING
 
 namespace swerve {
     namespace pidf {

@@ -40,6 +40,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   units::degree_t GetAngle();
 
+  void Nudge( units::degree_t deltaAngle );
+
   bool IsAtGoal();
 
   units::degree_t GetShooter_ArmAngle()
@@ -79,7 +81,11 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   double m_shooterSpeed;
 
-    // Arm and Wrist lookup tables
-  LUT arm_lut{ {25.0, 45.0}, {145.0, 180.0} };
-  LUT wrist_lut{ {25.0, 45.0}, {150.0, 130.0} };
+    // Arm and Wrist lookup tables: maps shooter angle to arm and wrist angles
+  // LUT arm_lut{ {25.0, 45.0}, {145.0, 180.0} };
+  // LUT wrist_lut{ {25.0, 45.0}, {150.0, 130.0} };
+  // LUT arm_lut{ {26.0, 33.5, 45.0}, {158.0, 169, 177.5} };
+//  LUT arm_lut{ {18.0, 26.0, 33.5, 45.0}, {159.0, 155.0, 166, 174.5} };
+  LUT arm_lut{ {18.0, 26.0, 33.5, 45.0}, {156.0, 155.0, 166, 174.5} };
+  LUT wrist_lut{ {18.0, 26.0, 33.5, 45.0}, {153.0, 152.3, 142.5, 136.3} };
 };

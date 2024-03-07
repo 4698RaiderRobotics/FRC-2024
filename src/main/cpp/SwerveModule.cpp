@@ -27,6 +27,8 @@ SwerveModule::SwerveModule( const int turnMotorChannel,
     driveConfigs.Slot0.kP = swerve::pidf::kDriveP;
     driveConfigs.Slot0.kI = swerve::pidf::kDriveI;
     driveConfigs.Slot0.kD = swerve::pidf::kDriveD;
+    driveConfigs.CurrentLimits.SupplyCurrentLimit = 30;
+    driveConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_driveMotor.GetConfigurator().Apply(driveConfigs, 50_ms);
 
 
@@ -40,6 +42,8 @@ SwerveModule::SwerveModule( const int turnMotorChannel,
     turnConfigs.Feedback.FeedbackSensorSource = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
     turnConfigs.MotorOutput.Inverted = true;
     turnConfigs.ClosedLoopGeneral.ContinuousWrap = true;
+    turnConfigs.CurrentLimits.SupplyCurrentLimit = 30;
+    turnConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_turnMotor.GetConfigurator().Apply(turnConfigs, 50_ms);
 
     ctre::phoenix6::configs::CANcoderConfiguration absoluteEncoderConfigs{};

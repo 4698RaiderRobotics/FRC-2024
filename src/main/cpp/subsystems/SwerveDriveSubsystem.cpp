@@ -6,9 +6,12 @@
 #include "SwerveConstants.h"
 #include "DataLogger.h"
 
-#ifdef TUNING
+#include <frc/DriverStation.h>
+#include <frc/Filesystem.h>
+#include <frc/trajectory/TrajectoryUtil.h>
+#include <wpi/fs.h>
+
 #include <frc/smartdashboard/SmartDashboard.h>
-#endif /* TUNING */
 
 
 SwerveDriveSubsystem::SwerveDriveSubsystem(VisionSubsystem *ll) 
@@ -68,6 +71,12 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(VisionSubsystem *ll)
 
         // Reset the gyro
     ResetGyro(0_deg);
+
+    frc::SmartDashboard::PutData("Field", &m_field);
+
+    fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
+    deployDirectory = deployDirectory / "output" / "Example Trajectory.wpilib.json";
+    exampleTraj = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
 }
 
 // ArcadeDrive drives with joystick inputs
@@ -89,7 +98,7 @@ void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double
 void SwerveDriveSubsystem::Drive( frc::ChassisSpeeds speeds, bool fieldRelative ) {
     // An array of SwerveModuleStates computed from the ChassisSpeeds object
     m_desiredStates = m_kinematics.ToSwerveModuleStates( fieldRelative ? speeds.FromFieldRelativeSpeeds( 
-                    speeds.vx, speeds.vy, speeds.omega, frc::Rotation2d{m_gyro.GetAngle() * 1_deg}) :
+                    speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue() ) :
                     speeds );
     m_kinematics.DesaturateWheelSpeeds( &m_desiredStates, swerve::physical::kMaxDriveSpeed );
 }
@@ -99,7 +108,7 @@ void SwerveDriveSubsystem::DriveTrajectory( frc::Trajectory::State trajState, co
     // A ChassisSpeeds objects based on the current position on the trajectory
     auto adjustedSpeeds = m_controller.Calculate( m_odometry.GetEstimatedPosition(), trajState, robotHeading.Degrees() );
 
-    Drive( adjustedSpeeds );
+    Drive( adjustedSpeeds, false );
 }
 
 void SwerveDriveSubsystem::Periodic( void ) {
@@ -125,17 +134,17 @@ void SwerveDriveSubsystem::Periodic( void ) {
 #else
     for(int i = 0; i < 3; i++) {
         DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
         DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
 
         DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Delta Theta", m_modules[i].dTheta.value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Desired RPM", m_modules[i].rpm.value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Optimized RPM", m_modules[i].opRPM.value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetOutputCurrent() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetOutputCurrent() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Motor Speed", m_modules[i].m_driveEncoder.GetVelocity() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Motor Speed", m_modules[i].m_turnMotorEncoder.GetVelocity() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Desired RPM", m_modules[i].speed.value() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Optimized RPM", m_modules[i].opSpeed.value() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Motor Speed", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() );
+        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Motor Speed", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() );
     }
 
 #endif /* TUNING */
@@ -145,14 +154,30 @@ void SwerveDriveSubsystem::Periodic( void ) {
         m_modules[i].SetDesiredState( m_desiredStates[i] );
     }
 
+    auto pose = m_vision->GetGlobalEstimatedPose();
+    if(frc::DriverStation::IsDisabled()) {
+        if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
+            ResetGyro(pose.first.Rotation().Degrees() - 180_deg);
+        } else {
+            ResetGyro(pose.first.Rotation().Degrees());
+        }
+    }
+
     // Updates the odometry of the robot given the SwerveModules' states
     //needs to be an array
-    m_odometry.Update( frc::Rotation2d{m_gyro.GetAngle() * 1_deg},
+
+frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() );
+
+    m_odometry.Update( m_gyro.GetYaw().GetValue(),
     {
          m_modules[0].GetPosition(),  m_modules[1].GetPosition(), 
          m_modules[2].GetPosition(),  m_modules[3].GetPosition() 
     });
-    //m_odometry.AddVisionMeasurement(m_vision->GetGlobalEstimatedPose().first, m_vision->GetGlobalEstimatedPose().second);
+
+    
+    if( pose.first != frc::Pose2d{}) {
+        m_odometry.AddVisionMeasurement(pose.first, pose.second);
+    }
 
     if( m_logging ) {
         // Log the swerve states
@@ -171,6 +196,8 @@ void SwerveDriveSubsystem::Periodic( void ) {
                                  currentPose.Y().value(), 
                                  currentPose.Rotation().Degrees().value() } );
     }
+
+    m_field.SetRobotPose(GetPose());
 }
 
 // Returns the pose2d of the robot
@@ -186,12 +213,12 @@ void SwerveDriveSubsystem::ResetGyro( units::degree_t angle ) {
 // Resets the pose to a position
 void SwerveDriveSubsystem::ResetPose( frc::Translation2d position ) {
     m_odometry.ResetPosition(
-        frc::Rotation2d{m_gyro.GetAngle() * 1_deg},
+        m_gyro.GetYaw().GetValue(),
         {
             m_modules[0].GetPosition(),  m_modules[1].GetPosition(), 
             m_modules[2].GetPosition(),  m_modules[3].GetPosition() 
         },
-        frc::Pose2d{ position.X(), position.Y(), m_gyro.GetAngle() * 1_deg}
+        frc::Pose2d{ position.X(), position.Y(), m_gyro.GetYaw().GetValue() }
     );
 }
 

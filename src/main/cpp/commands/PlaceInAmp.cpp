@@ -26,7 +26,7 @@ PlaceInAmp::PlaceInAmp(SwerveDriveSubsystem* swerveDrive, ElevatorSubsystem* ele
     ChangeElevatorHeight(elevator, 22_in),
     frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 117_deg)),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.5);}, {intake}),
-    frc2::WaitCommand(1_s),
+    frc2::WaitCommand(0.2_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
     frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 90_deg)),
     ChangeElevatorHeight(elevator, 0_m),

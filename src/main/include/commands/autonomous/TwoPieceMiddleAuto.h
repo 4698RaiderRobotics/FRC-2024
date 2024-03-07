@@ -7,14 +7,17 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/ArmSubsystem.h"
 #include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
 #include "subsystems/ElevatorSubsystem.h"
 
-class PickUpNote
+class TwoPieceMiddleAuto
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
-                                 PickUpNote> {
+                                 TwoPieceMiddleAuto> {
  public:
-  PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator);
+  TwoPieceMiddleAuto(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
+                      ArmSubsystem* arm, ElevatorSubsystem* elevator, VisionSubsystem* vision);
 };
