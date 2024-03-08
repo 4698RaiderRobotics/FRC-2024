@@ -54,4 +54,5 @@ private:
       // NOTE: Should change to Geometry based calculation.
     // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {18.0, 22.0, 25.0, 45.0}};
     LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {20.0, 24.0, 27.0, 45.0}};
+    // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {22.0, 26.0, 29.0, 45.0}};
 };

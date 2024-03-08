@@ -18,15 +18,19 @@ TwoPieceSideAuto::TwoPieceSideAuto(SwerveDriveSubsystem* swerve, ShooterSubsyste
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
   frc::Pose2d targetPose;
+  frc::Pose2d negativePose;
   if(isStartingLeft) {
-    targetPose = {1_m, 0.5_m, 30_deg};
+    targetPose = {1.4_m, 0.3_m, 45_deg};
+    negativePose = {-1.0_m, -0.5_m, -20_deg};
   } else {
-    targetPose = {1_m, -0.5_m, -30_deg};
+    targetPose = {1.4_m, -0.3_m, -45_deg};
+    negativePose = {-1.0_m, 0.5_m, 20_deg};
   }
 
   AddCommands(
     ShootNoteTargeting(swerve, shooter, intake, arm, vision),
     frc2::ParallelCommandGroup(ProfiledDriveToPose(swerve, targetPose), PickUpNote(swerve, intake, arm, elevator)),
+    ProfiledDriveToPose(swerve, negativePose),
     ShootNoteTargeting(swerve, shooter, intake, arm, vision)
   );
 }

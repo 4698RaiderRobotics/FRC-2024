@@ -101,7 +101,7 @@ namespace physical {
     // Maximum angle for the shooter position
     constexpr units::degree_t kShooterMaxAngle = 75_deg;
     // Minimum angle for the shooter position
-    constexpr units::degree_t kShooterMinAngle = 15_deg;
+    constexpr units::degree_t kShooterMinAngle = 0_deg;
 
     // Maximum angle for the arm position
     constexpr units::degree_t kArmMaxAngle = 180_deg;
@@ -154,8 +154,8 @@ namespace physical {
     constexpr units::meter_t kElevatorTrapHeight = 0_m;
 
     constexpr double kShooterAbsoluteOffset = -0.342;
-    constexpr double kWristAbsoluteOffset = 0.206;
-    constexpr double kArmAbsoluteOffset = 0.145;
+    constexpr double kWristAbsoluteOffset = 0.155;
+    constexpr double kArmAbsoluteOffset = 0.1;
 
     constexpr units::second_t kDt = 20_ms;
 }

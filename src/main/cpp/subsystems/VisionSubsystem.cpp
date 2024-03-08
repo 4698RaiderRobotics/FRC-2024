@@ -33,8 +33,8 @@ std::pair<frc::Pose2d, units::second_t> VisionSubsystem::GetGlobalEstimatedPose(
         // fmt::print( "robotPoseEstimator pose {} {} -- {}\n", pose->estimatedPose.ToPose2d().X(), 
         //                                                      pose->estimatedPose.ToPose2d().Y(), 
         //                                                      pose->estimatedPose.ToPose2d().Rotation().Degrees());
-        return std::make_pair<>(pose->estimatedPose.ToPose2d(),
-                                frc::Timer::GetFPGATimestamp() - pose->timestamp);
+        return std::make_pair<>(pose->estimatedPose.ToPose2d(),  pose->timestamp);
+                                // frc::Timer::GetFPGATimestamp() - pose->timestamp);
     } else {
         return std::make_pair(frc::Pose2d(), 0_ms);
     }

@@ -17,6 +17,8 @@
 
 #include <frc/DriverStation.h>
 
+#include "DataLogger.h"
+
 
 ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, 
                       IntakeSubsystem* intake, ArmSubsystem* arm, 
@@ -46,7 +48,8 @@ void ShootNoteTargeting::Initialize() {
     // Start the shooter motors and move to the correct arm and wrist positions.
   m_shooter->Spin( 2000_rpm );
   // m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
-  m_arm->GoToWristAngle( m_shooter->GetShooter_WristAngle() );
+      // m_arm->GoToWristAngle( m_shooter->GetShooter_WristAngle() );
+      m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle() );
 
   fmt::print("Setting Arm / Wrist to {}/{}\n",  m_shooter->GetShooter_ArmAngle(), m_shooter->GetShooter_WristAngle() );
 
@@ -64,6 +67,10 @@ void ShootNoteTargeting::Initialize() {
 void ShootNoteTargeting::Execute() {
   double t_yaw, t_pitch;
 
+  units::degree_t arm_tolerance;
+
+  arm_tolerance = 5_deg;
+
   if( !readyToShoot ) {
       // Set the shooter angle based on the position of the apriltag
     if( m_vision->GetAprilTagPosition( targetingID, t_yaw, t_pitch ) ) {
@@ -74,7 +81,8 @@ void ShootNoteTargeting::Execute() {
       if( m_arm->GetWristAngle() > 80_deg ) {
          m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
       }
-      m_arm->GoToWristAngle( m_shooter->GetShooter_WristAngle() );
+      // m_arm->GoToWristAngle( m_shooter->GetShooter_WristAngle() );
+      m_arm->GoToWristAngle( 180_deg - targetAngle );
 
       if( allowDriving ) {
         m_drive->ArcadeDrive( m_x_axis->GetAxis(), m_y_axis->GetAxis(), -t_yaw * 0.02 );
@@ -82,10 +90,22 @@ void ShootNoteTargeting::Execute() {
         m_drive->ArcadeDrive( 0, 0, -t_yaw * 0.02 );
       }
 
-      fmt::print( "    AtGoal:  shooter({}), arm({}), yaw({})\n", m_shooter->IsAtGoal(), m_arm->IsAtGoal( 6_deg ), fabs(t_yaw) < 1.5 );
-      if( m_shooter->IsAtGoal() && m_arm->IsAtGoal(6_deg) && fabs(t_yaw) < 1.5 ) {
+      DataLogger::GetInstance().SendNT( "ShootNote/Shooter Angle Goal", targetAngle.value() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle Goal", 180 - targetAngle.value() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
+      DataLogger::GetInstance().SendNT( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Target Yaw", t_yaw );
+
+      // fmt::print( "    Arm/Wrist Angles:  atGoal({}), Curr_arm({}), Arm_target({}), Curr_wrist({}), Wrist_target({})\n", 
+      //                 m_arm->IsAtGoal( arm_tolerance ), m_arm->GetArmAngle(), m_shooter->GetShooter_ArmAngle(),
+      //                  m_arm->GetWristAngle(), 180_deg - targetAngle );
+      if( m_shooter->IsAtGoal() && m_arm->IsAtGoal( arm_tolerance ) && fabs(t_yaw) < 1.5 ) {
         fmt::print( "ShootNoteTargeting(), pitch({}), Shooter({}), Arm({}), Wrist({})\n", t_pitch, targetAngle,
-                     m_shooter->GetShooter_ArmAngle(), m_shooter->GetShooter_WristAngle()  );
+                     m_shooter->GetShooter_ArmAngle(), 180_deg - targetAngle  );
         readyToShoot = true;
         m_intake->SpinIntake( -1 );
         spin_start = frc::Timer::GetFPGATimestamp();

@@ -23,5 +23,9 @@ void ChangeWristAngle::End(bool interrupted) {}
 
 // Returns true when the command should end.
 bool ChangeWristAngle::IsFinished() {
-  return units::math::abs(m_wristAngle - m_arm->GetWristAngle()) < 5_deg;
+  bool done = units::math::abs(m_wristAngle - m_arm->GetWristAngle()) < 5_deg;;
+  if( done ) {
+    fmt::print( "ChangeWristAngle::IsFinished() -- DONE...\n");
+  }
+  return done;
 }

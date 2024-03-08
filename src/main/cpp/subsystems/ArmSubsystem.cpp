@@ -132,6 +132,6 @@ units::degree_t ArmSubsystem::GetWristAngle() {
 }
 
 bool ArmSubsystem::IsAtGoal( units::degree_t arm_tol ) {
-    return units::math::abs(m_wristAngle - m_wristGoal.position) < 3_deg &&
+    return units::math::abs(m_wristAngle - m_wristGoal.position) < arm_tol &&
            units::math::abs(m_armAngle - m_armGoal.position) < arm_tol;
 }

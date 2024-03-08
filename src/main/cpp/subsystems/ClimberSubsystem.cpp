@@ -7,7 +7,10 @@
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-ClimberSubsystem::ClimberSubsystem() = default;
+ClimberSubsystem::ClimberSubsystem() {
+    m_climberMotor.SetSmartCurrentLimit(30);
+    m_climberMotor.EnableVoltageCompensation(12);
+};
 
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {

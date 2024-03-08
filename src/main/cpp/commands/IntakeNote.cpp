@@ -26,12 +26,16 @@ void IntakeNote::Execute() {
     beamHasBroken = true;
     isFinished = true;
   }
+  // fmt::print( "   IntakeNote::Execute beam broken {}, isFinished {}\n", m_intake->IsBeamBroken(), isFinished );
 }
 
 // Called once the command ends or is interrupted.
 void IntakeNote::End(bool interrupted) {
-  m_intake->centering = true;
-  m_intake->SpinIntake(0.0);
+  // fmt::print( "   IntakeNote::End interrupted {}\n", interrupted );
+  if(!interrupted) {
+    m_intake->centering = true;
+    m_intake->SpinIntake(0.0);
+  }
 }
 
 // Returns true when the command should end.

@@ -14,8 +14,12 @@ ProfiledDriveToPose::ProfiledDriveToPose(SwerveDriveSubsystem *swerve, frc::Pose
 
 // Called when the command is initially scheduled.
 void ProfiledDriveToPose::Initialize() {
-  m_xSetpoint.position = 0.0_m;
-  m_ySetpoint.position = 0.0_m;
+  // m_xSetpoint.position = m_swerve->GetPose().X();
+  // m_ySetpoint.position = m_swerve->GetPose().Y();
+  // m_omegaSetpoint.position = m_swerve->GetPose().Rotation().Degrees();
+
+  m_xSetpoint.position = 0_m;
+  m_ySetpoint.position = 0_m;
   m_omegaSetpoint.position = 0_deg;
 
   m_xGoal.position = m_targetPose.X();
@@ -27,7 +31,7 @@ void ProfiledDriveToPose::Initialize() {
 
   m_startTime = frc::Timer::GetFPGATimestamp();
 
-  fmt::print( "Initial profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
+  // fmt::print( "Initial profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -41,14 +45,14 @@ void ProfiledDriveToPose::Execute() {
   frc::SmartDashboard::PutNumber( "ProfileVX", m_xSetpoint.velocity.value() );
   frc::SmartDashboard::PutNumber( "ProfileVY", m_ySetpoint.velocity.value() );
 
-  fmt::print( "Profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
+  // fmt::print( "Profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
 
   frc::ChassisSpeeds speeds;
   speeds.vx = m_xSetpoint.velocity;
   speeds.vy = m_ySetpoint.velocity;
   speeds.omega = m_omegaSetpoint.velocity;
 
-  m_swerve->Drive(speeds, false);
+  m_swerve->Drive( speeds, false );
 }
 
 // Called once the command ends or is interrupted.

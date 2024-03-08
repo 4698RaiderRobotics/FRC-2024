@@ -23,18 +23,21 @@ void IntakeSubsystem::Periodic() {
 
     if(centering && IsBeamBroken()) {
             // Start moving the note back out of the intake.
+        // fmt::print("    IntakeSubsystem -- Spitting back out ...\n");
         m_intakeMotor.Set(-0.2);
         isIndexed = false;
     } else if( centering && !IsBeamBroken()) {
-            // Not has been picked up but not indexed.
+            // Note has been picked up but not indexed.
         hasNote = true;
         centering = false;
+        // fmt::print("    IntakeSubsystem -- Picked up note ...\n");
         m_intakeMotor.Set(0.0);
         isIndexed = true;
         m_startPos = GetRotations();
         m_intakeMotor.Set(0.2);
     } else if(isIndexed && GetRotations() - m_startPos > 1.5) {
             // Note has been backed out to the resting position.
+        // fmt::print("    IntakeSubsystem -- Note is in resting position...\n");
         isIndexed = false;
         m_intakeMotor.Set(0.0);
     }
@@ -44,6 +47,7 @@ void IntakeSubsystem::SpinIntake(double speed) {
     if(hasNote) {
         hasNote = false;
     }
+    // fmt::print("    IntakeSubsystem -- Set Speed to {}...\n", speed );
     m_intakeMotor.Set(speed);
 }
 
