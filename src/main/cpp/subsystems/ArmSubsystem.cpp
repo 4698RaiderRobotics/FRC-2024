@@ -31,7 +31,7 @@ ArmSubsystem::ArmSubsystem() {
 
     ctre::phoenix6::configs::CANcoderConfiguration armAbsoluteEncoderConfigs{};
     armAbsoluteEncoderConfigs.MagnetSensor.SensorDirection = true;
-    armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = physical::kArmAbsoluteOffset;
+    armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = -0.031;
     m_armEncoder.GetConfigurator().Apply(armAbsoluteEncoderConfigs, 50_ms);
 
     m_armMotor.GetConfigurator().Apply(ctre::phoenix6::configs::TalonFXConfiguration{});

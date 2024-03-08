@@ -154,8 +154,8 @@ namespace physical {
     constexpr units::meter_t kElevatorTrapHeight = 0_m;
 
     constexpr double kShooterAbsoluteOffset = -0.342;
-    constexpr double kWristAbsoluteOffset = 0.155;
-    constexpr double kArmAbsoluteOffset = 0.1;
+    constexpr double kWristAbsoluteOffset = 0.032;
+    constexpr double kArmAbsoluteOffset = -0.022;
 
     constexpr units::second_t kDt = 20_ms;
 }
