@@ -32,6 +32,7 @@
 #include "commands/autonomous/TwoPieceMiddleAuto.h"
 #include "commands/autonomous/OnePieceAuto.h"
 #include "commands/autonomous/TwoPieceSideAuto.h"
+#include "commands/autonomous/OnePieceTaxiAuto.h"
 
 RobotContainer::RobotContainer() 
 : m_swerveDrive{&m_vision}, m_intake{&m_leds} {
@@ -95,6 +96,7 @@ RobotContainer::RobotContainer()
   m_chooser.AddOption(kOnePiece, kOnePiece);
   m_chooser.AddOption(kTwoPieceLeft, kTwoPieceLeft);
   m_chooser.AddOption(kTwoPieceRight, kTwoPieceRight);
+  m_chooser.AddOption(kOnePieceTaxi, kOnePieceTaxi);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
@@ -120,9 +122,9 @@ void RobotContainer::ConfigureBindings() {
   // m_operatorController.LeftStick().OnTrue(IntakeNote(&m_intake).ToPtr());
 
   m_operatorController.B().OnTrue(frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in), 
-                                                                        frc2::ParallelCommandGroup(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
-                                                                                                                                ChangeWristAngle(&m_arm, 35_deg)), 
-                                                                                                   frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}))).ToPtr());
+                                                               frc2::ParallelCommandGroup(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
+                                                                                                                       ChangeWristAngle(&m_arm, 35_deg)), 
+                                                                                          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}))).ToPtr());
 
   m_operatorController.A().OnTrue(PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
 
@@ -175,6 +177,8 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
     m_autoCommand = new TwoPieceSideAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, true);
   } else if (m_autoSelected == kTwoPieceRight) {
     m_autoCommand = new TwoPieceSideAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, false);
+  } else if (m_autoSelected == kOnePieceTaxi) {
+    m_autoCommand = new OnePieceTaxiAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
   }
 
   return m_autoCommand;

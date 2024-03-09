@@ -37,6 +37,7 @@ class RobotContainer {
   const std::string kOnePiece = "One Piece Auto";
   const std::string kTwoPieceLeft = "Two Piece Left Auto";
   const std::string kTwoPieceRight = "Two Piece Right Auto";
+  const std::string kOnePieceTaxi = "One Piece Taxi Auto";
   std::string m_autoSelected;
 
   LEDSubsystem m_leds;
