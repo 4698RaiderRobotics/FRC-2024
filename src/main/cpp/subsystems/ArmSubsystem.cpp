@@ -10,7 +10,7 @@
 ArmSubsystem::ArmSubsystem() {
     ctre::phoenix6::configs::CANcoderConfiguration wristAbsoluteEncoderConfigs{};
     wristAbsoluteEncoderConfigs.MagnetSensor.SensorDirection = true;
-    wristAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = -0.007;
+    wristAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = 0.314;
     m_wristEncoder.GetConfigurator().Apply(wristAbsoluteEncoderConfigs, 50_ms);
 
     m_wristMotor.GetConfigurator().Apply(ctre::phoenix6::configs::TalonFXConfiguration{});
@@ -31,7 +31,7 @@ ArmSubsystem::ArmSubsystem() {
 
     ctre::phoenix6::configs::CANcoderConfiguration armAbsoluteEncoderConfigs{};
     armAbsoluteEncoderConfigs.MagnetSensor.SensorDirection = true;
-    armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = -0.066;
+    armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = -0.243;
     m_armEncoder.GetConfigurator().Apply(armAbsoluteEncoderConfigs, 50_ms);
 
     m_armMotor.GetConfigurator().Apply(ctre::phoenix6::configs::TalonFXConfiguration{});

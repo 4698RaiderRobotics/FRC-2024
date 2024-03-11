@@ -150,8 +150,8 @@ void RobotContainer::ConfigureBindings() {
 
   // m_operatorController.RightTrigger().OnTrue(ChangeClimberHeight(&m_climber, 10).ToPtr());
 
-  // m_operatorController.Y().OnTrue(frc2::InstantCommand([this] {m_intake.SpinIntake(-1);}, {&m_intake}).ToPtr())
-  //                         .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
+   frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kCross).OnTrue(frc2::InstantCommand([this] {m_intake.SpinIntake(-1);}, {&m_intake}).ToPtr())
+                          .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
 
   // frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kCircle).WhileTrue(frc2::RunCommand([this] {m_elevator.NudgeHeight(0.1_in);}, {&m_elevator}).ToPtr());
 

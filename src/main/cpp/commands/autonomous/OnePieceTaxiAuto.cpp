@@ -16,6 +16,6 @@ OnePieceTaxiAuto::OnePieceTaxiAuto(SwerveDriveSubsystem* swerve, ShooterSubsyste
   // AddCommands(FooCommand{}, BarCommand{});
   AddCommands(
     ShootNoteTargeting(swerve, shooter, intake, arm, vision),
-    ProfiledDriveToPose(swerve, {1_m, 0_m, 0_deg})
+    ProfiledDriveToPose(swerve, {0_m, -0.5_m, 0_deg})
   );
 }
