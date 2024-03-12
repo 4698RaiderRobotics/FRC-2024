@@ -28,7 +28,7 @@ void VisionSubsystem::Periodic() {
 }
 
 std::pair<frc::Pose2d, units::second_t> VisionSubsystem::GetGlobalEstimatedPose() {
-    if( m_result.HasTargets() ) {
+    if( m_result.HasTargets() && m_result.GetBestTarget().GetBestCameraToTarget().Translation().Norm() < 3_m) {
         auto pose = m_robotPoseEstimator->Update( m_result );
         // fmt::print( "robotPoseEstimator pose {} {} -- {}\n", pose->estimatedPose.ToPose2d().X(), 
         //                                                      pose->estimatedPose.ToPose2d().Y(), 

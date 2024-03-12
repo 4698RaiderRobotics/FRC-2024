@@ -74,7 +74,7 @@ namespace deviceIDs {
 
 namespace physical {
 
-    const frc::Transform3d kRobotToCam = frc::Transform3d(frc::Translation3d(-0.5_m, 0_m, 0.25_m), frc::Rotation3d(0_deg, -35_deg, 180_deg));
+    const frc::Transform3d kRobotToCam = frc::Transform3d(frc::Translation3d(-0.23_m, 0.042_m, 0.25_m), frc::Rotation3d(0_deg, -35_deg, 180_deg));
 
     // Maximum velocity for the shooter angle TrapezoidProfile
     constexpr units::degrees_per_second_t kShooterMaxSpeed = 360_deg_per_s;

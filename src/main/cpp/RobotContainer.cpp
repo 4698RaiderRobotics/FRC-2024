@@ -13,6 +13,8 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include <pathplanner/lib/auto/NamedCommands.h>
+
 #include "commands/SpinShooter.h"
 #include "commands/ChangeShooterAngle.h"
 #include "commands/ChangeArmAngle.h"
@@ -36,6 +38,14 @@
 
 RobotContainer::RobotContainer() 
 : m_swerveDrive{&m_vision}, m_intake{&m_leds} {
+
+  pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
+  pathplanner::NamedCommands::registerCommand("shootNoteTargeting", frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
+                                                                         frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
+                                                                                                      ChangeWristAngle(&m_arm, 35_deg)),  
+                                                                         ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_vision, &vx_axis, &vy_axis )).ToPtr());
+
+
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
     [this] {
       m_swerveDrive.ArcadeDrive(vx_axis.GetAxis(), vy_axis.GetAxis(), omega_axis.GetAxis());
@@ -163,7 +173,7 @@ void RobotContainer::ConfigureBindings() {
   //                                                                                 .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
 }
 
-frc2::Command* RobotContainer::GetAutonomousCommand() {
+frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   delete m_autoCommand;
   m_autoCommand = nullptr;
 
@@ -181,5 +191,7 @@ frc2::Command* RobotContainer::GetAutonomousCommand() {
     m_autoCommand = new OnePieceTaxiAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
   }
 
-  return m_autoCommand;
+  frc2::CommandPtr m_auto = pathplanner::AutoBuilder::buildAuto("AmpThreePieceCenter");
+
+  return m_auto;
 }

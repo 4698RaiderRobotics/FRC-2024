@@ -77,6 +77,33 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(VisionSubsystem *ll)
     fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
     deployDirectory = deployDirectory / "output" / "Example Trajectory.wpilib.json";
     exampleTraj = frc::TrajectoryUtil::FromPathweaverJson(deployDirectory.string());
+
+    pathplanner::AutoBuilder::configureHolonomic(
+        [this](){ return GetPose(); },
+        [this](frc::Pose2d pose){ ResetGyro(pose.Rotation().Degrees()); ResetPose(pose); frc::Pose2d p = GetPose(); 
+                                    fmt::print("Reset pose: {}, {}, {}\n", p.X(), p.Y(), p.Rotation().Degrees()); },
+        [this](){frc::ChassisSpeeds s = GetRobotRelativeSpeeds(); fmt::print("Robot Relative Speeds: {}, {}, {}", s.vx, s.vy, s.omega); return s;},
+        [this](frc::ChassisSpeeds speeds){ fmt::print("Target Speeds: {}, {}, {}", speeds.vx, speeds.vy, speeds.omega); Drive(speeds, false); },
+        pathplanner::HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            pathplanner::PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            pathplanner::PIDConstants(4.0, 0.0, 0.0), // Rotation PID constants
+            1.0_mps, // Max module speed, in m/s
+            0.61_m, // Drive base radius in meters. Distance from robot center to furthest module.
+            pathplanner::ReplanningConfig() // Default path replanning config. See the API for the options here
+        ),
+        []() {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            auto alliance = frc::DriverStation::GetAlliance();
+            if (alliance.has_value()) {
+                return alliance.value() == frc::DriverStation::Alliance::kRed;
+            }
+            return false;
+        },
+        this
+    );
 }
 
 // ArcadeDrive drives with joystick inputs
@@ -96,10 +123,17 @@ void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double
 }
 
 void SwerveDriveSubsystem::Drive( frc::ChassisSpeeds speeds, bool fieldRelative ) {
+    if(fieldRelative) {
+        m_robotRelativeSpeeds = speeds.FromFieldRelativeSpeeds(speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue());
+    } else {
+        m_robotRelativeSpeeds = speeds;
+    }
+
     // An array of SwerveModuleStates computed from the ChassisSpeeds object
-    m_desiredStates = m_kinematics.ToSwerveModuleStates( fieldRelative ? speeds.FromFieldRelativeSpeeds( 
-                    speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue() ) :
-                    speeds );
+    // m_desiredStates = m_kinematics.ToSwerveModuleStates( fieldRelative ? speeds.FromFieldRelativeSpeeds( 
+    //                 speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue() ) :
+    //                 speeds );
+    m_desiredStates = m_kinematics.ToSwerveModuleStates( m_robotRelativeSpeeds );
     m_kinematics.DesaturateWheelSpeeds( &m_desiredStates, swerve::physical::kMaxDriveSpeed );
 }
 
@@ -200,6 +234,10 @@ frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() 
     m_field.SetRobotPose(GetPose());
 }
 
+frc::ChassisSpeeds SwerveDriveSubsystem::GetRobotRelativeSpeeds() {
+    return m_robotRelativeSpeeds;
+}
+
 // Returns the pose2d of the robot
 frc::Pose2d SwerveDriveSubsystem::GetPose( void ) {
     return m_odometry.GetEstimatedPosition();
@@ -211,14 +249,14 @@ void SwerveDriveSubsystem::ResetGyro( units::degree_t angle ) {
 }
 
 // Resets the pose to a position
-void SwerveDriveSubsystem::ResetPose( frc::Translation2d position ) {
+void SwerveDriveSubsystem::ResetPose( frc::Pose2d pose ) {
     m_odometry.ResetPosition(
         m_gyro.GetYaw().GetValue(),
         {
             m_modules[0].GetPosition(),  m_modules[1].GetPosition(), 
             m_modules[2].GetPosition(),  m_modules[3].GetPosition() 
         },
-        frc::Pose2d{ position.X(), position.Y(), m_gyro.GetYaw().GetValue() }
+        frc::Pose2d{ pose.X(), pose.Y(), m_gyro.GetYaw().GetValue() }
     );
 }
 

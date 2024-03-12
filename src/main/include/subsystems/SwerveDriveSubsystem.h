@@ -19,6 +19,11 @@
 #include <units/time.h>
 using namespace units::literals;
 
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
+#include <pathplanner/lib/util/PIDConstants.h>
+#include <pathplanner/lib/util/ReplanningConfig.h>
+
 #include "SwerveModule.h"
 #include "SwerveModuleDisplay.h"
 #include "subsystems/VisionSubsystem.h"
@@ -37,11 +42,13 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
     void Periodic( void );
 
+    frc::ChassisSpeeds GetRobotRelativeSpeeds();
+
     frc::Pose2d GetPose( void );
 
     void ResetGyro( units::degree_t angle );
 
-    void ResetPose( frc::Translation2d position );
+    void ResetPose( frc::Pose2d pose );
 
     void StartLogging( wpi::log::DataLog& log );
 
@@ -65,6 +72,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
     frc::SwerveDriveKinematics<4> m_kinematics;
     frc::SwerveDrivePoseEstimator<4> m_odometry;
+
+    frc::ChassisSpeeds m_robotRelativeSpeeds;
 
     // Drive controller for driving a trajectory
     frc::HolonomicDriveController m_controller;

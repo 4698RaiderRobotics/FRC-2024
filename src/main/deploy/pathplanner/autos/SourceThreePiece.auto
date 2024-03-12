@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7820469694993443,
+      "y": 4.354255194996877
+    },
+    "rotation": -60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartSourceToBottom"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomToMiddle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

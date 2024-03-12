@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.717334047280707,
+      "y": 6.730143910738272
+    },
+    "rotation": 60.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartAmpToTop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopToCenter1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center1ToShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
