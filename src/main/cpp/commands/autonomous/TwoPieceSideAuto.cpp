@@ -28,9 +28,9 @@ TwoPieceSideAuto::TwoPieceSideAuto(SwerveDriveSubsystem* swerve, ShooterSubsyste
   }
 
   AddCommands(
-    ShootNoteTargeting(swerve, shooter, intake, arm, vision),
+    ShootNoteTargeting(swerve, shooter, intake, arm, elevator, vision),
     frc2::ParallelCommandGroup(ProfiledDriveToPose(swerve, targetPose), PickUpNote(swerve, intake, arm, elevator)),
     ProfiledDriveToPose(swerve, negativePose),
-    ShootNoteTargeting(swerve, shooter, intake, arm, vision)
+    ShootNoteTargeting(swerve, shooter, intake, arm, elevator, vision)
   );
 }

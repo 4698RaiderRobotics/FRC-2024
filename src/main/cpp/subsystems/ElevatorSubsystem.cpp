@@ -2,9 +2,11 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include <frc/DriverStation.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+
 #include "subsystems/ElevatorSubsystem.h"
 
-#include <frc/DriverStation.h>
 
 ElevatorSubsystem::ElevatorSubsystem() {
     m_elevatorEncoder.SetPosition(0.0);
@@ -29,6 +31,8 @@ void ElevatorSubsystem::Periodic() {
     double elevatorOutput = m_elevatorPID.Calculate(m_elevatorPosition.value(), m_elevatorSetpoint.position.value());
     double elevatorFFOutput = m_elevatorFeedforward.Calculate(m_elevatorSetpoint.velocity).value();
 
+    frc::SmartDashboard::PutNumber("Elevator Height", m_elevatorPosition.value());
+
     m_elevatorMotor.Set(elevatorOutput + elevatorFFOutput / 12);
 }
 
@@ -46,6 +50,10 @@ void ElevatorSubsystem::NudgeHeight(units::meter_t deltaHeight) {
     if(m_elevatorGoal.position < physical::kElevatorMinHeight) {m_elevatorGoal.position = physical::kElevatorMinHeight;}
 }
 
-units::meter_t ElevatorSubsystem::GetElevatorHeight() {
+units::meter_t ElevatorSubsystem::GetHeight() {
     return m_elevatorPosition;
+}
+
+bool ElevatorSubsystem::IsAtGoal() {
+    return units::math::abs( m_elevatorGoal.position - m_elevatorPosition ) < 1_in;
 }

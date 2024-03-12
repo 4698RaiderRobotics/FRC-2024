@@ -27,7 +27,9 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
 
   void NudgeHeight(units::meter_t deltaHeight);
 
-  units::meter_t GetElevatorHeight();
+  units::meter_t GetHeight();
+
+  bool IsAtGoal();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

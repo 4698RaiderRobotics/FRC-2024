@@ -46,8 +46,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   units::degree_t GetShooter_ArmAngle()
     { return arm_lut.lookup( m_shooterPosition.value() ) * 1_deg; }
-  units::degree_t GetShooter_WristAngle()
-    { return wrist_lut.lookup( m_shooterPosition.value() ) * 1_deg; }
+  units::inch_t GetShooter_ElevatorHeight()
+    { return elev_lut.lookup( m_shooterPosition.value() ) * 1_in; }
 
 
  private:
@@ -88,5 +88,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 //  LUT arm_lut{ {18.0, 26.0, 33.5, 45.0}, {159.0, 155.0, 166, 174.5} };
   // LUT arm_lut{ {18.0, 26.0, 33.5, 45.0}, {156.0, 155.0, 166, 174.5} };
   LUT arm_lut{ {18.0, 26.0, 33.5, 45.0}, {146.0, 143.0, 153, 171.5} };
-  LUT wrist_lut{ {18.0, 26.0, 33.5, 45.0}, {153.0, 152.3, 142.5, 136.3} };
+//  LUT wrist_lut{ {18.0, 26.0, 33.5, 45.0}, {153.0, 152.3, 142.5, 136.3} };
+
+    // Elevator Height (inches) versus shooting angle.
+  LUT elev_lut{ {18.0, 26.0, 33.5, 45.0}, {5.0, 4.0, 2.0, 0.0} };
 };

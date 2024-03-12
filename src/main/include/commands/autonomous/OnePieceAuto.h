@@ -11,6 +11,7 @@
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
 #include "subsystems/ArmSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
 
 class OnePieceAuto
@@ -18,5 +19,5 @@ class OnePieceAuto
                                  OnePieceAuto> {
  public:
   OnePieceAuto(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
-                      ArmSubsystem* arm, VisionSubsystem* vision);
+                      ArmSubsystem* arm, ElevatorSubsystem* elev, VisionSubsystem* vision);
 };

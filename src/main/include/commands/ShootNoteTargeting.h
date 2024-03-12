@@ -15,15 +15,14 @@
 #include "subsystems/ShooterSubsystem.h"
 #include "subsystems/ArmSubsystem.h"
 #include "subsystems/VisionSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
 
 class ShootNoteTargeting
     : public frc2::CommandHelper<frc2::Command, ShootNoteTargeting> {
 public:
   ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
-                      ArmSubsystem* arm, VisionSubsystem* vision);
-
-  ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
-                      ArmSubsystem* arm, VisionSubsystem* vision, ControllerAxis *x_axis, ControllerAxis *y_axis );
+                      ArmSubsystem* arm, ElevatorSubsystem* elev, VisionSubsystem* vision, 
+                      ControllerAxis *x_axis=nullptr, ControllerAxis *y_axis=nullptr );
 
   void Initialize() override;
 
@@ -38,6 +37,7 @@ private:
     ShooterSubsystem* m_shooter;
     IntakeSubsystem* m_intake;
     ArmSubsystem* m_arm;
+    ElevatorSubsystem* m_elev;
     VisionSubsystem* m_vision;
 
     ControllerAxis *m_x_axis;

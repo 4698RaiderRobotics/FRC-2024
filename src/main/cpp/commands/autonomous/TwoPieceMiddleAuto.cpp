@@ -31,12 +31,12 @@ TwoPieceMiddleAuto::TwoPieceMiddleAuto(SwerveDriveSubsystem* swerve, ShooterSubs
     theta = 180_deg;
   }
   AddCommands(
-    ShootNoteTargeting(swerve, shooter, intake, arm, vision),
+    ShootNoteTargeting(swerve, shooter, intake, arm, elevator, vision),
     // frc2::ParallelCommandGroup(frc2::SequentialCommandGroup(frc2::WaitCommand(0.5_s), ProfiledDriveToPose(swerve, {xCoord, 5.5_m, theta})), 
     //                            PickUpNote(swerve, intake, arm, elevator)),
     frc2::ParallelCommandGroup(frc2::SequentialCommandGroup(frc2::WaitCommand(0.5_s), ProfiledDriveToPose(swerve, {1.2_m, 0_m, 0_deg})), 
                                PickUpNote(swerve, intake, arm, elevator)),
     ProfiledDriveToPose(swerve, {-1.2_m, 0_m, 0_deg}),
-    ShootNoteTargeting(swerve, shooter, intake, arm, vision)
+    ShootNoteTargeting(swerve, shooter, intake, arm, elevator, vision)
   );
 }
