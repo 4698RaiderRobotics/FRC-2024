@@ -16,8 +16,8 @@ void VisionSubsystem::Periodic() {
     m_result = m_camera.GetLatestResult();
 
     if( m_result.HasTargets() ) {
-        m_lastestTargetTime = frc::Timer::GetFPGATimestamp();
-        auto camtotarget = m_result.GetBestTarget().GetBestCameraToTarget();
+        m_latestTargetTime = frc::Timer::GetFPGATimestamp();
+        // auto camtotarget = m_result.GetBestTarget().GetBestCameraToTarget();
         // fmt::print("Camera To Target: {}, {}, {}, -- {}, {}, {}\n", camtotarget.X(),camtotarget.Y(), camtotarget.Z(), 
         //                                      camtotarget.Rotation().X().convert<units::degree>().value(), 
         //                                      camtotarget.Rotation().Y().convert<units::degree>().value(),
@@ -42,7 +42,7 @@ std::pair<frc::Pose2d, units::second_t> VisionSubsystem::GetGlobalEstimatedPose(
 
 bool VisionSubsystem::GetAprilTagPosition( int tagID, double &yaw, double &pitch ) {
 //    fmt::print( "Has targets({}), elaspsed time {}\n", m_result.HasTargets(), frc::Timer::GetFPGATimestamp() - m_lastestTargetTime );
-    if( m_result.HasTargets() && frc::Timer::GetFPGATimestamp() - m_lastestTargetTime < 2_s ) {
+    if( m_result.HasTargets() && frc::Timer::GetFPGATimestamp() - m_latestTargetTime < 2_s ) {
         // We have a target that was found within 2 seconds
         auto targets = m_result.GetTargets();
         for( auto target : targets ) {

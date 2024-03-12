@@ -29,7 +29,7 @@ class VisionSubsystem : public frc2::SubsystemBase {
   photon::PhotonCamera m_camera{"ShooterCam"};
   photon::PhotonPoseEstimator *m_robotPoseEstimator;
   photon::PhotonPipelineResult m_result;
-  units::second_t m_lastestTargetTime;
+  units::second_t m_latestTargetTime;
 
  public:
   frc::AprilTagFieldLayout aprilTagFieldLayout;
