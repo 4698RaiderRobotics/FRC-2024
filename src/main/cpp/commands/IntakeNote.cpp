@@ -34,7 +34,7 @@ void IntakeNote::Execute() {
 
 // Called once the command ends or is interrupted.
 void IntakeNote::End(bool interrupted) {
-  DataLogger::GetInstance().Send( "Command/IntakeNote", true );
+  DataLogger::GetInstance().Send( "Command/IntakeNote", false );
 
   // fmt::print( "   IntakeNote::End interrupted {}\n", interrupted );
   if(!interrupted) {
