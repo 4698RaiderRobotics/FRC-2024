@@ -79,7 +79,7 @@ void ShootNoteTargeting::Execute() {
 
     if( dist_to_speaker < 4_m  ) {
       units::degree_t geometryAngle = units::math::atan2( 78_in, dist_to_speaker );
-      units::degree_t shooterAngle = geometryAngle;
+      units::degree_t shooterAngle = geometryAngle - 10_deg;
 
       double t_yaw = pose_to_speaker.Rotation().Degrees().value();
 
@@ -89,10 +89,9 @@ void ShootNoteTargeting::Execute() {
         m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
       }
       m_arm->GoToWristAngle( 180_deg - shooterAngle );
-      m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
 
       if( allowDriving ) {
-        m_drive->ArcadeDrive( m_x_axis->GetAxis(), m_y_axis->GetAxis(), -t_yaw * 0.002 );
+        m_drive->ArcadeDrive( m_x_axis->GetAxis(), m_y_axis->GetAxis(), -t_yaw * 0.02 );
       } else {
         m_drive->ArcadeDrive( 0, 0, -t_yaw * 0.02 );
       }
