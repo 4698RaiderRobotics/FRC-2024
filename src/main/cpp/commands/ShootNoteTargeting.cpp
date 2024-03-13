@@ -126,6 +126,7 @@ void ShootNoteTargeting::End(bool interrupted) {
   m_shooter->GoToAngle( 30_deg );
   m_arm->GoToArmAngle( 170_deg );
   m_arm->GoToWristAngle( 35_deg );
+  m_elev->GoToHeight(0_in);
 }
 
 // Returns true when the command should end.
