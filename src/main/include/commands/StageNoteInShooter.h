@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <frc/geometry/Pose2d.h>
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
@@ -18,10 +17,10 @@
 #include "subsystems/VisionSubsystem.h"
 #include "subsystems/ElevatorSubsystem.h"
 
-class ShootNoteTargeting
-    : public frc2::CommandHelper<frc2::Command, ShootNoteTargeting> {
+class StageNoteInShooter
+    : public frc2::CommandHelper<frc2::Command, StageNoteInShooter> {
 public:
-  ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
+  StageNoteInShooter( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
                       ArmSubsystem* arm, ElevatorSubsystem* elev, VisionSubsystem* vision, 
                       ControllerAxis *x_axis=nullptr, ControllerAxis *y_axis=nullptr );
 
@@ -48,12 +47,12 @@ private:
     bool noTargets;
     bool allowDriving;
 
-    frc::Pose2d targetLocation;
+    int targetingID;
 
     units::second_t spin_start;
 
       // NOTE: Should change to Geometry based calculation.
     // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {18.0, 22.0, 25.0, 45.0}};
-    LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {20.0, 24.0, 27.0, 45.0}};
+    // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {20.0, 24.0, 27.0, 45.0}};
     // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {22.0, 26.0, 29.0, 45.0}};
 };
