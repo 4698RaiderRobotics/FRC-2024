@@ -4,6 +4,8 @@
 
 #include "subsystems/ArmSubsystem.h"
 
+#include "DataLogger.h"
+
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -65,9 +67,15 @@ void ArmSubsystem::Periodic() {
 
     m_armAngle = m_wristAngle - phi;
 
-    frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
+    DataLogger::GetInstance().Send( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
+    DataLogger::GetInstance().Send( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
+    DataLogger::GetInstance().Send( "ArmSubsys/IsATGoal", IsAtGoal() );
+
+    // frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
     // frc::SmartDashboard::PutNumber("Phi", phi.value());
-    frc::SmartDashboard::PutNumber("Arm Angle", m_armAngle.value());
+    // frc::SmartDashboard::PutNumber("Arm Angle", m_armAngle.value());
 
     // frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
     // frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);

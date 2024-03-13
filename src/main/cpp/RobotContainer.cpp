@@ -43,7 +43,8 @@ RobotContainer::RobotContainer()
   pathplanner::NamedCommands::registerCommand("shootNoteTargeting", frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
                                                                          frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
                                                                                                       ChangeWristAngle(&m_arm, 35_deg)),  
-                                                                         ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_vision, &vx_axis, &vy_axis )).ToPtr());
+                                                                         ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
+                                                                                            &m_vision, &vx_axis, &vy_axis )).ToPtr());
 
 
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
@@ -192,7 +193,7 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
     m_autoCommand = new OnePieceTaxiAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
   }
 
-  frc2::CommandPtr m_auto = pathplanner::AutoBuilder::buildAuto("AmpThreePieceCenter");
+  frc2::CommandPtr m_auto = pathplanner::AutoBuilder::buildAuto("SourceFourPiece");
 
   return m_auto;
 }

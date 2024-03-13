@@ -16,5 +16,5 @@ class PickUpNote
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
                                  PickUpNote> {
  public:
-  PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator);
+    PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator);
 };

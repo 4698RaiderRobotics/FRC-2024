@@ -2,6 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include "DataLogger.h"
 #include "commands/autonomous/FollowTrajectory.h"
 
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -14,6 +15,8 @@ FollowTrajectory::FollowTrajectory(SwerveDriveSubsystem *swerve, frc::Trajectory
 
 // Called when the command is initially scheduled.
 void FollowTrajectory::Initialize() {
+  DataLogger::GetInstance().Send( "Command/FollowTrajectory", true );
+
   m_swerve->m_field.GetObject("trajectory")->SetTrajectory(m_trajectory);
   m_autoElapsed = 0_ms;
 }
@@ -32,7 +35,9 @@ void FollowTrajectory::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void FollowTrajectory::End(bool interrupted) {}
+void FollowTrajectory::End(bool interrupted) {
+    DataLogger::GetInstance().Send( "Command/FollowTrajectory", false );
+}
 
 // Returns true when the command should end.
 bool FollowTrajectory::IsFinished() {

@@ -36,10 +36,11 @@ ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSub
 
 // Called when the command is initially scheduled.
 void ShootNoteTargeting::Initialize() {
+  DataLogger::GetInstance().Send( "Command/ShootNoteTargeting", true );
+
     // Start the shooter motors and move to the correct arm and wrist positions.
   m_shooter->Spin( 2000_rpm );
   // m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
-      m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
       m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle() );
 
   fmt::print("Setting Arm / Wrist / Elevator to {}/{}/{}\n", 
@@ -72,10 +73,11 @@ void ShootNoteTargeting::Execute() {
 
       m_shooter->GoToAngle( targetAngle );
       if( m_arm->GetWristAngle() > 80_deg ) {
-         m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
+        m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
+        m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
       }
       m_arm->GoToWristAngle( 180_deg - targetAngle );
-      m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
+      
 
       if( allowDriving ) {
         m_drive->ArcadeDrive( m_x_axis->GetAxis(), m_y_axis->GetAxis(), -t_yaw * 0.02 );
@@ -120,6 +122,7 @@ void ShootNoteTargeting::Execute() {
 
 // Called once the command ends or is interrupted.
 void ShootNoteTargeting::End(bool interrupted) {
+  DataLogger::GetInstance().Send( "Command/ShootNoteTargeting", false );
 
   fmt::print( "ShootNoteTargeting::End interrupted({}), noTargets({})\n", interrupted, noTargets );
   m_shooter->Spin( 0_rpm );

@@ -2,10 +2,11 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "subsystems/ShooterSubsystem.h"
-
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+
+#include "DataLogger.h"
+#include "subsystems/ShooterSubsystem.h"
 
 ShooterSubsystem::ShooterSubsystem() {
     m_topShooterMotor.SetInverted(true);
@@ -30,7 +31,8 @@ ShooterSubsystem::ShooterSubsystem() {
 void ShooterSubsystem::Periodic() {
     m_shooterPosition = m_shooterAngleEncoder.GetPosition().GetValueAsDouble() * 360_deg;
 
-    frc::SmartDashboard::PutNumber("Shooter Position", m_shooterPosition.value());
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/Angle", m_shooterPosition.value() );
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/Speed", m_topEncoder.GetVelocity() );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_shooterSetpoint.position = m_shooterPosition;

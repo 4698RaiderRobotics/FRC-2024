@@ -24,17 +24,7 @@ class DataLogger {
       // delete copy constructor
     DataLogger(const DataLogger& obj) = delete; 
 
-    static DataLogger& GetInstance() {
-            // If there is no instance of class
-            // then we can create an instance.
-      if (singleton == nullptr)  {
-        singleton = new DataLogger();
-        singleton->log = &frc::DataLogManager::GetLog();
-        singleton->nt_inst = nt::NetworkTableInstance::GetDefault();
-      }
-            
-      return *singleton;
-    }
+    static DataLogger& GetInstance();
 
     void Send( std::string_view s, double val );
     void Send( std::string_view s, std::span<const double> a );
@@ -44,6 +34,8 @@ class DataLogger {
 
     void SendNT( std::string s, double val );
     void SendNT( std::string s, std::span<const double> a );
+
+    void SendCmdMessage( std::string_view cmd_name, std::string_view val );
 
     void LogMetadata( void );
 

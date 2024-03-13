@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include "DataLogger.h"
+
 #include "commands/PickUpNote.h"
 
 #include "Constants.h"
@@ -19,6 +21,10 @@
 PickUpNote::PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator) {
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
+
+  frc::DataLogManager::Log( "Command PickUpNote executing..." );
+  DataLogger::GetInstance().SendCmdMessage( "PickUpNote", "executing..." );
+
   AddCommands(
     // Limelight data
     // Drive to note

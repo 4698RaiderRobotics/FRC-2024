@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.717334047280707,
-        "y": 6.730143910738272
+        "x": 0.7543128599770712,
+        "y": 6.757878020260545
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.1518350964629855,
-        "y": 7.044463818657367
+        "x": 1.1888139091593497,
+        "y": 7.07219792817964
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AmpStarting"
     },
     {
       "anchor": {
@@ -67,7 +67,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Starting Paths",
   "previewStartingState": {
     "rotation": 60.0,
     "velocity": 0

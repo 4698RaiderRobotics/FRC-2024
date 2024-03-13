@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.717334047280707,
-      "y": 6.730143910738272
+      "x": 0.7450681568029801,
+      "y": 4.345010491822786
     },
-    "rotation": 60.0
+    "rotation": -60.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartAmpToTop"
+            "pathName": "StartSourceToBottom"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "TopToMiddle"
+            "pathName": "BottomToMiddle"
           }
         },
         {
@@ -44,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToBottom"
+            "pathName": "MiddleToTop"
           }
         },
         {
@@ -56,6 +56,6 @@
       ]
     }
   },
-  "folder": "Amp Side",
+  "folder": "Source Side",
   "choreoAuto": false
 }

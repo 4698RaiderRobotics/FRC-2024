@@ -2,9 +2,10 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "commands/IntakeNote.h"
-
 #include <frc/Timer.h>
+
+#include "DataLogger.h"
+#include "commands/IntakeNote.h"
 
 IntakeNote::IntakeNote(IntakeSubsystem* intake)
  : m_intake{intake} {
@@ -14,6 +15,8 @@ IntakeNote::IntakeNote(IntakeSubsystem* intake)
 
 // Called when the command is initially scheduled.
 void IntakeNote::Initialize() {
+  DataLogger::GetInstance().Send( "Command/IntakeNote", true );
+
   m_intake->SpinIntake(physical::kIntakeSpeed);
   m_startTime = frc::Timer::GetFPGATimestamp();
   beamHasBroken = false;
@@ -31,6 +34,8 @@ void IntakeNote::Execute() {
 
 // Called once the command ends or is interrupted.
 void IntakeNote::End(bool interrupted) {
+  DataLogger::GetInstance().Send( "Command/IntakeNote", true );
+
   // fmt::print( "   IntakeNote::End interrupted {}\n", interrupted );
   if(!interrupted) {
     m_intake->centering = true;

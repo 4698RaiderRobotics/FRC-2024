@@ -5,6 +5,7 @@
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "DataLogger.h"
 #include "subsystems/ElevatorSubsystem.h"
 
 
@@ -14,6 +15,10 @@ ElevatorSubsystem::ElevatorSubsystem() {
 
 // This method will be called once per scheduler run
 void ElevatorSubsystem::Periodic() {
+    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Height", m_elevatorPosition.value() );
+    DataLogger::GetInstance().Send( "ElevatorSubsys/Goal Height", m_elevatorGoal.position.value() );
+    DataLogger::GetInstance().Send( "ElevatorSubsys/IsAtGoal", IsAtGoal() );
+
     m_elevatorPosition = m_elevatorEncoder.GetPosition() / 15.0 * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
 
     if (frc::DriverStation::IsDisabled()) {

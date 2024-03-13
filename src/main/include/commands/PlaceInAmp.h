@@ -16,5 +16,5 @@ class PlaceInAmp
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
                                  PlaceInAmp> {
  public:
-  PlaceInAmp(SwerveDriveSubsystem* swerveDrive, ElevatorSubsystem* elevator, IntakeSubsystem* intake, ArmSubsystem* arm);
+    PlaceInAmp(SwerveDriveSubsystem* swerveDrive, ElevatorSubsystem* elevator, IntakeSubsystem* intake, ArmSubsystem* arm);
 };

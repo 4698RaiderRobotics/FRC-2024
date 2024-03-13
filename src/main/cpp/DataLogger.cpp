@@ -13,6 +13,18 @@
 
 DataLogger* DataLogger::singleton = nullptr; 
 
+DataLogger& DataLogger::GetInstance() {
+        // If there is no instance of class
+        // then we can create an instance.
+    if (singleton == nullptr)  {
+    singleton = new DataLogger();
+    singleton->log = &frc::DataLogManager::GetLog();
+    singleton->nt_inst = nt::NetworkTableInstance::GetDefault();
+    }
+        
+    return *singleton;
+}
+
 void DataLogger::Send( std::string_view s, double val ) { 
     wpi::log::DoubleLogEntry le{ *(log), s };
     le.Append( val );
@@ -50,6 +62,19 @@ void DataLogger::SendNT( std::string s, std::span<const double> a ) {
         nt_map[s] = nt_inst.GetDoubleArrayTopic( s ).GenericPublish( "double" );
     }
     nt_map[s].SetDoubleArray( a );
+}
+
+void DataLogger::SendCmdMessage( std::string_view cmd_name, std::string_view s ) {
+    std::string id = "Seq_Commands/";
+    id += cmd_name;
+
+    std::string mesg = "";
+    mesg += cmd_name;
+    mesg += " -- ";
+    mesg += s;
+
+    wpi::log::StringLogEntry le{ *(log), id };
+    le.Append( mesg );
 }
 
 void DataLogger::LogMetadata( void ) {

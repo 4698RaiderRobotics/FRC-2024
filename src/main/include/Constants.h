@@ -128,7 +128,7 @@ namespace physical {
     constexpr units::degree_t kShooterPodiumAngle = 22_deg;
 
     // Angle for the wrist to pick up off the ground
-    constexpr units::degree_t kWristGroundPickUpAngle = -30_deg;
+    constexpr units::degree_t kWristGroundPickUpAngle = -35_deg;
     // Angle for the arm to pick up off the ground
     constexpr units::degree_t kArmGroundPickUpAngle = -8_deg;
 

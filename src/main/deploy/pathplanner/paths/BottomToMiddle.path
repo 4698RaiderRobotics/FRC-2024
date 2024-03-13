@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.35364650909482,
-        "y": 4.095403506122328
+        "x": 2.4276041344875483,
+        "y": 4.132382318818692
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.171922058129831,
-        "y": 4.559091403897094
+        "x": 2.2458796835225594,
+        "y": 4.596070216593458
       },
       "isLocked": false,
       "linkedName": "BottomPickUp"
@@ -25,12 +25,17 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MiddleBottomPickUp"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
+      "rotationDegrees": 40.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.95,
       "rotationDegrees": 40.0,
       "rotateFast": false
     }
@@ -39,7 +44,7 @@
   "eventMarkers": [
     {
       "name": "Pick Up",
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -57,13 +62,13 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 40.0,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,
@@ -72,5 +77,5 @@
     "rotation": -45.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

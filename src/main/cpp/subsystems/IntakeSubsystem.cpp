@@ -4,6 +4,8 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "DataLogger.h"
+
 #include "subsystems/IntakeSubsystem.h"
 
 IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds)
@@ -13,7 +15,9 @@ IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds)
 
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
-    frc::SmartDashboard::PutBoolean( "Beam Broken", IsBeamBroken() );
+
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/BeamBroken", IsBeamBroken() );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Speed", m_intakeMotor.Get() );
 
     if(hasNote) {
         m_leds->SetColor(0, 255, 0);

@@ -4,6 +4,8 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "DataLogger.h"
+
 #include "commands/ProfiledDriveToPose.h"
 
 ProfiledDriveToPose::ProfiledDriveToPose(SwerveDriveSubsystem *swerve, frc::Pose2d targetPose) 
@@ -14,6 +16,8 @@ ProfiledDriveToPose::ProfiledDriveToPose(SwerveDriveSubsystem *swerve, frc::Pose
 
 // Called when the command is initially scheduled.
 void ProfiledDriveToPose::Initialize() {
+  DataLogger::GetInstance().Send( "Command/ProfiledDriveToPose", true );
+
   // m_xSetpoint.position = m_swerve->GetPose().X();
   // m_ySetpoint.position = m_swerve->GetPose().Y();
   // m_omegaSetpoint.position = m_swerve->GetPose().Rotation().Degrees();
@@ -58,6 +62,7 @@ void ProfiledDriveToPose::Execute() {
 // Called once the command ends or is interrupted.
 void ProfiledDriveToPose::End(bool interrupted) {
   fmt::print( "   ProfiledDriveToPose::End() interrupted {}\n", interrupted );
+  DataLogger::GetInstance().Send( "Command/ProfiledDriveToPose", false );
 }
 
 // Returns true when the command should end.
