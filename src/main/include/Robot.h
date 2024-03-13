@@ -10,9 +10,10 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc/PowerDistribution.h>
 
+#include "LoggedRobot.h"
 #include "RobotContainer.h"
 
-class Robot : public frc::TimedRobot {
+class Robot : public LoggedRobot {
  public:
   void RobotInit() override;
   void RobotPeriodic() override;
@@ -34,6 +35,6 @@ class Robot : public frc::TimedRobot {
 
   RobotContainer m_container;
 
-  frc::PowerDistribution m_pdp{ 1, frc::PowerDistribution::ModuleType::kRev };
+//  frc::PowerDistribution m_pdp{ 1, frc::PowerDistribution::ModuleType::kRev };
 
 };
