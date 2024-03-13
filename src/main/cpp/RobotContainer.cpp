@@ -23,6 +23,7 @@
 #include "commands/PickUpNote.h"
 #include "commands/ShootNote.h"
 #include "commands/ShootNoteTargeting.h"
+#include "commands/StageNoteInShooter.h"
 #include "commands/PlaceInAmp.h"
 #include "commands/ProfiledDriveToPose.h"
 #include "commands/ChangeClimberHeight.h"
@@ -127,6 +128,12 @@ void RobotContainer::ConfigureBindings() {
                                                                          frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
                                                                                                       ChangeWristAngle(&m_arm, 35_deg)),  
                                                                          ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
+                                                                                           &m_vision, &vx_axis, &vy_axis )).ToPtr());
+
+ (m_operatorController.RightBumper() && m_operatorController.LeftStick()).OnTrue(frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
+                                                                         frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
+                                                                                                      ChangeWristAngle(&m_arm, 35_deg)),  
+                                                                         StageNoteInShooter(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
                                                                                            &m_vision, &vx_axis, &vy_axis )).ToPtr());
 
   // m_operatorController.RightStick().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 140_deg)).ToPtr());
