@@ -125,7 +125,8 @@ void RobotContainer::ConfigureBindings() {
   m_operatorController.RightBumper().OnTrue(frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
                                                                          frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
                                                                                                       ChangeWristAngle(&m_arm, 35_deg)),  
-                                                                         ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_vision, &vx_axis, &vy_axis )).ToPtr());
+                                                                         ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
+                                                                                           &m_vision, &vx_axis, &vy_axis )).ToPtr());
 
   // m_operatorController.RightStick().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 140_deg)).ToPtr());
   
@@ -182,7 +183,7 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   if (m_autoSelected == kTwoPieceMiddle) {
     m_autoCommand = new TwoPieceMiddleAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
   } else if (m_autoSelected == kOnePiece) {
-    m_autoCommand = new OnePieceAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_vision);
+    m_autoCommand = new OnePieceAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
   } else if (m_autoSelected == kTwoPieceLeft) {
     m_autoCommand = new TwoPieceSideAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, true);
   } else if (m_autoSelected == kTwoPieceRight) {

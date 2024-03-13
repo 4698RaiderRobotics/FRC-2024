@@ -19,28 +19,19 @@
 
 #include "DataLogger.h"
 
-
 ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, 
-                      IntakeSubsystem* intake, ArmSubsystem* arm, 
-                      VisionSubsystem* vision) :
-                      m_drive{swerve}, m_shooter{shooter}, m_intake{intake}, m_arm{arm}, m_vision{vision}
-{
-  allowDriving = false;
-  m_x_axis = nullptr;
-  m_y_axis = nullptr;
-
-  AddRequirements({m_drive, m_shooter, m_intake, m_arm, m_vision});
-}
-
-ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, 
-                      IntakeSubsystem* intake, ArmSubsystem* arm, 
+                      IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem* elev, 
                       VisionSubsystem* vision, ControllerAxis *x_axis, ControllerAxis *y_axis ) :
-                      m_drive{swerve}, m_shooter{shooter}, m_intake{intake}, m_arm{arm}, m_vision{vision}
+                      m_drive{swerve}, m_shooter{shooter}, m_intake{intake}, m_arm{arm}, m_elev{elev},
+                      m_vision{vision}, m_x_axis{x_axis}, m_y_axis{y_axis}
 {
-  allowDriving = true;
-  m_x_axis = x_axis;
-  m_y_axis = y_axis;
-  AddRequirements({m_drive, m_shooter, m_intake, m_arm, m_vision});
+  if( x_axis != nullptr ) {
+    allowDriving = true;
+  } else {
+    allowDriving = false;
+  }
+
+  AddRequirements({m_drive, m_shooter, m_intake, m_arm, m_elev, m_vision});
 }
 
 // Called when the command is initially scheduled.
@@ -48,10 +39,12 @@ void ShootNoteTargeting::Initialize() {
     // Start the shooter motors and move to the correct arm and wrist positions.
   m_shooter->Spin( 2000_rpm );
   // m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
-      // m_arm->GoToWristAngle( m_shooter->GetShooter_WristAngle() );
+      m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
       m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle() );
 
-  fmt::print("Setting Arm / Wrist to {}/{}\n",  m_shooter->GetShooter_ArmAngle(), m_shooter->GetShooter_WristAngle() );
+  fmt::print("Setting Arm / Wrist / Elevator to {}/{}/{}\n", 
+              m_shooter->GetShooter_ArmAngle(), 180_deg - m_shooter->GetAngle(), 
+              m_shooter->GetShooter_ElevatorHeight() );
 
   if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
     targetingID = 4;
@@ -81,8 +74,8 @@ void ShootNoteTargeting::Execute() {
       if( m_arm->GetWristAngle() > 80_deg ) {
          m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
       }
-      // m_arm->GoToWristAngle( m_shooter->GetShooter_WristAngle() );
       m_arm->GoToWristAngle( 180_deg - targetAngle );
+      m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
 
       if( allowDriving ) {
         m_drive->ArcadeDrive( m_x_axis->GetAxis(), m_y_axis->GetAxis(), -t_yaw * 0.02 );
@@ -96,8 +89,10 @@ void ShootNoteTargeting::Execute() {
       DataLogger::GetInstance().SendNT( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
       DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle Goal", 180 - targetAngle.value() );
       DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Elevator Height", m_elev->GetHeight().value() );
       DataLogger::GetInstance().SendNT( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
       DataLogger::GetInstance().SendNT( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
+      DataLogger::GetInstance().SendNT( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
       DataLogger::GetInstance().SendNT( "ShootNote/Target Yaw", t_yaw );
 
       // fmt::print( "    Arm/Wrist Angles:  atGoal({}), Curr_arm({}), Arm_target({}), Curr_wrist({}), Wrist_target({})\n", 
@@ -131,6 +126,7 @@ void ShootNoteTargeting::End(bool interrupted) {
   m_shooter->GoToAngle( 30_deg );
   m_arm->GoToArmAngle( 170_deg );
   m_arm->GoToWristAngle( 35_deg );
+  m_elev->GoToHeight(0_in);
 }
 
 // Returns true when the command should end.

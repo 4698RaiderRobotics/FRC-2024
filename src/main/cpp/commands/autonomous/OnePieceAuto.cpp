@@ -10,10 +10,10 @@
 // For more information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 OnePieceAuto::OnePieceAuto(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
-                      ArmSubsystem* arm, VisionSubsystem* vision) {
+                      ArmSubsystem* arm, ElevatorSubsystem* elev, VisionSubsystem* vision) {
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
   AddCommands(
-    ShootNoteTargeting(swerve, shooter, intake, arm, vision)
+    ShootNoteTargeting(swerve, shooter, intake, arm, elev, vision)
   );
 }
