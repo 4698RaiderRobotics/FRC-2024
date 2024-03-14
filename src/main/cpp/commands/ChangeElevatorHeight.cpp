@@ -4,17 +4,15 @@
 
 #include "commands/ChangeElevatorHeight.h"
 
-#include "DataLogger.h"
-
 ChangeElevatorHeight::ChangeElevatorHeight(ElevatorSubsystem* elevator, units::meter_t height)
  : m_elevator{elevator}, m_height{height} {
+  SetName( "ChangeElevatorHeight" );
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements({elevator});
 }
 
 // Called when the command is initially scheduled.
-void ChangeElevatorHeight::Initialize() {
-  DataLogger::GetInstance().Send( "Command/ChangeElevatorHeight", true );
+void ChangeElevatorHeight::Init() {
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -23,8 +21,7 @@ void ChangeElevatorHeight::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void ChangeElevatorHeight::End(bool interrupted) {
-    DataLogger::GetInstance().Send( "Command/ChangeElevatorHeight", false );
+void ChangeElevatorHeight::HasEnded(bool interrupted) {
 }
 
 // Returns true when the command should end.

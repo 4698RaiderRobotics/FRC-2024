@@ -11,6 +11,7 @@
 #include "LUT.h"
 #include "ControllerAxis.h"
 
+#include "LoggedCommand.h"
 #include "subsystems/SwerveDriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ShooterSubsystem.h"
@@ -19,17 +20,17 @@
 #include "subsystems/ElevatorSubsystem.h"
 
 class ShootNoteTargeting
-    : public frc2::CommandHelper<frc2::Command, ShootNoteTargeting> {
+    : public frc2::CommandHelper<LoggedCommand, ShootNoteTargeting> {
 public:
   ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
                       ArmSubsystem* arm, ElevatorSubsystem* elev, VisionSubsystem* vision, 
                       ControllerAxis *x_axis=nullptr, ControllerAxis *y_axis=nullptr );
 
-  void Initialize() override;
+  void Init() override;
 
   void Execute() override;
 
-  void End(bool interrupted) override;
+  void HasEnded(bool interrupted) override;
 
   bool IsFinished() override;
 

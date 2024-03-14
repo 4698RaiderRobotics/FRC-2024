@@ -2,8 +2,6 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "DataLogger.h"
-
 #include "commands/ShootNote.h"
 
 #include "Constants.h"
@@ -26,7 +24,7 @@ ShootNote::ShootNote(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, In
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
 
-  DataLogger::GetInstance().SendCmdMessage( "ShootNote", "executing..." );
+  SetName( "ShootNote" );
 
   AddCommands(
     // AprilTag data

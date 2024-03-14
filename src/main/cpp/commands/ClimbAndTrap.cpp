@@ -8,7 +8,6 @@
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 
-#include "DataLogger.h"
 #include "commands/ChangeArmAngle.h"
 #include "commands/ChangeWristAngle.h"
 #include "commands/ChangeElevatorHeight.h"
@@ -22,8 +21,7 @@ ClimbAndTrap::ClimbAndTrap(ShooterSubsystem* shooter, IntakeSubsystem* intake, C
                       ArmSubsystem* arm, ElevatorSubsystem *elevator) {
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
-
-  DataLogger::GetInstance().SendCmdMessage( "ClimbAndTrap", "executing..." );
+  SetName( "ClimbAndTrap" );
 
   AddCommands(
     Climb(climber),

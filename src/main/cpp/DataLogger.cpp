@@ -64,17 +64,8 @@ void DataLogger::SendNT( std::string s, std::span<const double> a ) {
     nt_map[s].SetDoubleArray( a );
 }
 
-void DataLogger::SendCmdMessage( std::string_view cmd_name, std::string_view s ) {
-    std::string id = "Seq_Commands/";
-    id += cmd_name;
-
-    std::string mesg = "";
-    mesg += cmd_name;
-    mesg += " -- ";
-    mesg += s;
-
-    wpi::log::StringLogEntry le{ *(log), id };
-    le.Append( mesg );
+void DataLogger::Log( std::string s ) {
+    frc::DataLogManager::Log( s );
 }
 
 void DataLogger::LogMetadata( void ) {

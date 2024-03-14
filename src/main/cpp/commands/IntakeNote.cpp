@@ -4,18 +4,17 @@
 
 #include <frc/Timer.h>
 
-#include "DataLogger.h"
 #include "commands/IntakeNote.h"
 
 IntakeNote::IntakeNote(IntakeSubsystem* intake)
  : m_intake{intake} {
+  SetName( "IntakeNote" );
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements({intake});
 }
 
 // Called when the command is initially scheduled.
-void IntakeNote::Initialize() {
-  DataLogger::GetInstance().Send( "Command/IntakeNote", true );
+void IntakeNote::Init() {
 
   m_intake->SpinIntake(physical::kIntakeSpeed);
   m_startTime = frc::Timer::GetFPGATimestamp();
@@ -33,9 +32,7 @@ void IntakeNote::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void IntakeNote::End(bool interrupted) {
-  DataLogger::GetInstance().Send( "Command/IntakeNote", false );
-
+void IntakeNote::HasEnded(bool interrupted) {
   // fmt::print( "   IntakeNote::End interrupted {}\n", interrupted );
   if(!interrupted) {
     m_intake->centering = true;

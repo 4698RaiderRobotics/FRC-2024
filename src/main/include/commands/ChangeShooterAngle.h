@@ -7,6 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
+#include "LoggedCommand.h"
 #include "subsystems/ShooterSubsystem.h"
 
 /**
@@ -18,15 +19,15 @@
  */
 // Updates the setpoint for the shooter's angle
 class ChangeShooterAngle
-    : public frc2::CommandHelper<frc2::Command, ChangeShooterAngle> {
+    : public frc2::CommandHelper<LoggedCommand, ChangeShooterAngle> {
  public:
   ChangeShooterAngle(ShooterSubsystem* shooter, units::degree_t angle);
 
-  void Initialize() override;
+  void Init() override;
 
   void Execute() override;
 
-  void End(bool interrupted) override;
+  void HasEnded(bool interrupted) override;
 
   bool IsFinished() override;
  private:

@@ -7,6 +7,7 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
+#include "LoggedCommand.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ArmSubsystem.h"
 #include "subsystems/SwerveDriveSubsystem.h"

@@ -35,7 +35,7 @@ class DataLogger {
     void SendNT( std::string s, double val );
     void SendNT( std::string s, std::span<const double> a );
 
-    void SendCmdMessage( std::string_view cmd_name, std::string_view val );
+    void Log(  std::string s );
 
     void LogMetadata( void );
 

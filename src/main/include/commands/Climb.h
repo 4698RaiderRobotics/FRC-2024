@@ -7,6 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
+#include "LoggedCommand.h"
 #include "subsystems/ClimberSubsystem.h"
 
 /**
@@ -17,15 +18,15 @@
  * Command will *not* work!
  */
 class Climb
-    : public frc2::CommandHelper<frc2::Command, Climb> {
+    : public frc2::CommandHelper<LoggedCommand, Climb> {
  public:
   Climb(ClimberSubsystem *climber);
 
-  void Initialize() override;
+  void Init() override;
 
   void Execute() override;
 
-  void End(bool interrupted) override;
+  void HasEnded(bool interrupted) override;
 
   bool IsFinished() override;
 
