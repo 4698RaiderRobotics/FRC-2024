@@ -12,6 +12,8 @@
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/GenericEntry.h>
 
+#include <frc/geometry/Pose2d.h>
+
 class DataLogger {
   private:
       // This class is a singleton.
@@ -31,9 +33,11 @@ class DataLogger {
     void Send( std::string_view s, std::string_view val );
     void Send( std::string_view s, int val );
     void Send( std::string_view s, bool val );
+    void Send( std::string_view s, frc::Pose2d p );
 
     void SendNT( std::string s, double val );
     void SendNT( std::string s, std::span<const double> a );
+    void SendNT( std::string s, frc::Pose2d p );
 
     void Log(  std::string s );
 

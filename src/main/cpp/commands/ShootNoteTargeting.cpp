@@ -72,9 +72,7 @@ void ShootNoteTargeting::Execute() {
     frc::Pose2d pose_to_speaker = m_drive->GetPose().RelativeTo( targetLocation );
     units::meter_t dist_to_speaker = pose_to_speaker.Translation().Norm();
 
-    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose X", pose_to_speaker.X().value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose Y", pose_to_speaker.Y().value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose Rot", pose_to_speaker.Rotation().Degrees().value() );
+    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose", pose_to_speaker );
     DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker dist", dist_to_speaker.value() );
 
     if( dist_to_speaker < 4_m  ) {
