@@ -6,7 +6,7 @@
 
 #include <frc2/command/CommandPtr.h>
 
-#include <frc/PS5Controller.h>
+#include <frc2/command/button/CommandPS5Controller.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
@@ -49,7 +49,7 @@ class RobotContainer {
   ShooterSubsystem m_shooter;
   VisionSubsystem m_vision;
 
-  frc::PS5Controller m_driverController{0};
+  frc2::CommandPS5Controller m_driverController{0};
   frc2::CommandXboxController m_operatorController{1};
 
   ControllerAxis vx_axis{m_driverController, frc::PS5Controller::Axis::kLeftY, true};
