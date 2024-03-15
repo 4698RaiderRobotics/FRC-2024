@@ -27,8 +27,6 @@ class ChangeShooterAngle
 
   void Execute() override;
 
-  void HasEnded(bool interrupted) override;
-
   bool IsFinished() override;
  private:
   ShooterSubsystem* m_shooter;

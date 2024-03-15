@@ -64,7 +64,7 @@ void StageNoteInShooter::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void StageNoteInShooter::HasEnded(bool interrupted) {
+void StageNoteInShooter::Ending(bool interrupted) {
 
   // fmt::print( "ShootNoteTargeting::End interrupted({}), noTargets({})\n", interrupted, noTargets );
   m_shooter->Spin( 0_rpm );

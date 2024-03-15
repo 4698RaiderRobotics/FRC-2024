@@ -25,7 +25,7 @@ void SpinShooter::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void SpinShooter::HasEnded(bool interrupted) {
+void SpinShooter::Ending(bool interrupted) {
 }
 
 // Returns true when the command should end.

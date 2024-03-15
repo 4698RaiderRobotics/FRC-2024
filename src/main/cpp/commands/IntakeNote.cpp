@@ -32,7 +32,7 @@ void IntakeNote::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void IntakeNote::HasEnded(bool interrupted) {
+void IntakeNote::Ending(bool interrupted) {
   // fmt::print( "   IntakeNote::End interrupted {}\n", interrupted );
   if(!interrupted) {
     m_intake->centering = true;

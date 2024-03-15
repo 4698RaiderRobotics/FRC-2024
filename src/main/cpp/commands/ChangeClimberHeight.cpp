@@ -25,7 +25,7 @@ void ChangeClimberHeight::Init() {
 void ChangeClimberHeight::Execute() {}
 
 // Called once the command ends or is interrupted.
-void ChangeClimberHeight::HasEnded(bool interrupted) {
+void ChangeClimberHeight::Ending(bool interrupted) {
   // fmt::print("ChangeClimberHeight::IsFinished()");
   m_climber->SetSpeed(0.0);
 }

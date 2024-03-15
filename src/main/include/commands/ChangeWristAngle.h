@@ -26,8 +26,6 @@ class ChangeWristAngle
 
   void Execute() override;
 
-  void HasEnded(bool interrupted) override;
-
   bool IsFinished() override;
 
  private:

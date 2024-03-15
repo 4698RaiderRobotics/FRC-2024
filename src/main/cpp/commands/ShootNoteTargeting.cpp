@@ -130,7 +130,7 @@ void ShootNoteTargeting::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void ShootNoteTargeting::HasEnded(bool interrupted) {
+void ShootNoteTargeting::Ending(bool interrupted) {
   fmt::print( "ShootNoteTargeting::End interrupted({}), noTargets({})\n", interrupted, noTargets );
   m_shooter->Spin( 0_rpm );
   m_shooter->GoToAngle( 30_deg );

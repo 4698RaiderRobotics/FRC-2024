@@ -28,7 +28,7 @@ public:
 
   void Execute() override;
 
-  void HasEnded(bool interrupted) override;
+  void Ending(bool interrupted) override;
 
   bool IsFinished() override;
 

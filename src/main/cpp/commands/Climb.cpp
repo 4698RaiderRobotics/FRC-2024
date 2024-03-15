@@ -20,7 +20,7 @@ void Climb::Init() {
 void Climb::Execute() {}
 
 // Called once the command ends or is interrupted.
-void Climb::HasEnded(bool interrupted) {
+void Climb::Ending(bool interrupted) {
   m_climber->SetSpeed(0.0);
 }
 

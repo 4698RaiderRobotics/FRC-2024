@@ -21,7 +21,7 @@ void ChangeElevatorHeight::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void ChangeElevatorHeight::HasEnded(bool interrupted) {
+void ChangeElevatorHeight::Ending(bool interrupted) {
 }
 
 // Returns true when the command should end.

@@ -57,7 +57,7 @@ void ProfiledDriveToPose::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void ProfiledDriveToPose::HasEnded(bool interrupted) {
+void ProfiledDriveToPose::Ending(bool interrupted) {
   fmt::print( "   ProfiledDriveToPose::End() interrupted {}\n", interrupted );
 }
 
