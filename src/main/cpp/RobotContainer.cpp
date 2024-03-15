@@ -130,7 +130,9 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() {
   // Resets the gyro when the robot is facing the driver
-  (frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kL1) && frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR1))
+  // (frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kL1) && frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR1))
+  //   .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(0_deg); }, { &m_swerveDrive }).ToPtr());
+  (m_driverController.L1() && m_driverController.R1() )
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(0_deg); }, { &m_swerveDrive }).ToPtr());
 
   frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR2).OnTrue(frc2::SequentialCommandGroup(
@@ -149,26 +151,44 @@ void RobotContainer::ConfigureBindings() {
 
   // m_operatorController.X().OnTrue(ChangeShooterAngle(&m_shooter, 45_deg).ToPtr());
 
-  m_operatorController.RightBumper().OnTrue(frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
-                                                                         frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
-                                                                                                      ChangeWristAngle(&m_arm, 35_deg)),  
-                                                                         ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
-                                                                                           &m_vision, &vx_axis, &vy_axis )).ToPtr());
+  m_operatorController.RightBumper().OnTrue(
+      frc2::SequentialCommandGroup(
+        ChangeElevatorHeight(&m_elevator, 0_in),
+        frc2::SequentialCommandGroup(
+          ChangeArmAngle(&m_arm, 170_deg), 
+          ChangeWristAngle(&m_arm, 35_deg)
+        ),  
+        ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )
+      ).ToPtr().WithName( "Right Bumper Shoot")
+    );
 
- (m_operatorController.RightBumper() && m_operatorController.LeftStick()).OnTrue(frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
-                                                                         frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
-                                                                                                      ChangeWristAngle(&m_arm, 35_deg)),  
-                                                                         StageNoteInShooter(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
-                                                                                           &m_vision, &vx_axis, &vy_axis )).ToPtr());
+ (m_operatorController.RightBumper() && m_operatorController.LeftStick()).OnTrue(
+      frc2::SequentialCommandGroup( 
+        ChangeElevatorHeight(&m_elevator, 0_in),
+        frc2::SequentialCommandGroup(
+          ChangeArmAngle(&m_arm, 170_deg), 
+          ChangeWristAngle(&m_arm, 35_deg)
+        ),  
+        StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator )
+      ).ToPtr().WithName( "Right Bumper + Left Stick")
+    );
 
   // m_operatorController.RightStick().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 140_deg)).ToPtr());
   
   // m_operatorController.LeftStick().OnTrue(IntakeNote(&m_intake).ToPtr());
 
-  m_operatorController.B().OnTrue(frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in), 
-                                                               frc2::ParallelCommandGroup(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
-                                                                                                                       ChangeWristAngle(&m_arm, 35_deg)), 
-                                                                                          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}))).ToPtr());
+  m_operatorController.B().OnTrue(
+      frc2::SequentialCommandGroup(
+        ChangeElevatorHeight(&m_elevator, 0_in), 
+        frc2::ParallelCommandGroup(
+          frc2::SequentialCommandGroup(
+            ChangeArmAngle(&m_arm, 170_deg), 
+            ChangeWristAngle(&m_arm, 35_deg)
+          ), 
+          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake})
+        )
+      ).ToPtr().WithName( "B Button - Rest Position" )
+    );
 
   m_operatorController.A().OnTrue(PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
 
@@ -186,10 +206,18 @@ void RobotContainer::ConfigureBindings() {
   m_operatorController.RightTrigger().OnTrue(ClimbAndTrap(&m_shooter, &m_intake, &m_climber, &m_arm, &m_elevator).ToPtr());
 
   // Pre-climb button
-  m_operatorController.Y().OnTrue(frc2::SequentialCommandGroup(frc2::ParallelCommandGroup(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), 
-                                                                                                                                   ChangeWristAngle(&m_arm, 90_deg)),
-                                                                                                      ChangeShooterAngle(&m_shooter, 30_deg)), 
-                                                                          ChangeElevatorHeight(&m_elevator, 25_in)).ToPtr());
+  m_operatorController.Y().OnTrue(
+    frc2::SequentialCommandGroup(
+      frc2::ParallelCommandGroup(
+        frc2::SequentialCommandGroup(
+          ChangeArmAngle(&m_arm, 75_deg), 
+          ChangeWristAngle(&m_arm, 90_deg)
+        ),
+        ChangeShooterAngle(&m_shooter, 30_deg)
+      ), 
+      ChangeElevatorHeight(&m_elevator, 25_in)
+    ).ToPtr().WithName( "Button Y - Pre Climb")
+  );
 
   // m_operatorController.RightTrigger().OnTrue(FollowTrajectory(&m_swerveDrive, m_swerveDrive.exampleTraj, 0_deg).ToPtr());
 
@@ -197,8 +225,9 @@ void RobotContainer::ConfigureBindings() {
 
   // m_operatorController.RightTrigger().OnTrue(ChangeClimberHeight(&m_climber, 10).ToPtr());
 
-   frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kCross).OnTrue(frc2::InstantCommand([this] {m_intake.SpinIntake(-1);}, {&m_intake}).ToPtr())
-                          .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
+  m_driverController.Cross()
+    .OnTrue( frc2::InstantCommand([this] {m_intake.SpinIntake(-1);}, {&m_intake}).ToPtr().WithName("Driver X - Note Eject"))
+    .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr().WithName("Driver X - Note Eject Stop"));
 
   // frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kCircle).WhileTrue(frc2::RunCommand([this] {m_elevator.NudgeHeight(0.1_in);}, {&m_elevator}).ToPtr());
 
