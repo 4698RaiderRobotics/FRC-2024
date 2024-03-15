@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4645829471839122,
-        "y": 7.007485005961003
+        "x": 2.509089589607751,
+        "y": 6.665430988519635
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.082406002649843,
-        "y": 7.395762539272825
+        "x": 3.7588413915566568,
+        "y": 6.831835645653273
       },
       "isLocked": false,
-      "linkedName": "TopPickUp"
+      "linkedName": "TopBottomPickUp"
     },
     {
       "anchor": {
@@ -20,26 +20,20 @@
         "y": 7.441986055143282
       },
       "prevControl": {
-        "x": 6.4582947183912385,
-        "y": 7.469720164665555
+        "x": 6.661678188221241,
+        "y": 7.4604754614914635
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Center1PickUp"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
       "name": "Pick Up",
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0.25,
       "command": {
         "type": "parallel",
         "data": {

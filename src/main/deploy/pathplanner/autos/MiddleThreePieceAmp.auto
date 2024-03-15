@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7450681568029801,
-      "y": 4.345010491822786
+      "x": 1.3656518741608918,
+      "y": 5.55593454044051
     },
-    "rotation": -60.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -20,19 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartSourceToBottom"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootNoteTargeting"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BottomToMiddle"
+            "pathName": "StartMiddleToMiddle"
           }
         },
         {
@@ -56,6 +44,6 @@
       ]
     }
   },
-  "folder": "Source Start",
+  "folder": "Middle Start",
   "choreoAuto": false
 }

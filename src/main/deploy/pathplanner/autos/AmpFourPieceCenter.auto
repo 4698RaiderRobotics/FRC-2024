@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7450681568029801,
-      "y": 4.345010491822786
+      "x": 0.7543128599770712,
+      "y": 6.757878020260545
     },
-    "rotation": -60.0
+    "rotation": 60.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartSourceToBottom"
+            "pathName": "StartAmpToTop"
           }
         },
         {
@@ -32,7 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BottomToMiddle"
+            "pathName": "TopToCenter1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center1ToShoot"
           }
         },
         {
@@ -44,7 +50,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToTop"
+            "pathName": "ShootToCenter2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center2ToShoot"
           }
         },
         {
@@ -56,6 +68,6 @@
       ]
     }
   },
-  "folder": "Source Start",
+  "folder": "Amp Side",
   "choreoAuto": false
 }

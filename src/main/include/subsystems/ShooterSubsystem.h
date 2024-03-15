@@ -53,12 +53,12 @@ class ShooterSubsystem : public frc2::SubsystemBase {
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  rev::CANSparkFlex m_topShooterMotor{deviceIDs::kTopShooterID, rev::CANSparkFlex::MotorType::kBrushless};
-  rev::CANSparkFlex m_bottomShooterMotor{deviceIDs::kBottomShooterID, rev::CANSparkFlex::MotorType::kBrushless};
+  rev::CANSparkFlex m_rightShooterMotor{deviceIDs::kRightShooterID, rev::CANSparkFlex::MotorType::kBrushless};
+  rev::CANSparkFlex m_leftShooterMotor{deviceIDs::kLeftShooterID, rev::CANSparkFlex::MotorType::kBrushless};
 
-  rev::SparkPIDController m_speedPID = m_topShooterMotor.GetPIDController();
+  rev::SparkPIDController m_speedPID = m_rightShooterMotor.GetPIDController();
 
-  rev::SparkRelativeEncoder m_topEncoder = m_topShooterMotor.GetEncoder();
+  rev::SparkRelativeEncoder m_rightEncoder = m_rightShooterMotor.GetEncoder();
 
   rev::CANSparkMax m_angleShooterMotor{deviceIDs::kShooterAngleID, rev::CANSparkMax::MotorType::kBrushless};
 

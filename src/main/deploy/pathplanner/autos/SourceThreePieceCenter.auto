@@ -20,7 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartSourceToBottom"
+            "pathName": "StartSourceToCenter5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center5ToShoot"
           }
         },
         {
@@ -32,19 +38,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BottomToMiddle"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootNoteTargeting"
+            "pathName": "ShootToCenter4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToTop"
+            "pathName": "Center4ToShoot"
           }
         },
         {

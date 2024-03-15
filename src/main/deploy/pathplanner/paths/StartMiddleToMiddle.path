@@ -3,43 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4645829471839122,
-        "y": 7.007485005961003
+        "x": 1.3656518741608918,
+        "y": 5.55593454044051
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.082406002649843,
-        "y": 7.395762539272825
+        "x": 2.365651874160892,
+        "y": 5.55593454044051
       },
       "isLocked": false,
-      "linkedName": "TopPickUp"
+      "linkedName": "MiddleStarting"
     },
     {
       "anchor": {
-        "x": 7.7525531627639825,
-        "y": 7.441986055143282
+        "x": 2.3351571027466376,
+        "y": 5.55593454044051
       },
       "prevControl": {
-        "x": 6.4582947183912385,
-        "y": 7.469720164665555
+        "x": 1.3351571027466376,
+        "y": 5.55593454044051
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center1PickUp"
+      "linkedName": "MiddlePickUp"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Pick Up",
-      "waypointRelativePos": 0.45,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -57,20 +51,20 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Center Paths",
+  "folder": "Starting Paths",
   "previewStartingState": {
-    "rotation": 40.0,
+    "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

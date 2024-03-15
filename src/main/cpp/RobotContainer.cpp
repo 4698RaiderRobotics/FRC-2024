@@ -10,6 +10,7 @@
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/RepeatCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
+#include <frc2/command/WaitCommand.h>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -104,11 +105,26 @@ RobotContainer::RobotContainer()
 
   ConfigureBindings();
 
-  m_chooser.SetDefaultOption(kTwoPieceMiddle, kTwoPieceMiddle);
-  m_chooser.AddOption(kOnePiece, kOnePiece);
-  m_chooser.AddOption(kTwoPieceLeft, kTwoPieceLeft);
-  m_chooser.AddOption(kTwoPieceRight, kTwoPieceRight);
-  m_chooser.AddOption(kOnePieceTaxi, kOnePieceTaxi);
+  m_chooser.SetDefaultOption(kOnePiece, pathplanner::AutoBuilder::buildAuto("OnePiece").Unwrap().get());
+  m_chooser.AddOption(kSourceFourPiece, pathplanner::AutoBuilder::buildAuto("SourceFourPiece").Unwrap().get());
+  m_chooser.AddOption(kSourceThreePiece, pathplanner::AutoBuilder::buildAuto("SourceThreePiece").Unwrap().get());
+  m_chooser.AddOption(kSourceTwoPiece, pathplanner::AutoBuilder::buildAuto("SourceTwoPiece").Unwrap().get());
+  m_chooser.AddOption(kSourceTwoPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceTwoPieceCenter").Unwrap().get());
+  m_chooser.AddOption(kSourceThreePieceCenter, pathplanner::AutoBuilder::buildAuto("SourceThreePieceCenter").Unwrap().get());
+  m_chooser.AddOption(kSourceFourPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceFourPieceCenter").Unwrap().get());
+  m_chooser.AddOption(kSourceOnePieceTaxi, pathplanner::AutoBuilder::buildAuto("SourceOnePieceTaxi").Unwrap().get());
+  m_chooser.AddOption(kAmpFourPiece, pathplanner::AutoBuilder::buildAuto("AmpFourPiece").Unwrap().get());
+  m_chooser.AddOption(kAmpThreePiece, pathplanner::AutoBuilder::buildAuto("AmpThreePiece").Unwrap().get());
+  m_chooser.AddOption(kAmpTwoPiece, pathplanner::AutoBuilder::buildAuto("AmpTwoPiece").Unwrap().get());
+  m_chooser.AddOption(kAmpThreePieceCenter, pathplanner::AutoBuilder::buildAuto("AmpThreePieceCenter").Unwrap().get());
+  m_chooser.AddOption(kAmpFourPieceCenter, pathplanner::AutoBuilder::buildAuto("AmpFourPieceCenter").Unwrap().get());
+  m_chooser.AddOption(kMiddleFourPiece, pathplanner::AutoBuilder::buildAuto("MiddleFourPiece").Unwrap().get());
+  m_chooser.AddOption(kMiddleThreePieceAmp, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceAmp").Unwrap().get());
+  m_chooser.AddOption(kMiddleThreePieceSource, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceSource").Unwrap().get());
+  m_chooser.AddOption(kMiddleTwoPiece, pathplanner::AutoBuilder::buildAuto("MiddleTwoPiece").Unwrap().get());
+  m_chooser.AddOption(kMiddleFourPieceCenterAmp, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterAmp").Unwrap().get());
+  m_chooser.AddOption(kMiddleFourPieceCenterSource, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterSource").Unwrap().get());
+
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
@@ -116,6 +132,15 @@ void RobotContainer::ConfigureBindings() {
   // Resets the gyro when the robot is facing the driver
   (frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kL1) && frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR1))
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(0_deg); }, { &m_swerveDrive }).ToPtr());
+
+  frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR2).OnTrue(frc2::SequentialCommandGroup(
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 117_deg)),
+    frc2::InstantCommand([this] {m_intake.SpinIntake(0.5);}, {&m_intake}),
+    frc2::WaitCommand(0.2_s),
+    frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}),
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 90_deg)),
+    ChangeElevatorHeight(&m_elevator, 0_m),
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 35_deg))).ToPtr());
 
 
   // m_operatorController.A().OnTrue(SpinShooter(&m_shooter, 1700_rpm).ToPtr()).OnFalse(SpinShooter(&m_shooter, 0_rpm).ToPtr());
@@ -151,7 +176,10 @@ void RobotContainer::ConfigureBindings() {
 
   // m_operatorController.B().OnTrue(ShootNote(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, 45_deg, 180_deg, 130_deg).ToPtr());
 
-  m_operatorController.X().OnTrue(PlaceInAmp(&m_swerveDrive, &m_elevator, &m_intake, &m_arm).ToPtr());
+  // m_operatorController.X().OnTrue(PlaceInAmp(&m_swerveDrive, &m_elevator, &m_intake, &m_arm).ToPtr());
+  m_operatorController.X().OnTrue(frc2::SequentialCommandGroup(
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 90_deg)),
+    ChangeElevatorHeight(&m_elevator, 22_in)).ToPtr());
 
   // m_operatorController.B().OnTrue(Climb(&m_climber).ToPtr());
 
@@ -182,25 +210,6 @@ void RobotContainer::ConfigureBindings() {
   //                                                                                 .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  delete m_autoCommand;
-  m_autoCommand = nullptr;
-
-  m_autoSelected = m_chooser.GetSelected();
-
-  if (m_autoSelected == kTwoPieceMiddle) {
-    m_autoCommand = new TwoPieceMiddleAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
-  } else if (m_autoSelected == kOnePiece) {
-    m_autoCommand = new OnePieceAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
-  } else if (m_autoSelected == kTwoPieceLeft) {
-    m_autoCommand = new TwoPieceSideAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, true);
-  } else if (m_autoSelected == kTwoPieceRight) {
-    m_autoCommand = new TwoPieceSideAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, false);
-  } else if (m_autoSelected == kOnePieceTaxi) {
-    m_autoCommand = new OnePieceTaxiAuto(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision);
-  }
-
-  frc2::CommandPtr m_auto = pathplanner::AutoBuilder::buildAuto("SourceFourPiece");
-
-  return m_auto;
+frc2::Command* RobotContainer::GetAutonomousCommand() {
+  return m_chooser.GetSelected();
 }

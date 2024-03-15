@@ -3,35 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4645829471839122,
-        "y": 7.007485005961003
+        "x": 2.5292958694025494,
+        "y": 4.483681039434152
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.082406002649843,
-        "y": 7.395762539272825
+        "x": 2.0578160075239067,
+        "y": 4.853469166397792
       },
       "isLocked": false,
-      "linkedName": "TopPickUp"
+      "linkedName": "BottomTopPickUp"
     },
     {
       "anchor": {
-        "x": 7.7525531627639825,
-        "y": 7.441986055143282
+        "x": 2.3351571027466376,
+        "y": 5.55593454044051
       },
       "prevControl": {
-        "x": 6.4582947183912385,
-        "y": 7.469720164665555
+        "x": 1.6787831773861743,
+        "y": 5.546821904454621
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center1PickUp"
+      "linkedName": "MiddlePickUp"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     }
   ],
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "Pick Up",
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -67,9 +67,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Center Paths",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 40.0,
+    "rotation": -45.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

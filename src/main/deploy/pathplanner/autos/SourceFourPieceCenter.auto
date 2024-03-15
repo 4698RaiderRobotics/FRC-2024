@@ -32,7 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "BottomToMiddle"
+            "pathName": "BottomToCenter5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center5ToShoot"
           }
         },
         {
@@ -44,7 +50,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToTop"
+            "pathName": "ShootToCenter4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center4ToShoot"
           }
         },
         {

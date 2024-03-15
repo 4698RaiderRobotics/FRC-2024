@@ -20,19 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartSourceToCenter5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center5ToShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shootNoteTargeting"
+            "pathName": "StartSourceTaxi"
           }
         }
       ]

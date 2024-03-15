@@ -8,7 +8,8 @@
   ],
   "autoFolders": [
     "Amp Side",
-    "Source Side"
+    "Middle Start",
+    "Source Start"
   ],
   "defaultMaxVel": 4.5,
   "defaultMaxAccel": 4.5,

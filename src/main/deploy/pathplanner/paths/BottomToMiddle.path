@@ -3,40 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4276041344875483,
-        "y": 4.132382318818692
+        "x": 2.473827650358003,
+        "y": 4.095403506122328
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2458796835225594,
-        "y": 4.596070216593458
+        "x": 2.292103199393014,
+        "y": 4.559091403897094
       },
       "isLocked": false,
       "linkedName": "BottomPickUp"
     },
     {
       "anchor": {
-        "x": 2.509089589607751,
-        "y": 5.233426466852934
+        "x": 2.3351571027466376,
+        "y": 5.55593454044051
       },
       "prevControl": {
-        "x": 1.9965368321985046,
-        "y": 4.661971743505907
+        "x": 1.5493573329488999,
+        "y": 5.583800717150984
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "MiddleBottomPickUp"
+      "linkedName": "MiddlePickUp"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 40.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.95,
-      "rotationDegrees": 40.0,
+      "rotationDegrees": 0.0,
       "rotateFast": false
     }
   ],
@@ -62,7 +57,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 1.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -77,5 +72,5 @@
     "rotation": -45.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

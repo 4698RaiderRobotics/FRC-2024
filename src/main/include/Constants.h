@@ -54,8 +54,8 @@ namespace pidf {
 }
 
 namespace deviceIDs {
-    constexpr int kTopShooterID = 14;
-    constexpr int kBottomShooterID = 15;
+    constexpr int kRightShooterID = 14;
+    constexpr int kLeftShooterID = 15;
     constexpr int kShooterAngleID = 16;
 
     constexpr int kArmMotorID = 21;

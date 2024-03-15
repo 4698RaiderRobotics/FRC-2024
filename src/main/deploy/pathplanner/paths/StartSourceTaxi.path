@@ -8,67 +8,60 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.567846739297082,
-        "y": 4.0214458807296
+        "x": 1.308995050422533,
+        "y": 3.7533494886809597
       },
       "isLocked": false,
       "linkedName": "SourceStarting"
     },
     {
       "anchor": {
-        "x": 2.473827650358003,
-        "y": 4.095403506122328
+        "x": 2.5847640884470957,
+        "y": 1.9413876665591177
       },
       "prevControl": {
-        "x": 1.473827650358003,
-        "y": 4.095403506122328
+        "x": 2.5847640884470957,
+        "y": 2.662474514138218
+      },
+      "nextControl": {
+        "x": 2.5847640884470957,
+        "y": 1.3711310905894327
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.6156423123657057,
+        "y": 2.5607827792232163
+      },
+      "prevControl": {
+        "x": 1.2257927218557132,
+        "y": 2.440601637960033
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BottomPickUp"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.95,
+      "waypointRelativePos": 0.85,
       "rotationDegrees": 0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "Pick Up",
-      "waypointRelativePos": 0.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "pickUpNote"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 4.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -30.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
@@ -77,5 +70,5 @@
     "rotation": -60.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

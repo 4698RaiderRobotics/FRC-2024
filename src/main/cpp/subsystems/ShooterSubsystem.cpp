@@ -9,9 +9,8 @@
 #include "subsystems/ShooterSubsystem.h"
 
 ShooterSubsystem::ShooterSubsystem() {
-    m_topShooterMotor.SetInverted(true);
-    m_bottomShooterMotor.SetInverted(true);
-    m_bottomShooterMotor.Follow(m_topShooterMotor);
+    m_leftShooterMotor.SetInverted(true);
+    m_leftShooterMotor.Follow(m_rightShooterMotor);
 
     ctre::phoenix6::configs::CANcoderConfiguration absoluteEncoderConfigs{};
     absoluteEncoderConfigs.MagnetSensor.MagnetOffset = -0.350;
@@ -32,7 +31,7 @@ void ShooterSubsystem::Periodic() {
     m_shooterPosition = m_shooterAngleEncoder.GetPosition().GetValueAsDouble() * 360_deg;
 
     DataLogger::GetInstance().SendNT( "ShooterSubsys/Angle", m_shooterPosition.value() );
-    DataLogger::GetInstance().SendNT( "ShooterSubsys/Speed", m_topEncoder.GetVelocity() );
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/Speed", m_rightEncoder.GetVelocity() );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_shooterSetpoint.position = m_shooterPosition;
@@ -66,7 +65,7 @@ void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
 }
 
 bool ShooterSubsystem::IsAtSpeed() {
-    return m_topEncoder.GetVelocity() >= m_speed.value() - 200;
+    return m_rightEncoder.GetVelocity() >= m_speed.value() - 200;
 }
 
 units::degree_t ShooterSubsystem::GetAngle() {
