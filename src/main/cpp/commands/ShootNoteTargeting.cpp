@@ -25,6 +25,8 @@ ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSub
                       m_drive{swerve}, m_shooter{shooter}, m_intake{intake}, m_arm{arm}, m_elev{elev},
                       m_vision{vision}, m_x_axis{x_axis}, m_y_axis{y_axis}
 {
+  SetName( "ShootNoteTargeting" );
+
   if( x_axis != nullptr ) {
     allowDriving = true;
   } else {
@@ -35,9 +37,7 @@ ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSub
 }
 
 // Called when the command is initially scheduled.
-void ShootNoteTargeting::Initialize() {
-  DataLogger::GetInstance().Send( "Command/ShootNoteTargeting", true );
-
+void ShootNoteTargeting::Init() {
     // Start the shooter motors and move to the correct arm and wrist positions.
   m_shooter->Spin( 2000_rpm );
   // m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
@@ -72,9 +72,7 @@ void ShootNoteTargeting::Execute() {
     frc::Pose2d pose_to_speaker = m_drive->GetPose().RelativeTo( targetLocation );
     units::meter_t dist_to_speaker = pose_to_speaker.Translation().Norm();
 
-    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose X", pose_to_speaker.X().value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose Y", pose_to_speaker.Y().value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose Rot", pose_to_speaker.Rotation().Degrees().value() );
+    DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker Pose", pose_to_speaker );
     DataLogger::GetInstance().SendNT( "ShootNote/RobotToSpeaker dist", dist_to_speaker.value() );
 
     if( dist_to_speaker < 4_m  ) {
@@ -132,9 +130,7 @@ void ShootNoteTargeting::Execute() {
 }
 
 // Called once the command ends or is interrupted.
-void ShootNoteTargeting::End(bool interrupted) {
-  DataLogger::GetInstance().Send( "Command/ShootNoteTargeting", false );
-
+void ShootNoteTargeting::Ending(bool interrupted) {
   fmt::print( "ShootNoteTargeting::End interrupted({}), noTargets({})\n", interrupted, noTargets );
   m_shooter->Spin( 0_rpm );
   m_shooter->GoToAngle( 30_deg );

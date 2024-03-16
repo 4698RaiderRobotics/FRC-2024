@@ -7,6 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
+#include "LoggedCommand.h"
 #include "subsystems/ElevatorSubsystem.h"
 
 /**
@@ -17,15 +18,15 @@
  * Command will *not* work!
  */
 class ChangeElevatorHeight
-    : public frc2::CommandHelper<frc2::Command, ChangeElevatorHeight> {
+    : public frc2::CommandHelper<LoggedCommand, ChangeElevatorHeight> {
  public:
   ChangeElevatorHeight(ElevatorSubsystem* elevator, units::meter_t height);
 
-  void Initialize() override;
+  void Init() override;
 
   void Execute() override;
 
-  void End(bool interrupted) override;
+  void Ending(bool interrupted) override;
 
   bool IsFinished() override;
 

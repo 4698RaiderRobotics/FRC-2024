@@ -50,6 +50,13 @@ void DataLogger::Send( std::string_view s, bool val ) {
     le.Append( val );
 }
 
+void DataLogger::Send( std::string_view s, frc::Pose2d p ) {
+    wpi::log::DoubleArrayLogEntry le{ *(log), s };
+    le.Append( {p.X().value(),
+                p.Y().value(),
+                p.Rotation().Degrees().value()} );
+}
+
 void DataLogger::SendNT( std::string s, double val ) {
     if( !nt_map.contains( s ) ) {
         nt_map[s] = nt_inst.GetDoubleTopic( s ).GenericPublish( "double" );
@@ -64,17 +71,19 @@ void DataLogger::SendNT( std::string s, std::span<const double> a ) {
     nt_map[s].SetDoubleArray( a );
 }
 
-void DataLogger::SendCmdMessage( std::string_view cmd_name, std::string_view s ) {
-    std::string id = "Seq_Commands/";
-    id += cmd_name;
+void DataLogger::SendNT( std::string s, frc::Pose2d p ) {
+    if( !nt_map.contains( s ) ) {
+        nt_map[s] = nt_inst.GetDoubleArrayTopic( s ).GenericPublish( "double" );
+    }
+    wpi::log::DoubleArrayLogEntry le{ *(log), s };
+    double a[] = {p.X().value(),
+                  p.Y().value(),
+                  p.Rotation().Degrees().value()};
+    nt_map[s].SetDoubleArray( a );
+}
 
-    std::string mesg = "";
-    mesg += cmd_name;
-    mesg += " -- ";
-    mesg += s;
-
-    wpi::log::StringLogEntry le{ *(log), id };
-    le.Append( mesg );
+void DataLogger::Log( std::string s ) {
+    frc::DataLogManager::Log( s );
 }
 
 void DataLogger::LogMetadata( void ) {

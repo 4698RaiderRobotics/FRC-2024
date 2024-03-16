@@ -6,6 +6,8 @@
 #include <frc/DataLogManager.h>
 #include <frc/DriverStation.h>
 #include <frc/livewindow/LiveWindow.h>
+#include <frc2/command/CommandScheduler.h>
+#include <frc2/command/Command.h>
 
 #include "DataLogger.h"
 #include "LoggedRobot.h"
@@ -25,6 +27,27 @@ void LoggedRobot::RobotInit() {
 
         // Determine the number of PDP channels
     m_pdpChannels = (m_pdp.GetType() == frc::PowerDistribution::ModuleType::kRev) ? 24 : 16;
+
+    frc2::CommandScheduler::GetInstance().OnCommandInitialize(  
+        [](const frc2::Command& command) {
+            DataLogger::GetInstance().Log( "Command " + command.GetName() + 
+                                        " starting..." );
+            DataLogger::GetInstance().SendNT( "Command/" + command.GetName(), true );
+        }
+        );
+    frc2::CommandScheduler::GetInstance().OnCommandFinish(  
+        [](const frc2::Command& command) {
+            DataLogger::GetInstance().Log( "Command " + command.GetName() + 
+                                        " finished." );
+            DataLogger::GetInstance().SendNT( "Command/" + command.GetName(), false );
+        }
+    );
+    frc2::CommandScheduler::GetInstance().OnCommandInterrupt(  
+        [](const frc2::Command& command, const std::optional<frc2::Command*>& int_cmd) {
+            DataLogger::GetInstance().Log( "Command " + command.GetName() + 
+                                        " interrupted by " + int_cmd.value()->GetName() );
+        }
+    );
 }
 
 void LoggedRobot::RobotPeriodic() {

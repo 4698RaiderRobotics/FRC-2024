@@ -7,6 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
+#include "LoggedCommand.h"
 #include "subsystems/ArmSubsystem.h"
 
 /**
@@ -17,15 +18,11 @@
  * Command will *not* work!
  */
 class ChangeArmAngle
-    : public frc2::CommandHelper<frc2::Command, ChangeArmAngle> {
+    : public frc2::CommandHelper<LoggedCommand, ChangeArmAngle> {
  public:
   ChangeArmAngle(ArmSubsystem* arm, units::degree_t armAngle);
 
-  void Initialize() override;
-
   void Execute() override;
-
-  void End(bool interrupted) override;
 
   bool IsFinished() override;
  
