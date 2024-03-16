@@ -19,11 +19,6 @@
 #include <units/time.h>
 using namespace units::literals;
 
-#include <pathplanner/lib/auto/AutoBuilder.h>
-#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
-#include <pathplanner/lib/util/PIDConstants.h>
-#include <pathplanner/lib/util/ReplanningConfig.h>
-
 #include "SwerveModule.h"
 #include "SwerveModuleDisplay.h"
 #include "subsystems/VisionSubsystem.h"

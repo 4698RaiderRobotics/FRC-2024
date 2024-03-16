@@ -14,6 +14,7 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 
 #include "commands/SpinShooter.h"
