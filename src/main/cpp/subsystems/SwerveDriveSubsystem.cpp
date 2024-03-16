@@ -188,14 +188,14 @@ void SwerveDriveSubsystem::Periodic( void ) {
         m_modules[i].SetDesiredState( m_desiredStates[i] );
     }
 
-    auto pose = m_vision->GetGlobalEstimatedPose();
-    if(frc::DriverStation::IsDisabled()) {
-        if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
-            ResetGyro(pose.first.Rotation().Degrees() - 180_deg);
-        } else {
-            ResetGyro(pose.first.Rotation().Degrees());
-        }
-    }
+    // auto pose = m_odometry.GetEstimatedPosition();
+    // if(frc::DriverStation::IsDisabled()) {
+    //     if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
+    //         ResetGyro(pose.Rotation().Degrees() - 180_deg);
+    //     } else {
+    //         ResetGyro(pose.Rotation().Degrees());
+    //     }
+    // }
 
     // Updates the odometry of the robot given the SwerveModules' states
     //needs to be an array
@@ -208,10 +208,7 @@ frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() 
          m_modules[2].GetPosition(),  m_modules[3].GetPosition() 
     });
 
-    
-    if( pose.first != frc::Pose2d{}) {
-        m_odometry.AddVisionMeasurement(pose.first, pose.second);
-    }
+    m_vision->UpdateVisionPose( m_odometry );
 
     if( m_logging ) {
         // Log the swerve states

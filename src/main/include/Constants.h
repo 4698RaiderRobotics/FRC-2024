@@ -74,7 +74,13 @@ namespace deviceIDs {
 
 namespace physical {
 
-    const frc::Transform3d kRobotToCam = frc::Transform3d(frc::Translation3d(-0.23_m, 0.042_m, 0.25_m), frc::Rotation3d(0_deg, -35_deg, 180_deg));
+    const frc::Transform3d kFrontRightRobotToCam = frc::Transform3d(frc::Translation3d{0.025_m, -0.26_m, 0.66_m}, frc::Rotation3d{-6_deg, -8_deg, 30_deg});
+
+    const frc::Transform3d kBackRightRobotToCam = frc::Transform3d(frc::Translation3d{-0.06_m, -0.26_m, 0.66_m}, frc::Rotation3d{10_deg, -15_deg, 150_deg});
+
+    const frc::Transform3d kFrontLeftRobotToCam = frc::Transform3d(frc::Translation3d(0_m, 0_m, 0_m), frc::Rotation3d(0_deg, 0_deg, 0_deg));
+
+    const frc::Transform3d kBackLeftRobotToCam = frc::Transform3d(frc::Translation3d(0_m, 0_m, 0_m), frc::Rotation3d(0_deg, 0_deg, 0_deg));
 
     // Maximum velocity for the shooter angle TrapezoidProfile
     constexpr units::degrees_per_second_t kShooterMaxSpeed = 360_deg_per_s;
@@ -153,9 +159,9 @@ namespace physical {
     // Height for the elevator to place in trap
     constexpr units::meter_t kElevatorTrapHeight = 0_m;
 
-    constexpr double kShooterAbsoluteOffset = -0.342;
-    constexpr double kWristAbsoluteOffset = 0.032;
-    constexpr double kArmAbsoluteOffset = -0.022;
+    constexpr double kShooterAbsoluteOffset = -0.068;
+    constexpr double kWristAbsoluteOffset = 0.314;
+    constexpr double kArmAbsoluteOffset = -0.243;
 
     constexpr units::second_t kDt = 20_ms;
 }

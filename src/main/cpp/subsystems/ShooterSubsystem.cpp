@@ -13,7 +13,7 @@ ShooterSubsystem::ShooterSubsystem() {
     m_leftShooterMotor.Follow(m_rightShooterMotor);
 
     ctre::phoenix6::configs::CANcoderConfiguration absoluteEncoderConfigs{};
-    absoluteEncoderConfigs.MagnetSensor.MagnetOffset = -0.350;
+    absoluteEncoderConfigs.MagnetSensor.MagnetOffset = physical::kShooterAbsoluteOffset;
     m_shooterAngleEncoder.GetConfigurator().Apply(absoluteEncoderConfigs, 50_ms);
 
     m_angleShooterMotor.EnableVoltageCompensation(12);

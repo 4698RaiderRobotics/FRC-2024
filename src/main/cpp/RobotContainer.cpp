@@ -105,7 +105,7 @@ RobotContainer::RobotContainer()
 
   ConfigureBindings();
 
-  m_chooser.SetDefaultOption(kOnePiece, pathplanner::AutoBuilder::buildAuto("OnePiece").Unwrap().get());
+  m_chooser.SetDefaultOption(kOnePiece, pathplanner::AutoBuilder::buildAuto("THEOnePiece").Unwrap().get());
   m_chooser.AddOption(kSourceFourPiece, pathplanner::AutoBuilder::buildAuto("SourceFourPiece").Unwrap().get());
   m_chooser.AddOption(kSourceThreePiece, pathplanner::AutoBuilder::buildAuto("SourceThreePiece").Unwrap().get());
   m_chooser.AddOption(kSourceTwoPiece, pathplanner::AutoBuilder::buildAuto("SourceTwoPiece").Unwrap().get());
@@ -135,7 +135,7 @@ void RobotContainer::ConfigureBindings() {
   (m_driverController.L1() && m_driverController.R1() )
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(0_deg); }, { &m_swerveDrive }).ToPtr());
 
-  frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR2).OnTrue(frc2::SequentialCommandGroup(
+  m_driverController.R2().OnTrue(frc2::SequentialCommandGroup(
     frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 117_deg)),
     frc2::InstantCommand([this] {m_intake.SpinIntake(0.5);}, {&m_intake}),
     frc2::WaitCommand(0.2_s),
