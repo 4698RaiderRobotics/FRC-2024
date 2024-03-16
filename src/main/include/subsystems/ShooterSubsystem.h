@@ -17,7 +17,6 @@
 #include <ctre/phoenix6/CANcoder.hpp>
 
 #include "Constants.h"
-#include "AbsoluteEncoder.h"
 #include "LUT.h"
 
 class ShooterSubsystem : public frc2::SubsystemBase {
@@ -35,13 +34,17 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   // Spins the shooter at a speed
   void Spin(units::revolutions_per_minute_t speed);
 
-  // Checks if the shooter is at the right speed
-  bool IsAtSpeed();
-
   units::degree_t GetAngle();
 
   void Nudge( units::degree_t deltaAngle );
 
+    // Checks if the shooter is at the right speed
+  bool IsAtSpeed();
+
+    // Checks if the shooter is at the right angle
+  bool IsAtAngle();
+
+    // Checks if the shooter is at the right speed and angle
   bool IsAtGoal();
 
   units::degree_t GetShooter_ArmAngle()

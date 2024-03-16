@@ -9,8 +9,13 @@
 #include "subsystems/ShooterSubsystem.h"
 
 ShooterSubsystem::ShooterSubsystem() {
-    m_leftShooterMotor.SetInverted(true);
-    m_leftShooterMotor.Follow(m_rightShooterMotor);
+    m_leftShooterMotor.SetInverted( true );
+    m_leftShooterMotor.Follow( m_rightShooterMotor, true );
+
+    m_leftShooterMotor.SetSmartCurrentLimit( 40 );
+    m_rightShooterMotor.SetSmartCurrentLimit( 40 );
+    m_leftShooterMotor.EnableVoltageCompensation(12);
+    m_leftShooterMotor.EnableVoltageCompensation(12);
 
     ctre::phoenix6::configs::CANcoderConfiguration absoluteEncoderConfigs{};
     absoluteEncoderConfigs.MagnetSensor.MagnetOffset = physical::kShooterAbsoluteOffset;
@@ -64,10 +69,6 @@ void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
     
 }
 
-bool ShooterSubsystem::IsAtSpeed() {
-    return m_rightEncoder.GetVelocity() >= m_speed.value() - 200;
-}
-
 units::degree_t ShooterSubsystem::GetAngle() {
     return m_shooterPosition;
 }
@@ -76,6 +77,14 @@ void ShooterSubsystem::Nudge( units::degree_t deltaAngle ) {
      GoToAngle( m_shooterGoal.position + deltaAngle );
 }
 
-bool ShooterSubsystem::IsAtGoal() {
+bool ShooterSubsystem::IsAtSpeed() {
+    return m_rightEncoder.GetVelocity() >= m_speed.value() - 200;
+}
+
+bool ShooterSubsystem::IsAtAngle() {
     return units::math::abs( m_shooterGoal.position - m_shooterPosition ) < 3_deg;
+}
+
+bool ShooterSubsystem::IsAtGoal() {
+    return IsAtSpeed() && IsAtAngle();
 }
