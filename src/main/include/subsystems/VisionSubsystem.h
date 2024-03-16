@@ -17,16 +17,9 @@ class VisionSubsystem : public frc2::SubsystemBase {
  public:
   VisionSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
   void Periodic() override;
 
   void UpdateVisionPose(frc::SwerveDrivePoseEstimator<4> &odometry);
-
-  std::pair<frc::Pose2d, units::second_t> GetGlobalEstimatedPose();
-
-  bool GetAprilTagPosition( int tagID, double &yaw, double &pitch );
 
  private:
   photon::PhotonCamera m_frontRightCam{"CameraA_1MP"};
@@ -38,9 +31,4 @@ class VisionSubsystem : public frc2::SubsystemBase {
   // photon::PhotonCamera m_backLeftCam{"BackLeftCam"};
   // photon::PhotonPoseEstimator *m_backLeftPoseEstimator;
 
-  photon::PhotonPipelineResult m_result;
-  units::second_t m_latestTargetTime;
-
- public:
-  frc::AprilTagFieldLayout aprilTagFieldLayout;
 };
