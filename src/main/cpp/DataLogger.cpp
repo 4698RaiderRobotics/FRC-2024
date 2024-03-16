@@ -91,7 +91,9 @@ void DataLogger::LogMetadata( void ) {
     std::ifstream binfo;
     char line[256];
 
-    binfo.open( frc::filesystem::GetDeployDirectory() + "/buildinfo.txt", std::ios::in );
+    std::string path = frc::filesystem::GetDeployDirectory() + "/buildinfo.txt";
+
+    binfo.open( path, std::ios::in );
     if( binfo.is_open() ) {
         binfo.getline( line, 255 );
         this->SendMetadata( "BUILD_DATE", line );
@@ -102,6 +104,8 @@ void DataLogger::LogMetadata( void ) {
         binfo.getline( line, 255 );
         this->SendMetadata( "GIT_VERSION", line );
         binfo.close();
+    } else {
+        Log( "Cannot open METADATA file: " + path );
     }
 
 }

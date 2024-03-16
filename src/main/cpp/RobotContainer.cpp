@@ -43,10 +43,10 @@ RobotContainer::RobotContainer()
 
   pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
   pathplanner::NamedCommands::registerCommand("shootNoteTargeting", frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
-                                                                         frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
-                                                                                                      ChangeWristAngle(&m_arm, 35_deg)),  
-                                                                         ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
-                                                                                            &m_vision, &vx_axis, &vy_axis )).ToPtr());
+  frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
+  ChangeWristAngle(&m_arm, 35_deg)),  
+  ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
+  &m_vision, &vx_axis, &vy_axis )).ToPtr());
 
 
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
@@ -54,7 +54,7 @@ RobotContainer::RobotContainer()
       m_swerveDrive.ArcadeDrive(vx_axis.GetAxis(), vy_axis.GetAxis(), omega_axis.GetAxis());
    },
     { &m_swerveDrive }
-    ));
+    ).WithName("Arcade Drive"));
 
   m_arm.SetDefaultCommand(frc2::RunCommand(
     [this] {
@@ -64,7 +64,7 @@ RobotContainer::RobotContainer()
       }
     },
     { &m_arm }
-    ));
+    ).WithName("Arm Nudge"));
 
   m_elevator.SetDefaultCommand(frc2::RunCommand(
     [this] {
@@ -73,7 +73,7 @@ RobotContainer::RobotContainer()
       }
     },
     { &m_elevator }
-    ));
+    ).WithName("Elevator Nudge"));
 
   m_shooter.SetDefaultCommand(frc2::RunCommand(
     [this] {
@@ -86,7 +86,7 @@ RobotContainer::RobotContainer()
       }
     },
     { &m_shooter }
-    ));
+    ).WithName("Shooter Nudge"));
 
   m_climber.SetDefaultCommand(frc2::RunCommand(
     [this] {
@@ -100,7 +100,7 @@ RobotContainer::RobotContainer()
       }
     },
     { &m_climber }
-    ));
+    ).WithName("Climber Nudge"));
 
 
   ConfigureBindings();
