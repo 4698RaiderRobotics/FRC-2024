@@ -9,13 +9,18 @@
 #include "subsystems/ShooterSubsystem.h"
 
 ShooterSubsystem::ShooterSubsystem() {
+    m_leftShooterMotor.RestoreFactoryDefaults();
+    m_rightShooterMotor.RestoreFactoryDefaults();
+
     m_leftShooterMotor.SetInverted( true );
     m_leftShooterMotor.Follow( m_rightShooterMotor, true );
 
-    m_leftShooterMotor.SetSmartCurrentLimit( 40 );
-    m_rightShooterMotor.SetSmartCurrentLimit( 40 );
+    // m_leftShooterMotor.SetSmartCurrentLimit( 40 );
+    // m_rightShooterMotor.SetSmartCurrentLimit( 40 );
     m_leftShooterMotor.EnableVoltageCompensation(12);
     m_leftShooterMotor.EnableVoltageCompensation(12);
+    m_leftShooterMotor.SetIdleMode( rev::CANSparkMax::IdleMode::kCoast );
+    m_rightShooterMotor.SetIdleMode( rev::CANSparkMax::IdleMode::kCoast );
 
     ctre::phoenix6::configs::CANcoderConfiguration absoluteEncoderConfigs{};
     absoluteEncoderConfigs.MagnetSensor.MagnetOffset = physical::kShooterAbsoluteOffset;
@@ -28,7 +33,6 @@ ShooterSubsystem::ShooterSubsystem() {
     m_speedPID.SetI(pidf::kSpeedI);
     m_speedPID.SetD(pidf::kSpeedD);
     m_speedPID.SetFF(pidf::kSpeedFF);
-
 };
 
 // This method will be called once per scheduler run
@@ -37,13 +41,18 @@ void ShooterSubsystem::Periodic() {
 
     DataLogger::GetInstance().SendNT( "ShooterSubsys/Angle", m_shooterPosition.value() );
     DataLogger::GetInstance().SendNT( "ShooterSubsys/Speed", m_rightEncoder.GetVelocity() );
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/SpeedGoal", m_speed.value() );
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/left Current", m_leftShooterMotor.GetOutputCurrent() );
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/right Current", m_rightShooterMotor.GetOutputCurrent() );
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/IsAtSpeed", IsAtSpeed() );
+    DataLogger::GetInstance().SendNT( "ShooterSubsys/IsAtAngle", IsAtAngle() );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_shooterSetpoint.position = m_shooterPosition;
         m_shooterSetpoint.velocity = 0_deg_per_s;
         m_shooterGoal.position = m_shooterPosition;
         m_shooterGoal.velocity = 0_deg_per_s;
-
+        m_speed = 0_rpm;
         return;
     }
 
@@ -66,7 +75,6 @@ void ShooterSubsystem::GoToAngle(units::degree_t shooterAngleGoal) {
 
 void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
     m_speed = speed;
-    
 }
 
 units::degree_t ShooterSubsystem::GetAngle() {

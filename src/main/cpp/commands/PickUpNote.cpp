@@ -10,6 +10,7 @@
 #include "commands/ChangeWristAngle.h"
 #include "commands/IntakeNote.h"
 #include "commands/ChangeElevatorHeight.h"
+#include "commands/GoToRestPosition.h"
 
 #include <frc2/command/SequentialCommandGroup.h>
 
@@ -28,6 +29,7 @@ PickUpNote::PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, Arm
     ChangeElevatorHeight(elevator, 0_in),
     frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmGroundPickUpAngle), ChangeWristAngle(arm, physical::kWristGroundPickUpAngle)),
     IntakeNote(intake),
-    frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmPassiveAngle), ChangeWristAngle(arm, physical::kWristPassiveAngle))
+    // frc2::SequentialCommandGroup(ChangeArmAngle(arm, physical::kArmPassiveAngle), ChangeWristAngle(arm, physical::kWristPassiveAngle)),
+    GoToRestPosition(arm, elevator, intake)
   );
 }

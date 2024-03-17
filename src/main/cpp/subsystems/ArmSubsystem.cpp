@@ -69,9 +69,11 @@ void ArmSubsystem::Periodic() {
 
     DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
     DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
-    DataLogger::GetInstance().Send( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
-    DataLogger::GetInstance().Send( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
-    DataLogger::GetInstance().Send( "ArmSubsys/IsATGoal", IsAtGoal() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/IsAtGoal", IsAtGoal() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
 
     // frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
     // frc::SmartDashboard::PutNumber("Phi", phi.value());

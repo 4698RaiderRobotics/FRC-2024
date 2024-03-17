@@ -8,9 +8,9 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "LoggedCommand.h"
+#include "subsystems/ArmSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
-
-#include "Constants.h"
+#include "subsystems/ElevatorSubsystem.h"
 
 /**
  * An example command.
@@ -19,10 +19,10 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class IntakeNote
-    : public frc2::CommandHelper<LoggedCommand, IntakeNote> {
+class GoToRestPosition
+    : public frc2::CommandHelper<LoggedCommand, GoToRestPosition> {
  public:
-  IntakeNote(IntakeSubsystem* intake);
+  GoToRestPosition(ArmSubsystem *arm, ElevatorSubsystem *elev, IntakeSubsystem *intake);
 
   void Init() override;
 
@@ -31,12 +31,9 @@ class IntakeNote
   void Ending(bool interrupted) override;
 
   bool IsFinished() override;
- private:
-  IntakeSubsystem* m_intake;
-  LEDSubsystem* m_leds;
 
-  units::second_t m_startTime;
-  // double startPos;
-  bool beamHasBroken = false;
-  // bool isFinished = false;
+ private:
+  ArmSubsystem *m_arm;
+  ElevatorSubsystem *m_elev;
+  IntakeSubsystem *m_intake;
 };

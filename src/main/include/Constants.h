@@ -19,12 +19,12 @@ namespace pidf {
     constexpr double kShooterA = 0.0;
     constexpr double kShooterS = 0.0;
 
-    constexpr double kArmP = 0.002;
+    constexpr double kArmP = 0.006;
     constexpr double kArmI = 0.0;
     constexpr double kArmD = 0.0;
 
-    constexpr double kArmG = 0.15;
-    constexpr double kArmWristG = 0.07;
+    constexpr double kArmG = 0.3;
+    constexpr double kArmWristG = 0.01;
     constexpr double kArmV = 1.1;
     constexpr double kArmA = 0.0;
     constexpr double kArmS = 0.0;

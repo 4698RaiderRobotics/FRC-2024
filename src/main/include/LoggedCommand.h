@@ -17,13 +17,13 @@ public:
   
 
   void Initialize() final {
-    DataLogger::GetInstance().Send( "Command/" + this->GetName(), true );
+    DataLogger::GetInstance().SendNT( "Command/" + this->GetName(), true );
     DataLogger::GetInstance().Log( "   Command " +  this->GetName() + " initialized" );
     Init();
   }
   void End( bool interrupted ) final {
     Ending( interrupted );
-    DataLogger::GetInstance().Send( "Command/" + this->GetName(), false );
+    DataLogger::GetInstance().SendNT( "Command/" + this->GetName(), false );
     DataLogger::GetInstance().Log( "   Command " +  this->GetName() + " ended" );
   }
 

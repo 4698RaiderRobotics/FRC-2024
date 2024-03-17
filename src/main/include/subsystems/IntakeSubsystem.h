@@ -29,6 +29,12 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   double GetRotations();
 
+    // We picked up a Note.
+  void NotePickedUp();
+
+    // Do we currently have a note.
+  bool HasNote();
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -43,8 +49,12 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   double m_startPos;
 
- public:
-  bool hasNote = false;
-  bool centering = false;
-  bool isIndexed = false;
+    // We have a note?
+  bool m_hasNote = false;
+    // We are moving the note backward to center it
+  bool m_reversing = false;
+    // We have reversed to the beam break
+  bool m_isIndexed = false;
+    // We are centered up
+  bool m_centered = false;
 };

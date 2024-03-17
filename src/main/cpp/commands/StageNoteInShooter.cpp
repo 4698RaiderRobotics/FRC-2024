@@ -51,31 +51,25 @@ void StageNoteInShooter::Execute() {
     m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle( ) );
       
 
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Shooter Angle", m_shooter->GetAngle().value() );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm Angle", m_arm->GetArmAngle().value() );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Wrist Angle Goal", 180 - m_shooter->GetAngle().value() );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Wrist Angle", m_arm->GetWristAngle().value() );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Elevator Height", m_elev->GetHeight().value() );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Shooter IsAtGoal", m_shooter->IsAtGoal() );
-    DataLogger::GetInstance().SendNT( "StageNoteInShooter/Elevator IsAtGoal", m_elev->IsAtGoal() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Shooter Angle", m_shooter->GetAngle().value() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm Angle", m_arm->GetArmAngle().value() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Wrist Angle Goal", 180 - m_shooter->GetAngle().value() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Wrist Angle", m_arm->GetWristAngle().value() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Elevator Height", m_elev->GetHeight().value() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Shooter IsAtAngle", m_shooter->IsAtAngle() );
+    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Elevator IsAtGoal", m_elev->IsAtGoal() );
 
 }
 
 // Called once the command ends or is interrupted.
 void StageNoteInShooter::Ending(bool interrupted) {
 
-  // fmt::print( "ShootNoteTargeting::End interrupted({}), noTargets({})\n", interrupted, noTargets );
-  m_shooter->Spin( 0_rpm );
-  // m_shooter->GoToAngle( 30_deg );
-  m_arm->GoToArmAngle( 170_deg );
-  m_arm->GoToWristAngle( 35_deg );
-  m_elev->GoToHeight(0_in);
 }
 
 // Returns true when the command should end.
 bool StageNoteInShooter::IsFinished() {
 
-  return false;
+  return m_shooter->IsAtAngle() && m_arm->IsAtGoal() && m_elev->IsAtGoal();
 }

@@ -27,6 +27,7 @@
 #include "commands/ShootNoteTargeting.h"
 #include "commands/StageNoteInShooter.h"
 #include "commands/PlaceInAmp.h"
+#include "commands/GotoRestPosition.h"
 #include "commands/ProfiledDriveToPose.h"
 #include "commands/ChangeClimberHeight.h"
 #include "commands/Climb.h"
@@ -43,11 +44,8 @@ RobotContainer::RobotContainer()
 : m_swerveDrive{&m_vision}, m_intake{&m_leds} {
 
   pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
-  pathplanner::NamedCommands::registerCommand("shootNoteTargeting", frc2::SequentialCommandGroup(ChangeElevatorHeight(&m_elevator, 0_in),
-  frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), 
-  ChangeWristAngle(&m_arm, 35_deg)),  
-  ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, 
-  &m_vision, &vx_axis, &vy_axis )).ToPtr());
+  pathplanner::NamedCommands::registerCommand("shootNoteTargeting", frc2::SequentialCommandGroup(GoToRestPosition(&m_arm, &m_elevator, &m_intake), 
+  ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision )).ToPtr());
 
 
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
@@ -70,7 +68,7 @@ RobotContainer::RobotContainer()
   m_elevator.SetDefaultCommand(frc2::RunCommand(
     [this] {
       if(m_operatorController.GetLeftBumper()) {
-        m_elevator.NudgeHeight(elevator_axis.GetAxis() * 0.5_in);
+        m_elevator.NudgeHeight(elevator_axis.GetAxis() * 0.1_in);
       }
     },
     { &m_elevator }
@@ -80,9 +78,9 @@ RobotContainer::RobotContainer()
     [this] {
       if(m_operatorController.GetLeftBumper()) {
         if( m_operatorController.GetPOV() == 90 ) {
-          m_shooter.Nudge( 0.5_deg ); 
+          m_shooter.Nudge( 0.1_deg ); 
         } else if( m_operatorController.GetPOV() == 270 ) {
-          m_shooter.Nudge( -0.5_deg );
+          m_shooter.Nudge( -0.1_deg );
         }
       }
     },
@@ -106,25 +104,25 @@ RobotContainer::RobotContainer()
 
   ConfigureBindings();
 
-  m_chooser.SetDefaultOption(kOnePiece, pathplanner::AutoBuilder::buildAuto("THEOnePiece").Unwrap().get());
-  m_chooser.AddOption(kSourceFourPiece, pathplanner::AutoBuilder::buildAuto("SourceFourPiece").Unwrap().get());
-  m_chooser.AddOption(kSourceThreePiece, pathplanner::AutoBuilder::buildAuto("SourceThreePiece").Unwrap().get());
-  m_chooser.AddOption(kSourceTwoPiece, pathplanner::AutoBuilder::buildAuto("SourceTwoPiece").Unwrap().get());
-  m_chooser.AddOption(kSourceTwoPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceTwoPieceCenter").Unwrap().get());
-  m_chooser.AddOption(kSourceThreePieceCenter, pathplanner::AutoBuilder::buildAuto("SourceThreePieceCenter").Unwrap().get());
-  m_chooser.AddOption(kSourceFourPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceFourPieceCenter").Unwrap().get());
-  m_chooser.AddOption(kSourceOnePieceTaxi, pathplanner::AutoBuilder::buildAuto("SourceOnePieceTaxi").Unwrap().get());
-  m_chooser.AddOption(kAmpFourPiece, pathplanner::AutoBuilder::buildAuto("AmpFourPiece").Unwrap().get());
-  m_chooser.AddOption(kAmpThreePiece, pathplanner::AutoBuilder::buildAuto("AmpThreePiece").Unwrap().get());
-  m_chooser.AddOption(kAmpTwoPiece, pathplanner::AutoBuilder::buildAuto("AmpTwoPiece").Unwrap().get());
-  m_chooser.AddOption(kAmpThreePieceCenter, pathplanner::AutoBuilder::buildAuto("AmpThreePieceCenter").Unwrap().get());
-  m_chooser.AddOption(kAmpFourPieceCenter, pathplanner::AutoBuilder::buildAuto("AmpFourPieceCenter").Unwrap().get());
-  m_chooser.AddOption(kMiddleFourPiece, pathplanner::AutoBuilder::buildAuto("MiddleFourPiece").Unwrap().get());
-  m_chooser.AddOption(kMiddleThreePieceAmp, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceAmp").Unwrap().get());
-  m_chooser.AddOption(kMiddleThreePieceSource, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceSource").Unwrap().get());
-  m_chooser.AddOption(kMiddleTwoPiece, pathplanner::AutoBuilder::buildAuto("MiddleTwoPiece").Unwrap().get());
-  m_chooser.AddOption(kMiddleFourPieceCenterAmp, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterAmp").Unwrap().get());
-  m_chooser.AddOption(kMiddleFourPieceCenterSource, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterSource").Unwrap().get());
+  m_chooser.SetDefaultOption(kOnePiece, pathplanner::AutoBuilder::buildAuto("THEOnePiece"));
+  m_chooser.AddOption(kSourceFourPiece, pathplanner::AutoBuilder::buildAuto("SourceFourPiece"));
+  m_chooser.AddOption(kSourceThreePiece, pathplanner::AutoBuilder::buildAuto("SourceThreePiece"));
+  m_chooser.AddOption(kSourceTwoPiece, pathplanner::AutoBuilder::buildAuto("SourceTwoPiece"));
+  m_chooser.AddOption(kSourceTwoPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceTwoPieceCenter"));
+  m_chooser.AddOption(kSourceThreePieceCenter, pathplanner::AutoBuilder::buildAuto("SourceThreePieceCenter"));
+  m_chooser.AddOption(kSourceFourPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceFourPieceCenter"));
+  m_chooser.AddOption(kSourceOnePieceTaxi, pathplanner::AutoBuilder::buildAuto("SourceOnePieceTaxi"));
+  m_chooser.AddOption(kAmpFourPiece, pathplanner::AutoBuilder::buildAuto("AmpFourPiece"));
+  m_chooser.AddOption(kAmpThreePiece, pathplanner::AutoBuilder::buildAuto("AmpThreePiece"));
+  m_chooser.AddOption(kAmpTwoPiece, pathplanner::AutoBuilder::buildAuto("AmpTwoPiece"));
+  m_chooser.AddOption(kAmpThreePieceCenter, pathplanner::AutoBuilder::buildAuto("AmpThreePieceCenter"));
+  m_chooser.AddOption(kAmpFourPieceCenter, pathplanner::AutoBuilder::buildAuto("AmpFourPieceCenter"));
+  m_chooser.AddOption(kMiddleFourPiece, pathplanner::AutoBuilder::buildAuto("MiddleFourPiece"));
+  m_chooser.AddOption(kMiddleThreePieceAmp, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceAmp"));
+  m_chooser.AddOption(kMiddleThreePieceSource, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceSource"));
+  m_chooser.AddOption(kMiddleTwoPiece, pathplanner::AutoBuilder::buildAuto("MiddleTwoPiece"));
+  m_chooser.AddOption(kMiddleFourPieceCenterAmp, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterAmp"));
+  m_chooser.AddOption(kMiddleFourPieceCenterSource, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterSource"));
 
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
@@ -143,7 +141,8 @@ void RobotContainer::ConfigureBindings() {
     frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}),
     frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 90_deg)),
     ChangeElevatorHeight(&m_elevator, 0_m),
-    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 35_deg))).ToPtr());
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 35_deg))).ToPtr().WithName( "Driver Put in Amp")
+  );
 
 
   // m_operatorController.A().OnTrue(SpinShooter(&m_shooter, 1700_rpm).ToPtr()).OnFalse(SpinShooter(&m_shooter, 0_rpm).ToPtr());
@@ -152,14 +151,17 @@ void RobotContainer::ConfigureBindings() {
 
   // m_operatorController.X().OnTrue(ChangeShooterAngle(&m_shooter, 45_deg).ToPtr());
 
-  m_operatorController.RightBumper().OnTrue(
+  (m_operatorController.RightBumper() && !m_operatorController.LeftStick()).OnTrue(
       frc2::SequentialCommandGroup(
-        ChangeElevatorHeight(&m_elevator, 0_in),
-        frc2::SequentialCommandGroup(
-          ChangeArmAngle(&m_arm, 170_deg), 
-          ChangeWristAngle(&m_arm, 35_deg)
-        ),  
-        ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )
+        frc2::InstantCommand( [this] { m_shooter.Spin( 1000_rpm ); }, {&m_shooter} ),
+//        GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
+        // ChangeElevatorHeight(&m_elevator, 0_in),
+        // frc2::SequentialCommandGroup(
+        //   ChangeArmAngle(&m_arm, 170_deg), 
+        //   ChangeWristAngle(&m_arm, 35_deg)
+        // ), 
+//        StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator ),
+        ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )
       ).ToPtr().WithName( "Right Bumper Shoot")
     );
 
@@ -186,7 +188,7 @@ void RobotContainer::ConfigureBindings() {
             ChangeArmAngle(&m_arm, 170_deg), 
             ChangeWristAngle(&m_arm, 35_deg)
           ), 
-          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake})
+          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0); m_shooter.Spin(0_rpm);}, {&m_intake, &m_shooter})
         )
       ).ToPtr().WithName( "B Button - Rest Position" )
     );
@@ -198,9 +200,15 @@ void RobotContainer::ConfigureBindings() {
   // m_operatorController.B().OnTrue(ShootNote(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, 45_deg, 180_deg, 130_deg).ToPtr());
 
   // m_operatorController.X().OnTrue(PlaceInAmp(&m_swerveDrive, &m_elevator, &m_intake, &m_arm).ToPtr());
-  m_operatorController.X().OnTrue(frc2::SequentialCommandGroup(
-    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 90_deg)),
-    ChangeElevatorHeight(&m_elevator, 22_in)).ToPtr());
+  m_operatorController.X().OnTrue(
+    frc2::SequentialCommandGroup(
+      frc2::SequentialCommandGroup(
+        ChangeArmAngle(&m_arm, 75_deg), 
+        ChangeWristAngle(&m_arm, 90_deg)
+      ),
+      ChangeElevatorHeight(&m_elevator, 22_in)
+    ).ToPtr().WithName("Button X -- Prepare for Amp")
+  );
 
   // m_operatorController.B().OnTrue(Climb(&m_climber).ToPtr());
 
@@ -240,6 +248,6 @@ void RobotContainer::ConfigureBindings() {
   //                                                                                 .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
 }
 
-frc2::Command* RobotContainer::GetAutonomousCommand() {
-  return m_chooser.GetSelected();
+frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
+  return pathplanner::AutoBuilder::buildAuto("THEOnePiece");
 }

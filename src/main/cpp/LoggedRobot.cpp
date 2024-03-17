@@ -44,8 +44,9 @@ void LoggedRobot::RobotInit() {
     );
     frc2::CommandScheduler::GetInstance().OnCommandInterrupt(  
         [](const frc2::Command& command, const std::optional<frc2::Command*>& int_cmd) {
-            DataLogger::GetInstance().Log( "Command " + command.GetName() + 
-                                        " interrupted by " + (int_cmd.has_value() ? int_cmd.value()->GetName() : "Disabled?") );
+            DataLogger::GetInstance().SendNT( "Command/" + command.GetName(), false );
+            DataLogger::GetInstance().Log( "Command <" + command.GetName() + 
+                                        "> interrupted by <" + (int_cmd.has_value() ? int_cmd.value()->GetName() : "<DISABLED>") + ">" );
         }
     );
 }

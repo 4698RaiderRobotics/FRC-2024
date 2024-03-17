@@ -37,7 +37,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   units::degree_t GetWristAngle();
 
-  bool IsAtGoal(units::degree_t arm_tol = 3_deg);
+  bool IsAtGoal(units::degree_t arm_tol = 6_deg);
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

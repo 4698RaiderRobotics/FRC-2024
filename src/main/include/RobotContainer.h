@@ -25,12 +25,12 @@ class RobotContainer {
  public:
   RobotContainer();
 
-  frc2::Command* GetAutonomousCommand();
+  frc2::CommandPtr GetAutonomousCommand();
 
  private:
   void ConfigureBindings();
 
-  frc::SendableChooser<frc2::Command*> m_chooser;
+  frc::SendableChooser<frc2::CommandPtr> m_chooser;
   const std::string kOnePiece = "One Piece";
 
   const std::string kSourceFourPiece = "Source Four Piece";
