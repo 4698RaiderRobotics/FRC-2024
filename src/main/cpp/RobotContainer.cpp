@@ -104,27 +104,27 @@ RobotContainer::RobotContainer()
 
   ConfigureBindings();
 
-  m_chooser.SetDefaultOption(kOnePiece, pathplanner::AutoBuilder::buildAuto("THEOnePiece"));
-  m_chooser.AddOption(kSourceFourPiece, pathplanner::AutoBuilder::buildAuto("SourceFourPiece"));
-  m_chooser.AddOption(kSourceThreePiece, pathplanner::AutoBuilder::buildAuto("SourceThreePiece"));
-  m_chooser.AddOption(kSourceTwoPiece, pathplanner::AutoBuilder::buildAuto("SourceTwoPiece"));
-  m_chooser.AddOption(kSourceTwoPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceTwoPieceCenter"));
-  m_chooser.AddOption(kSourceThreePieceCenter, pathplanner::AutoBuilder::buildAuto("SourceThreePieceCenter"));
-  m_chooser.AddOption(kSourceFourPieceCenter, pathplanner::AutoBuilder::buildAuto("SourceFourPieceCenter"));
-  m_chooser.AddOption(kSourceOnePieceTaxi, pathplanner::AutoBuilder::buildAuto("SourceOnePieceTaxi"));
-  m_chooser.AddOption(kAmpFourPiece, pathplanner::AutoBuilder::buildAuto("AmpFourPiece"));
-  m_chooser.AddOption(kAmpThreePiece, pathplanner::AutoBuilder::buildAuto("AmpThreePiece"));
-  m_chooser.AddOption(kAmpTwoPiece, pathplanner::AutoBuilder::buildAuto("AmpTwoPiece"));
-  m_chooser.AddOption(kAmpThreePieceCenter, pathplanner::AutoBuilder::buildAuto("AmpThreePieceCenter"));
-  m_chooser.AddOption(kAmpFourPieceCenter, pathplanner::AutoBuilder::buildAuto("AmpFourPieceCenter"));
-  m_chooser.AddOption(kMiddleFourPiece, pathplanner::AutoBuilder::buildAuto("MiddleFourPiece"));
-  m_chooser.AddOption(kMiddleThreePieceAmp, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceAmp"));
-  m_chooser.AddOption(kMiddleThreePieceSource, pathplanner::AutoBuilder::buildAuto("MiddleThreePieceSource"));
-  m_chooser.AddOption(kMiddleTwoPiece, pathplanner::AutoBuilder::buildAuto("MiddleTwoPiece"));
-  m_chooser.AddOption(kMiddleFourPieceCenterAmp, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterAmp"));
-  m_chooser.AddOption(kMiddleFourPieceCenterSource, pathplanner::AutoBuilder::buildAuto("MiddleFourPieceCenterSource"));
+  m_chooser.SetDefaultOption( kOnePiece, "THEOnePiece");
+  m_chooser.AddOption( kSourceFourPiece, "SourceFourPiece");
+  m_chooser.AddOption( kSourceThreePiece, "SourceThreePiece");
+  m_chooser.AddOption( kSourceTwoPiece, "SourceTwoPiece");
+  m_chooser.AddOption( kSourceTwoPieceCenter, "SourceTwoPieceCenter");
+  m_chooser.AddOption( kSourceThreePieceCenter, "SourceThreePieceCenter");
+  m_chooser.AddOption( kSourceFourPieceCenter, "SourceFourPieceCenter");
+  m_chooser.AddOption( kSourceOnePieceTaxi, "SourceOnePieceTaxi");
+  m_chooser.AddOption( kAmpFourPiece, "AmpFourPiece");
+  m_chooser.AddOption( kAmpThreePiece, "AmpThreePiece");
+  m_chooser.AddOption( kAmpTwoPiece, "AmpTwoPiece");
+  m_chooser.AddOption( kAmpThreePieceCenter, "AmpThreePieceCenter");
+  m_chooser.AddOption( kAmpFourPieceCenter, "AmpFourPieceCenter");
+  m_chooser.AddOption( kMiddleFourPiece, "MiddleFourPiece");
+  m_chooser.AddOption( kMiddleThreePieceAmp, "MiddleThreePieceAmp");
+  m_chooser.AddOption( kMiddleThreePieceSource, "MiddleThreePieceSource");
+  m_chooser.AddOption( kMiddleTwoPiece, "MiddleTwoPiece");
+  m_chooser.AddOption( kMiddleFourPieceCenterAmp, "MiddleFourPieceCenterAmp");
+  m_chooser.AddOption( kMiddleFourPieceCenterSource, "MiddleFourPieceCenterSource");
 
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+  frc::SmartDashboard::PutData("Auto Mode", &m_chooser);
 }
 
 void RobotContainer::ConfigureBindings() {
@@ -154,7 +154,7 @@ void RobotContainer::ConfigureBindings() {
   (m_operatorController.RightBumper() && !m_operatorController.LeftStick()).OnTrue(
       frc2::SequentialCommandGroup(
         frc2::InstantCommand( [this] { m_shooter.Spin( 1000_rpm ); }, {&m_shooter} ),
-//        GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
+        GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
         // ChangeElevatorHeight(&m_elevator, 0_in),
         // frc2::SequentialCommandGroup(
         //   ChangeArmAngle(&m_arm, 170_deg), 
@@ -162,18 +162,19 @@ void RobotContainer::ConfigureBindings() {
         // ), 
 //        StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator ),
         ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )
-      ).ToPtr().WithName( "Right Bumper Shoot")
+      ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
     );
 
  (m_operatorController.RightBumper() && m_operatorController.LeftStick()).OnTrue(
       frc2::SequentialCommandGroup( 
-        ChangeElevatorHeight(&m_elevator, 0_in),
-        frc2::SequentialCommandGroup(
-          ChangeArmAngle(&m_arm, 170_deg), 
-          ChangeWristAngle(&m_arm, 35_deg)
-        ),  
+        GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
+        // ChangeElevatorHeight(&m_elevator, 0_in),
+        // frc2::SequentialCommandGroup(
+        //   ChangeArmAngle(&m_arm, 170_deg), 
+        //   ChangeWristAngle(&m_arm, 35_deg)
+        // ),  
         StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator )
-      ).ToPtr().WithName( "Right Bumper + Left Stick")
+      ).ToPtr().WithName( "Right Bumper + Left Stick - StageNoteInShooter")
     );
 
   // m_operatorController.RightStick().OnTrue(frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 140_deg)).ToPtr());
@@ -184,10 +185,11 @@ void RobotContainer::ConfigureBindings() {
       frc2::SequentialCommandGroup(
         ChangeElevatorHeight(&m_elevator, 0_in), 
         frc2::ParallelCommandGroup(
-          frc2::SequentialCommandGroup(
-            ChangeArmAngle(&m_arm, 170_deg), 
-            ChangeWristAngle(&m_arm, 35_deg)
-          ), 
+          GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
+          // frc2::SequentialCommandGroup(
+          //   ChangeArmAngle(&m_arm, 170_deg), 
+          //   ChangeWristAngle(&m_arm, 35_deg)
+          // ), 
           frc2::InstantCommand([this] {m_intake.SpinIntake(0.0); m_shooter.Spin(0_rpm);}, {&m_intake, &m_shooter})
         )
       ).ToPtr().WithName( "B Button - Rest Position" )
@@ -249,5 +251,5 @@ void RobotContainer::ConfigureBindings() {
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return pathplanner::AutoBuilder::buildAuto("THEOnePiece");
+  return pathplanner::AutoBuilder::buildAuto( m_chooser.GetSelected() );
 }
