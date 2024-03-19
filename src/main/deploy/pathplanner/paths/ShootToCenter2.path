@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.016121023233038,
-        "y": 5.777939483806895
+        "x": 4.4734569469138945,
+        "y": 7.124496534707355
       },
       "isLocked": false,
       "linkedName": "AmpFarShoot"
@@ -39,7 +39,7 @@
   "eventMarkers": [
     {
       "name": "Pick Up",
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",
         "data": {

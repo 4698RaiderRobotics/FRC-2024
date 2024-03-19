@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4645829471839122,
-        "y": 7.007485005961003
+        "x": 2.3624950107043077,
+        "y": 7.007220871584601
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.082406002649843,
-        "y": 7.395762539272825
+        "x": 3.9803180661702386,
+        "y": 7.395498404896423
       },
       "isLocked": false,
       "linkedName": "TopPickUp"
@@ -57,7 +57,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 4.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -72,5 +72,5 @@
     "rotation": 40.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

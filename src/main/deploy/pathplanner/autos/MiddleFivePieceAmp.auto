@@ -1,0 +1,79 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3656518741608918,
+      "y": 5.55593454044051
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartMiddleToBottom"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomTopToMiddle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToTop"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopBottomToCenter1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center1ToShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shootNoteTargeting"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Middle Start",
+  "choreoAuto": false
+}
