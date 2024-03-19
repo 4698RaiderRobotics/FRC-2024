@@ -78,9 +78,9 @@ namespace physical {
 
     const frc::Transform3d kBackRightRobotToCam = frc::Transform3d(frc::Translation3d{-0.06_m, -0.26_m, 0.66_m}, frc::Rotation3d{10_deg, -15_deg, 150_deg});
 
-    const frc::Transform3d kFrontLeftRobotToCam = frc::Transform3d(frc::Translation3d(0_m, 0_m, 0_m), frc::Rotation3d(0_deg, 0_deg, 0_deg));
+    // const frc::Transform3d kFrontLeftRobotToCam = frc::Transform3d(frc::Translation3d(0_m, 0_m, 0_m), frc::Rotation3d(0_deg, 0_deg, 0_deg));
 
-    const frc::Transform3d kBackLeftRobotToCam = frc::Transform3d(frc::Translation3d(0_m, 0_m, 0_m), frc::Rotation3d(0_deg, 0_deg, 0_deg));
+    const frc::Transform3d kBackLeftRobotToCam = frc::Transform3d(frc::Translation3d(-0.06_m, 0.26_m, 0.66_m), frc::Rotation3d(-8_deg, -14_deg, 207_deg));
 
     // Maximum velocity for the shooter angle TrapezoidProfile
     constexpr units::degrees_per_second_t kShooterMaxSpeed = 360_deg_per_s;
@@ -123,10 +123,6 @@ namespace physical {
     constexpr units::meter_t kElevatorMaxHeight = 27_in;
     // Minimum height for the elevator position
     constexpr units::meter_t kElevatorMinHeight = 0_in;
-
-    constexpr double kIntakeSpeed = 1;
-
-    constexpr units::revolutions_per_minute_t kShooterSpeed = 3000_rpm;
 
     // Angle for the shooter to shoot from speaker
     constexpr units::degree_t kShooterSpeakerAngle = 60_deg;

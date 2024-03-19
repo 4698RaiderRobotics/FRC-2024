@@ -7,19 +7,28 @@
 #include "DataLogger.h"
 #include "subsystems/VisionSubsystem.h"
 
-void UpdatePoseEstimator( photon::PhotonCamera &cam, 
-                          photon::PhotonPoseEstimator *estimator, 
+void UpdatePoseEstimator( std::string camName, 
+                          photon::PhotonPoseEstimator &estimator, 
                           frc::SwerveDrivePoseEstimator<4> &odometry );
 
 
-VisionSubsystem::VisionSubsystem() {
-    frc::AprilTagFieldLayout aprilTagFieldLayout = frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo);
-    m_frontRightPoseEstimator = new photon::PhotonPoseEstimator(aprilTagFieldLayout, photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR, 
-                                                                physical::kFrontRightRobotToCam);
-    m_backRightPoseEstimator = new photon::PhotonPoseEstimator(aprilTagFieldLayout, photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR, 
-                                                                physical::kBackRightRobotToCam);
+VisionSubsystem::VisionSubsystem() : 
+    m_frontRightPoseEstimator{ frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo),
+                               photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
+                               std::move( photon::PhotonCamera{m_frontRightCameraName} ),
+                               physical::kFrontRightRobotToCam },
+    m_backRightPoseEstimator{ frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo),
+                               photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
+                               std::move( photon::PhotonCamera{m_backRightCameraName} ),
+                               physical::kBackRightRobotToCam },
+    m_backLeftPoseEstimator{ frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo),
+                               photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR,
+                               std::move( photon::PhotonCamera{m_backLeftCameraName} ),
+                               physical::kBackLeftRobotToCam }
     
-}
+ {
+ 
+ }
 
 // This method will be called once per scheduler run
 void VisionSubsystem::Periodic() {
@@ -39,42 +48,50 @@ void VisionSubsystem::Periodic() {
 
 void VisionSubsystem::UpdateVisionPose(frc::SwerveDrivePoseEstimator<4> &odometry) {
 
-    UpdatePoseEstimator( m_frontRightCam, m_frontRightPoseEstimator, odometry );
-    UpdatePoseEstimator( m_backRightCam, m_backRightPoseEstimator, odometry );
+    UpdatePoseEstimator( m_frontRightCameraName, m_frontRightPoseEstimator, odometry );
+    UpdatePoseEstimator( m_backRightCameraName, m_backRightPoseEstimator, odometry );
+    UpdatePoseEstimator( m_backLeftCameraName, m_backLeftPoseEstimator, odometry );
 
 }
 
-void UpdatePoseEstimator( photon::PhotonCamera &cam, 
-                          photon::PhotonPoseEstimator *estimator, 
+void UpdatePoseEstimator( std::string camName, 
+                          photon::PhotonPoseEstimator &estimator, 
                           frc::SwerveDrivePoseEstimator<4> &odometry ) {
 
     // Standard Deviations are found with a quadratic equation relating distance to target
     // to the s.d. 
-    // Used the points (1,0.5), (2,0.75), (4,2) which gave the quadratic 0.125x2 - 0.125x + 0.5
+    // Used the points (1,0.5), (2,0.75), (4,6) which gave the quadratic 0.792x2 - 2.125x + 1.833
 
-    photon::PhotonPipelineResult result;
-    result = cam.GetLatestResult();
+    std::string id_base = "Vision/";
+    id_base += camName;
+    id_base += "/";
+
+    auto result = estimator.GetCamera()->GetLatestResult();
+
     if( result.HasTargets() ) {
-        std::string id = "Vision/";
-        id += cam.GetCameraName();
-        id += "/Pose2d";
 
-        auto pose = estimator->Update(result);
-        if( pose.has_value() ) {
-
-            DataLogger::GetInstance().Send( id, pose->estimatedPose.ToPose2d() );
+        auto pose = estimator.Update( result );
+        if( pose.has_value() && result.MultiTagResult().result.ambiguity < 0.2 ) {
 
             double dist_to_tag = result.GetBestTarget().GetBestCameraToTarget().Translation().Norm().value();
-            double sd_dev = (0.125*dist_to_tag - 0.125)*dist_to_tag + 0.5;
-    // fmt::print( "{} updating with pose ({}, {}, {}) with std_dev {}\n", 
-    // m_frontRightCam.GetCameraName(), pose->estimatedPose.ToPose2d().X(),pose->estimatedPose.ToPose2d().Y(),
-    // pose->estimatedPose.ToPose2d().Rotation().Degrees(), sd_dev );
+            double sd_dev = (0.792*dist_to_tag - 2.125)*dist_to_tag + 1.833;
+            if(dist_to_tag < 1.3) {
+                sd_dev = 0.4;
+            }
+
             odometry.SetVisionMeasurementStdDevs( {sd_dev, sd_dev, sd_dev} );
             odometry.AddVisionMeasurement( pose->estimatedPose.ToPose2d(), pose->timestamp );
+
+                // Log the pose
+            DataLogger::GetInstance().Send( id_base + "Pose2d", pose->estimatedPose.ToPose2d() );
+            DataLogger::GetInstance().Send( id_base + "Stdev", sd_dev );
         } else {
-                // Log -20, -20, 0
-            DataLogger::GetInstance().Send( id, frc::Pose2d{-20_m, -20_m, 0_deg} );
+                // We got a bad pose. Log -10, -10, 0
+            DataLogger::GetInstance().Send( id_base + "Pose2d", frc::Pose2d{-10_m, -10_m, 0_deg} );
         }
+    } else {
+            // We don't have a result.  Log -20, -20, 0
+        DataLogger::GetInstance().Send( id_base + "Pose2d", frc::Pose2d{-20_m, -20_m, 0_deg} );
     }
 
 }

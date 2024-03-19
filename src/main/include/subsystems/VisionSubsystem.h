@@ -22,13 +22,15 @@ class VisionSubsystem : public frc2::SubsystemBase {
   void UpdateVisionPose(frc::SwerveDrivePoseEstimator<4> &odometry);
 
  private:
-  photon::PhotonCamera m_frontRightCam{"CameraA_1MP"};
-  photon::PhotonPoseEstimator *m_frontRightPoseEstimator;
-  photon::PhotonCamera m_backRightCam{"CameraB_2MP"};
-  photon::PhotonPoseEstimator *m_backRightPoseEstimator;
-  // photon::PhotonCamera m_frontLeftCam{"FrontLeftCam"};
-  // photon::PhotonPoseEstimator *m_frontLeftPoseEstimator;
-  // photon::PhotonCamera m_backLeftCam{"BackLeftCam"};
-  // photon::PhotonPoseEstimator *m_backLeftPoseEstimator;
+  const char * m_frontRightCameraName = "CameraA_1MP";
+  photon::PhotonPoseEstimator m_frontRightPoseEstimator;
+
+  const char * m_backRightCameraName = "CameraB_2MP";
+  photon::PhotonPoseEstimator m_backRightPoseEstimator;
+  // const char * m_frontLeftCameraName = "FrontLeftCam";
+  // photon::PhotonPoseEstimator m_frontLeftPoseEstimator;
+
+  const char * m_backLeftCameraName = "CameraC_2MP";
+  photon::PhotonPoseEstimator m_backLeftPoseEstimator;
 
 };
