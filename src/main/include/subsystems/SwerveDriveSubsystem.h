@@ -80,6 +80,9 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
     wpi::log::DoubleLogEntry m_gyroYawLogEntry;
     bool m_logging{ false };
 
+    units::degree_t driver_offset;
+    bool m_have_driver_offset{ false  };
+
   public:
     frc::Field2d m_field;
     frc::Trajectory exampleTraj;

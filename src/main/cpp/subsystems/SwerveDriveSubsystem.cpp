@@ -119,7 +119,7 @@ void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double
     frc::ChassisSpeeds speeds{ x, y, omega };
 
     if(operatorRelative) {
-        speeds = speeds.FromFieldRelativeSpeeds( speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue());
+        speeds = speeds.FromFieldRelativeSpeeds( speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue() + driver_offset);
     }
 
     Drive( speeds, false );
@@ -191,14 +191,18 @@ void SwerveDriveSubsystem::Periodic( void ) {
         m_modules[i].SetDesiredState( m_desiredStates[i] );
     }
 
-    // auto pose = m_odometry.GetEstimatedPosition();
-    // if(frc::DriverStation::IsDisabled()) {
-    //     if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
-    //         ResetGyro(pose.Rotation().Degrees() - 180_deg);
-    //     } else {
-    //         ResetGyro(pose.Rotation().Degrees());
-    //     }
-    // }
+    if(frc::DriverStation::IsDisabled() && !m_have_driver_offset ) {
+        auto pose = m_odometry.GetEstimatedPosition();
+        if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
+            driver_offset =  pose.Rotation().Degrees() + 180_deg;
+        } else {
+            driver_offset = pose.Rotation().Degrees();
+        }
+    } else if( !frc::DriverStation::IsDisabled() && !m_have_driver_offset ) {
+            // Only get a driver offset on the first enabling..
+        m_have_driver_offset = true;
+         fmt::print( "Stop getting offset has{} = {:.5}\n", m_have_driver_offset, driver_offset.value() );
+   }
 
     // Updates the odometry of the robot given the SwerveModules' states
     //needs to be an array
@@ -245,6 +249,8 @@ frc::Pose2d SwerveDriveSubsystem::GetPose( void ) {
 
 // Resets the gyro to an angle
 void SwerveDriveSubsystem::ResetGyro( units::degree_t angle ) {
+    driver_offset -= angle;
+    fmt::print( "   RESET GYRO, angle ({:.5}), driver_offset ({:.5})\n", angle, driver_offset );
     m_gyro.SetYaw(angle);
 }
 
