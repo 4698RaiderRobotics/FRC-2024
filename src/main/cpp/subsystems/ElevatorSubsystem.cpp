@@ -27,6 +27,9 @@ void ElevatorSubsystem::Periodic() {
 
         m_elevatorGoal.position = m_elevatorPosition;
         m_elevatorGoal.velocity = 0_mps;
+        
+        // Assume elevator is down when disabled.
+        m_elevatorEncoder.SetPosition(0.0);
 
         return;
     }

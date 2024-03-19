@@ -13,7 +13,7 @@ Climb::Climb(ClimberSubsystem *climber)
 
 // Called when the command is initially scheduled.
 void Climb::Init() {
-  m_climber->SetSpeed(-0.75);
+  m_climber->SetSpeed(-1);
 }
 
 // Called repeatedly when this Command is scheduled to run

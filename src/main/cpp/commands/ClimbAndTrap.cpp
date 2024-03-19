@@ -27,9 +27,9 @@ ClimbAndTrap::ClimbAndTrap(ShooterSubsystem* shooter, IntakeSubsystem* intake, C
     Climb(climber),
     ChangeShooterAngle(shooter, 60_deg),
     frc2::SequentialCommandGroup(ChangeArmAngle(arm, 69_deg), ChangeWristAngle(arm, 63_deg)),
-    frc2::WaitCommand(2_s),
+    frc2::WaitCommand(0.5_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(-0.5);}, {intake}),
-    frc2::WaitCommand(2_s),
+    frc2::WaitCommand(5_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake})
   );
 }

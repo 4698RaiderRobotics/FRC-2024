@@ -4,6 +4,7 @@
 
 #include <frc/Timer.h>
 
+#include "DataLogger.h"
 #include "commands/IntakeNote.h"
 
 IntakeNote::IntakeNote(IntakeSubsystem* intake)
@@ -16,9 +17,11 @@ IntakeNote::IntakeNote(IntakeSubsystem* intake)
 // Called when the command is initially scheduled.
 void IntakeNote::Init() {
 
-  m_intake->SpinIntake(physical::kIntakeSpeed);
+  m_intake->SpinIntake(0.8);
   m_startTime = frc::Timer::GetFPGATimestamp();
   beamHasBroken = false;
+
+  DataLogger::GetInstance().SendNT( "IntakeNote/beamHasBroken", beamHasBroken );
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -27,7 +30,7 @@ void IntakeNote::Execute() {
     beamHasBroken = true;
     m_intake->NotePickedUp();
   }
-  // fmt::print( "   IntakeNote::Execute beam broken {}\n", beamHasBroken );
+  DataLogger::GetInstance().SendNT( "IntakeNote/beamHasBroken", beamHasBroken );
 }
 
 // Called once the command ends or is interrupted.

@@ -34,6 +34,7 @@
 #include "commands/ClimbAndTrap.h"
 #include "commands/ChangeElevatorHeight.h"
 #include "commands/autonomous/FollowTrajectory.h"
+#include "commands/MoveMechanism.h"
 
 #include "commands/autonomous/TwoPieceMiddleAuto.h"
 #include "commands/autonomous/OnePieceAuto.h"
@@ -44,8 +45,12 @@ RobotContainer::RobotContainer()
 : m_swerveDrive{&m_vision}, m_intake{&m_leds} {
 
   pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
-  pathplanner::NamedCommands::registerCommand("shootNoteTargeting", frc2::SequentialCommandGroup(GoToRestPosition(&m_arm, &m_elevator, &m_intake), 
-  ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision )).ToPtr());
+  pathplanner::NamedCommands::registerCommand("shootNoteTargeting", 
+    frc2::SequentialCommandGroup(
+      MoveMechanism( &m_arm, &m_elevator, physical::kArmPassiveAngle, 130_deg, 0_in ), 
+      ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision )
+    ).ToPtr()
+  );
 
 
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
@@ -123,6 +128,7 @@ RobotContainer::RobotContainer()
   m_chooser.AddOption( kMiddleTwoPiece, "MiddleTwoPiece");
   m_chooser.AddOption( kMiddleFourPieceCenterAmp, "MiddleFourPieceCenterAmp");
   m_chooser.AddOption( kMiddleFourPieceCenterSource, "MiddleFourPieceCenterSource");
+//  m_chooser.AddOption( kMiddleFivePieceAmp, "MiddleFivePieceAmp");
 
   frc::SmartDashboard::PutData("Auto Mode", &m_chooser);
 }
@@ -224,7 +230,7 @@ void RobotContainer::ConfigureBindings() {
           ChangeArmAngle(&m_arm, 75_deg), 
           ChangeWristAngle(&m_arm, 90_deg)
         ),
-        ChangeShooterAngle(&m_shooter, 30_deg)
+        ChangeShooterAngle(&m_shooter, 60_deg)
       ), 
       ChangeElevatorHeight(&m_elevator, 25_in)
     ).ToPtr().WithName( "Button Y - Pre Climb")

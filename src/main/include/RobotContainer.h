@@ -53,6 +53,7 @@ class RobotContainer {
   const std::string kMiddleTwoPiece = "Middle Two Piece";
   const std::string kMiddleFourPieceCenterAmp = "Middle Four Piece Center Amp";
   const std::string kMiddleFourPieceCenterSource = "Middle Four Piece Center Source";
+  const std::string kMiddleFivePieceAmp = "Middle Five Piece Amp";
 
 
   // const std::string kTwoPieceMiddle = "Two Piece Middle Auto";

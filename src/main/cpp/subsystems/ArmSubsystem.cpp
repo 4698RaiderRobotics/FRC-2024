@@ -75,10 +75,6 @@ void ArmSubsystem::Periodic() {
     DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
     DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
 
-    // frc::SmartDashboard::PutNumber("Wrist Angle", m_wristAngle.value());
-    // frc::SmartDashboard::PutNumber("Phi", phi.value());
-    // frc::SmartDashboard::PutNumber("Arm Angle", m_armAngle.value());
-
     // frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
     // frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);
     // frc::SmartDashboard::PutNumber("Wrist Motion Magic Vel", wristVelReference.GetValueAsDouble());

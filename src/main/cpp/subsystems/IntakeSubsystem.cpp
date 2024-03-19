@@ -2,6 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 #include "DataLogger.h"
@@ -19,6 +20,26 @@ void IntakeSubsystem::Periodic() {
     DataLogger::GetInstance().SendNT( "IntakeSubsys/BeamBroken", IsBeamBroken() );
     DataLogger::GetInstance().SendNT( "IntakeSubsys/Speed", m_intakeMotor.Get() );
     DataLogger::GetInstance().SendNT( "IntakeSubsys/HasNote", m_hasNote );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Centered", m_centered );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Reversing", m_reversing );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/isIndexed", m_isIndexed );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/start Pos", m_startPos );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Rotations", GetRotations() );
+
+    if ( frc::DriverStation::IsDisabled() ) {
+        m_intakeMotor.Set(0);
+            // Manually placed note.
+        if( IsBeamBroken() ) {
+            m_hasNote = true;
+            m_isIndexed = true;
+        }
+        return;
+    }
+
+        // For some reason this condition happens some times ????
+    if( !m_reversing && !m_centered && !m_isIndexed && IsBeamBroken() ) {
+        m_hasNote = true;
+    }
 
     if( !m_hasNote ) {
          // If we dont have a note, nothing to do
@@ -82,6 +103,7 @@ void IntakeSubsystem::NotePickedUp() {
     m_reversing = false;
     m_intakeMotor.Set(0);
     m_startPos = GetRotations();
+    DataLogger::GetInstance().Log( "        IntakeSubsystem::NotePickedUp()  -- NOTE Picked !");
 }
 
 bool IntakeSubsystem::HasNote() {

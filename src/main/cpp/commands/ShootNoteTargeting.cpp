@@ -39,7 +39,6 @@ ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSub
 // Called when the command is initially scheduled.
 void ShootNoteTargeting::Init() {
     // Start the shooter motors and move to the correct arm and wrist positions.
-  m_shooter->Spin( 2000_rpm );
   // m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
       m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle() );
 
@@ -55,13 +54,17 @@ void ShootNoteTargeting::Init() {
     targetLocation = {-1.5_in, 218.42_in, 0_deg};
   }
 
+  frc::Pose2d robotPose = m_drive->GetPose();
+  units::meter_t dist_to_speaker = (robotPose - targetLocation).Translation().Norm();
+  m_shooter->Spin( 1000_rpm + 200_rpm * dist_to_speaker.value() );
+
   readyToShoot = false;
   noTargets = false;
 }
 
 // Called repeatedly when this Command is scheduled to run
 void ShootNoteTargeting::Execute() {
-  units::degree_t arm_tolerance = 5_deg;
+  units::degree_t arm_tolerance = 7_deg;
 
   if( !readyToShoot ) {
       // Set the shooter angle based on the distance between the robot and the speaker.
@@ -70,6 +73,8 @@ void ShootNoteTargeting::Execute() {
     units::meter_t delta_y =  robotPose.Y() - targetLocation.Y();
 
     units::meter_t dist_to_speaker = (robotPose - targetLocation).Translation().Norm();
+
+    m_shooter->Spin( 1000_rpm + 200_rpm * dist_to_speaker.value() );
 
     DataLogger::GetInstance().SendNT( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
 
@@ -151,8 +156,18 @@ void ShootNoteTargeting::Execute() {
 // Called once the command ends or is interrupted.
 void ShootNoteTargeting::Ending(bool interrupted) {
   // fmt::print( "ShootNoteTargeting::End interrupted({}), noTargets({})\n", interrupted, noTargets );
-  m_shooter->Spin( 0_rpm );
-  // m_shooter->GoToAngle( 30_deg );
+  if( m_shooter->GetAngle() > 50_deg ) {
+    // Shooter is up too far.  It will hit the intake.
+    m_shooter->GoToAngle( 50_deg );
+  }
+
+    // Don't completely stop the shooter in auto mode.
+  // if( frc::DriverStation::IsAutonomous() ) {
+  //   m_shooter->Spin( 1000_rpm );
+  // } else {
+    m_shooter->Spin( 0_rpm );
+  // }
+
   m_arm->GoToArmAngle( 170_deg );
   m_arm->GoToWristAngle( 35_deg );
   m_elev->GoToHeight(0_in);
