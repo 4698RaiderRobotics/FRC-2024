@@ -42,7 +42,10 @@ void ClimberSubsystem::SetSpeed(double speed) {
                 // Ignore setting a zero speed.
             return;
         } else {
+                // Speed was set to non-zero value during homing (Nudge was done)
+                // Stop homing routine
             isHoming = false;
+            isZeroed = true;
         }
     }
     

@@ -9,7 +9,7 @@ GoToRestPosition::GoToRestPosition(ArmSubsystem *arm, ElevatorSubsystem* elev, I
  : m_arm{arm}, m_elev{elev}, m_intake{intake} {
   SetName( "GoToRestPosition" );
   // Use addRequirements() here to declare subsystem dependencies.
-  AddRequirements({arm});
+  AddRequirements({m_arm, m_elev});
 }
 
 // Called when the command is initially scheduled.

@@ -35,7 +35,10 @@ void IntakeNote::Execute() {
 
 // Called once the command ends or is interrupted.
 void IntakeNote::Ending(bool interrupted) {
-  // fmt::print( "   IntakeNote::End interrupted {}\n", interrupted );
+  m_intake->SpinIntake(0.0);
+  if( m_intake->IsBeamBroken()) {
+    m_intake->NotePickedUp();
+  }
 }
 
 // Returns true when the command should end.

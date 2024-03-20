@@ -10,6 +10,8 @@
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/RepeatCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
+#include <frc2/command/ParallelRaceGroup.h>
+#include <frc2/command/FunctionalCommand.h>
 #include <frc2/command/WaitCommand.h>
 
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -138,7 +140,7 @@ void RobotContainer::ConfigureBindings() {
   // (frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kL1) && frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR1))
   //   .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(0_deg); }, { &m_swerveDrive }).ToPtr());
   (m_driverController.L1() && m_driverController.R1() )
-    .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(0_deg); }, { &m_swerveDrive }).ToPtr());
+    .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }).ToPtr());
 
   m_driverController.R2().OnTrue(frc2::SequentialCommandGroup(
     frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 117_deg)),
@@ -169,7 +171,11 @@ void RobotContainer::ConfigureBindings() {
 //        StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator ),
         ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )
       ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
-    );
+
+    //   frc2::FunctionalCommand( [this] { /*nop  init*/}, [this] { /*nop  exec*/}, 
+    //                            [this] (bool) { /*nop  onExit*/}, [this] { return !m_intake.HasNote(); /*nop  IsFinished*/}, {})
+    // ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
+  );
 
  (m_operatorController.RightBumper() && m_operatorController.LeftStick()).OnTrue(
       frc2::SequentialCommandGroup( 

@@ -43,6 +43,8 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
     void ResetGyro( units::degree_t angle );
 
+    void ResetDriverOrientation( units::degree_t angle );
+
     void ResetPose( frc::Pose2d pose );
 
     void StartLogging( wpi::log::DataLog& log );

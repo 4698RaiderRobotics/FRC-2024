@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3351571027466376,
+        "x": 2.4797706738270624,
         "y": 5.55593454044051
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8082090218234488,
-        "y": 5.01062912035734
+        "x": 1.8141520452925082,
+        "y": 4.65008569656779
       },
       "isLocked": false,
       "linkedName": "MiddlePickUp"
     },
     {
       "anchor": {
-        "x": 2.3351571027466376,
-        "y": 4.252563460081876
+        "x": 2.436848837661639,
+        "y": 4.354255194996877
       },
       "prevControl": {
-        "x": 1.9561242726089056,
-        "y": 4.659330399741882
+        "x": 1.7527408027789024,
+        "y": 4.807245650527337
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": -45.0,
+      "rotationDegrees": -30.0,
       "rotateFast": false
     }
   ],
@@ -63,7 +63,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -45.0,
+    "rotation": -30.0,
     "rotateFast": false
   },
   "reversed": false,

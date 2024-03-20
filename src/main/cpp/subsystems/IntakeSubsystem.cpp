@@ -37,6 +37,7 @@ void IntakeSubsystem::Periodic() {
     }
 
         // For some reason this condition happens some times ????
+        // Probably when IntakeNote is interrupted.
     if( !m_reversing && !m_centered && !m_isIndexed && IsBeamBroken() ) {
         m_hasNote = true;
     }
@@ -70,7 +71,7 @@ void IntakeSubsystem::Periodic() {
         m_intakeMotor.Set(0.0);
         m_startPos = GetRotations();
         m_intakeMotor.Set(0.1);
-    } else if(m_isIndexed && GetRotations() - m_startPos > 3.5) {
+    } else if(m_isIndexed && GetRotations() - m_startPos > 2.5) {
             // Note has been backed out to the resting position.
         // fmt::print("    IntakeSubsystem -- Note is in resting position r{}\n", GetRotations());
         m_centered = true;

@@ -254,6 +254,12 @@ void SwerveDriveSubsystem::ResetGyro( units::degree_t angle ) {
     m_gyro.SetYaw(angle);
 }
 
+// Resets the gyro to an angle
+void SwerveDriveSubsystem::ResetDriverOrientation( units::degree_t angle ) {
+    driver_offset = 0_deg;
+    ResetGyro(angle);
+}
+
 // Resets the pose to a position
 void SwerveDriveSubsystem::ResetPose( frc::Pose2d pose ) {
     m_odometry.ResetPosition(
