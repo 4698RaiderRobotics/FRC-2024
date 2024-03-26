@@ -169,7 +169,7 @@ void SwerveDriveSubsystem::Periodic( void ) {
     //m_swerve_display.SetState( m_desiredStates );
 
 #else
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < 4; i++) {
         DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
         DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() );
         DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );

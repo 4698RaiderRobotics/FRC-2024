@@ -10,7 +10,7 @@
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/RepeatCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
-#include <frc2/command/ParallelRaceGroup.h>
+#include <frc2/command/ConditionalCommand.h>
 #include <frc2/command/FunctionalCommand.h>
 #include <frc2/command/WaitCommand.h>
 
@@ -160,6 +160,7 @@ void RobotContainer::ConfigureBindings() {
   // m_operatorController.X().OnTrue(ChangeShooterAngle(&m_shooter, 45_deg).ToPtr());
 
   (m_operatorController.RightBumper() && !m_operatorController.LeftStick()).OnTrue(
+    frc2::ConditionalCommand(
       frc2::SequentialCommandGroup(
         frc2::InstantCommand( [this] { m_shooter.Spin( 1000_rpm ); }, {&m_shooter} ),
         GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
@@ -169,8 +170,10 @@ void RobotContainer::ConfigureBindings() {
         //   ChangeWristAngle(&m_arm, 35_deg)
         // ), 
 //        StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator ),
-        ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )
-      ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
+        ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )),
+      frc2::InstantCommand(), 
+      [this] {return m_intake.HasNote();}
+    ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
 
     //   frc2::FunctionalCommand( [this] { /*nop  init*/}, [this] { /*nop  exec*/}, 
     //                            [this] (bool) { /*nop  onExit*/}, [this] { return !m_intake.HasNote(); /*nop  IsFinished*/}, {})

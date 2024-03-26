@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/Timer.h>
+#include <frc/DriverStation.h>
 
 #include "DataLogger.h"
 #include "subsystems/VisionSubsystem.h"
@@ -79,12 +80,16 @@ void UpdatePoseEstimator( std::string camName,
                 sd_dev = 0.4;
             }
 
-            odometry.SetVisionMeasurementStdDevs( {sd_dev, sd_dev, sd_dev} );
-            odometry.AddVisionMeasurement( pose->estimatedPose.ToPose2d(), pose->timestamp );
-
-                // Log the pose
             DataLogger::GetInstance().Send( id_base + "Pose2d", pose->estimatedPose.ToPose2d() );
             DataLogger::GetInstance().Send( id_base + "Stdev", sd_dev );
+
+            if(frc::DriverStation::IsEnabled() && odometry.GetEstimatedPosition().RelativeTo(pose->estimatedPose.ToPose2d()).Translation().Norm() > 3_m) {
+                return;
+            }
+            odometry.SetVisionMeasurementStdDevs( {sd_dev, sd_dev, sd_dev} );
+            odometry.AddVisionMeasurement( pose->estimatedPose.ToPose2d(), pose->timestamp );
+                // Log the pose
+            
         } else {
                 // We got a bad pose. Log -10, -10, 0
             DataLogger::GetInstance().Send( id_base + "Pose2d", frc::Pose2d{-10_m, -10_m, 0_deg} );
