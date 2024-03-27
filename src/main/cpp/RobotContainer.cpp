@@ -46,15 +46,6 @@
 RobotContainer::RobotContainer() 
 : m_swerveDrive{&m_vision}, m_intake{&m_leds} {
 
-  pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
-  pathplanner::NamedCommands::registerCommand("shootNoteTargeting", 
-    frc2::SequentialCommandGroup(
-      MoveMechanism( &m_arm, &m_elevator, physical::kArmPassiveAngle, 130_deg, 0_in ), 
-      ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision )
-    ).ToPtr()
-  );
-
-
   m_swerveDrive.SetDefaultCommand(frc2::RunCommand(
     [this] {
       m_swerveDrive.ArcadeDrive(vx_axis.GetAxis(), vy_axis.GetAxis(), omega_axis.GetAxis());
@@ -111,26 +102,7 @@ RobotContainer::RobotContainer()
 
   ConfigureBindings();
 
-  m_chooser.SetDefaultOption( kOnePiece, "THEOnePiece");
-  m_chooser.AddOption( kSourceFourPiece, "SourceFourPiece");
-  m_chooser.AddOption( kSourceThreePiece, "SourceThreePiece");
-  m_chooser.AddOption( kSourceTwoPiece, "SourceTwoPiece");
-  m_chooser.AddOption( kSourceTwoPieceCenter, "SourceTwoPieceCenter");
-  m_chooser.AddOption( kSourceThreePieceCenter, "SourceThreePieceCenter");
-  m_chooser.AddOption( kSourceFourPieceCenter, "SourceFourPieceCenter");
-  m_chooser.AddOption( kSourceOnePieceTaxi, "SourceOnePieceTaxi");
-  m_chooser.AddOption( kAmpFourPiece, "AmpFourPiece");
-  m_chooser.AddOption( kAmpThreePiece, "AmpThreePiece");
-  m_chooser.AddOption( kAmpTwoPiece, "AmpTwoPiece");
-  m_chooser.AddOption( kAmpThreePieceCenter, "AmpThreePieceCenter");
-  m_chooser.AddOption( kAmpFourPieceCenter, "AmpFourPieceCenter");
-  m_chooser.AddOption( kMiddleFourPiece, "MiddleFourPiece");
-  m_chooser.AddOption( kMiddleThreePieceAmp, "MiddleThreePieceAmp");
-  m_chooser.AddOption( kMiddleThreePieceSource, "MiddleThreePieceSource");
-  m_chooser.AddOption( kMiddleTwoPiece, "MiddleTwoPiece");
-  m_chooser.AddOption( kMiddleFourPieceCenterAmp, "MiddleFourPieceCenterAmp");
-  m_chooser.AddOption( kMiddleFourPieceCenterSource, "MiddleFourPieceCenterSource");
-//  m_chooser.AddOption( kMiddleFivePieceAmp, "MiddleFivePieceAmp");
+  ConfigureAutos();
 
   frc::SmartDashboard::PutData("Auto Mode", &m_chooser);
 }
@@ -265,6 +237,50 @@ void RobotContainer::ConfigureBindings() {
   //                                                                                 .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr());
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return pathplanner::AutoBuilder::buildAuto( m_chooser.GetSelected() );
+
+void RobotContainer::ConfigureAutos() {
+
+ pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
+  pathplanner::NamedCommands::registerCommand("shootNoteTargeting", 
+    frc2::SequentialCommandGroup(
+      MoveMechanism( &m_arm, &m_elevator, physical::kArmPassiveAngle, 130_deg, 0_in ), 
+      ShootNoteTargeting(&m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision )
+    ).ToPtr()
+  );
+
+  std::vector<AutoNameMap> autos = {
+    { "One Piece", "THEOnePiece" },
+    { "Source Four Piece", "SourceFourPiece" },
+    { "Source Three Piece", "SourceThreePiece" },
+    { "Source Two Piece", "SourceTwoPiece" },
+    { "Source Two Piece Center", "SourceTwoPieceCenter" },
+    { "Source Three Piece Center", "SourceThreePieceCenter" },
+    { "Source Four Piece Center", "SourceFourPieceCenter" },
+    { "Source One Piece Taxi", "SourceOnePieceTaxi" },
+
+    { "Amp Four Piece", "AmpFourPiece" },
+    { "Amp Three Piece", "AmpThreePiece" },
+    { "Amp Two Piece", "AmpTwoPiece" },
+    { "Amp Three Piece Center", "AmpThreePieceCenter" },
+    { "Amp Four Piece Center", "AmpFourPieceCenter" },
+
+    { "Middle Four Piece", "MiddleFourPiece" },
+    { "Middle Three Piece Amp", "MiddleThreePieceAmp" },
+    { "Middle Three Piece Source", "MiddleThreePieceSource" },
+    { "Middle Two Piece", "MiddleTwoPiece" },
+    { "Middle Four Piece Center Amp", "MiddleFourPieceCenterAmp" },
+    { "Middle Four Piece Center Source", "MiddleFourPieceCenterSource" },
+    { "Middle Five Piece Amp", "MiddleFivePieceAmp" }
+  };
+
+  for( int i=0; i<autos.size(); ++i ) {
+      m_chooser.AddOption( autos[i].Description, i );
+       AutoCommands.push_back( pathplanner::AutoBuilder::buildAuto( autos[i].AutoName ).WithName(autos[i].AutoName) );
+  }
+  m_chooser.SetDefaultOption( autos[0].Description, 0 );
+
+}
+
+frc2::Command* RobotContainer::GetAutonomousCommand() {
+  return AutoCommands[ m_chooser.GetSelected() ].get();
 }

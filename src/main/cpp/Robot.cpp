@@ -27,7 +27,7 @@ void Robot::DisabledExit() {}
 void Robot::AutonomousInit() {
   m_autonomousCommand = m_container.GetAutonomousCommand();
 
-  if (m_autonomousCommand.has_value()) {
+  if (m_autonomousCommand != nullptr ) {
     m_autonomousCommand->Schedule();
   }
 }
@@ -37,7 +37,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit() {
-  if (m_autonomousCommand.has_value()) {
+  if (m_autonomousCommand != nullptr) {
     m_autonomousCommand->Cancel();
   }
 }

@@ -25,43 +25,20 @@ class RobotContainer {
  public:
   RobotContainer();
 
-  frc2::CommandPtr GetAutonomousCommand();
+  frc2::Command* GetAutonomousCommand();
 
  private:
   void ConfigureBindings();
+  void ConfigureAutos();
 
-  frc::SendableChooser<std::string> m_chooser;
-  const std::string kOnePiece = "One Piece";
+  frc::SendableChooser<int> m_chooser;
 
-  const std::string kSourceFourPiece = "Source Four Piece";
-  const std::string kSourceThreePiece = "Source Three Piece";
-  const std::string kSourceTwoPiece = "Source Two Piece";
-  const std::string kSourceTwoPieceCenter = "Source Two Piece Center";
-  const std::string kSourceThreePieceCenter = "Source Three Piece Center";
-  const std::string kSourceFourPieceCenter = "Source Four Piece Center";
-  const std::string kSourceOnePieceTaxi = "Source One Piece Taxi";
-
-  const std::string kAmpFourPiece = "Amp Four Piece";
-  const std::string kAmpThreePiece = "Amp Three Piece";
-  const std::string kAmpTwoPiece = "Amp Two Piece";
-  const std::string kAmpThreePieceCenter = "Amp Three Piece Center";
-  const std::string kAmpFourPieceCenter = "Amp Four Piece Center";
-
-  const std::string kMiddleFourPiece = "Middle Four Piece";
-  const std::string kMiddleThreePieceAmp = "Middle Three Piece Amp";
-  const std::string kMiddleThreePieceSource = "Middle Three Piece Source";
-  const std::string kMiddleTwoPiece = "Middle Two Piece";
-  const std::string kMiddleFourPieceCenterAmp = "Middle Four Piece Center Amp";
-  const std::string kMiddleFourPieceCenterSource = "Middle Four Piece Center Source";
-  const std::string kMiddleFivePieceAmp = "Middle Five Piece Amp";
-
-
-  // const std::string kTwoPieceMiddle = "Two Piece Middle Auto";
-  // const std::string kOnePiece = "One Piece Auto";
-  // const std::string kTwoPieceLeft = "Two Piece Left Auto";
-  // const std::string kTwoPieceRight = "Two Piece Right Auto";
-  // const std::string kOnePieceTaxi = "One Piece Taxi Auto";
-  // std::string m_autoSelected;
+  std::vector<frc2::CommandPtr> AutoCommands;
+  
+  struct AutoNameMap {
+    std::string Description;
+    std::string AutoName;
+  };
 
   LEDSubsystem m_leds;
   SwerveDriveSubsystem m_swerveDrive;
