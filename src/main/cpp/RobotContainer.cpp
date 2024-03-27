@@ -108,9 +108,7 @@ RobotContainer::RobotContainer()
 }
 
 void RobotContainer::ConfigureBindings() {
-  // Resets the gyro when the robot is facing the driver
-  // (frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kL1) && frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kR1))
-  //   .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetGyro(0_deg); }, { &m_swerveDrive }).ToPtr());
+  // Resets the gyro when the robot is facing away from the driver
   (m_driverController.L1() && m_driverController.R1() )
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }).ToPtr());
 
@@ -136,30 +134,15 @@ void RobotContainer::ConfigureBindings() {
       frc2::SequentialCommandGroup(
         frc2::InstantCommand( [this] { m_shooter.Spin( 1000_rpm ); }, {&m_shooter} ),
         GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
-        // ChangeElevatorHeight(&m_elevator, 0_in),
-        // frc2::SequentialCommandGroup(
-        //   ChangeArmAngle(&m_arm, 170_deg), 
-        //   ChangeWristAngle(&m_arm, 35_deg)
-        // ), 
-//        StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator ),
         ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )),
       frc2::InstantCommand(), 
       [this] {return m_intake.HasNote();}
     ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
-
-    //   frc2::FunctionalCommand( [this] { /*nop  init*/}, [this] { /*nop  exec*/}, 
-    //                            [this] (bool) { /*nop  onExit*/}, [this] { return !m_intake.HasNote(); /*nop  IsFinished*/}, {})
-    // ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
   );
 
  (m_operatorController.RightBumper() && m_operatorController.LeftStick()).OnTrue(
       frc2::SequentialCommandGroup( 
         GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
-        // ChangeElevatorHeight(&m_elevator, 0_in),
-        // frc2::SequentialCommandGroup(
-        //   ChangeArmAngle(&m_arm, 170_deg), 
-        //   ChangeWristAngle(&m_arm, 35_deg)
-        // ),  
         StageNoteInShooter( &m_shooter, &m_intake, &m_arm, &m_elevator )
       ).ToPtr().WithName( "Right Bumper + Left Stick - StageNoteInShooter")
     );
@@ -173,10 +156,6 @@ void RobotContainer::ConfigureBindings() {
         ChangeElevatorHeight(&m_elevator, 0_in), 
         frc2::ParallelCommandGroup(
           GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
-          // frc2::SequentialCommandGroup(
-          //   ChangeArmAngle(&m_arm, 170_deg), 
-          //   ChangeWristAngle(&m_arm, 35_deg)
-          // ), 
           frc2::InstantCommand([this] {m_intake.SpinIntake(0.0); m_shooter.Spin(0_rpm);}, {&m_intake, &m_shooter})
         )
       ).ToPtr().WithName( "B Button - Rest Position" )
@@ -273,7 +252,7 @@ void RobotContainer::ConfigureAutos() {
     { "Middle Five Piece Amp", "MiddleFivePieceAmp" }
   };
 
-  for( int i=0; i<autos.size(); ++i ) {
+  for( unsigned int i=0; i<autos.size(); ++i ) {
       m_chooser.AddOption( autos[i].Description, i );
        AutoCommands.push_back( pathplanner::AutoBuilder::buildAuto( autos[i].AutoName ).WithName(autos[i].AutoName) );
   }
