@@ -7,17 +7,16 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
-#include "subsystems/SwerveDriveSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/ShooterSubsystem.h"
 #include "subsystems/ArmSubsystem.h"
-#include "subsystems/VisionSubsystem.h"
 #include "subsystems/ElevatorSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
 
-class OnePieceTaxiAuto
+class MoveToAndPlaceInAmp
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
-                                 OnePieceTaxiAuto> {
+                                 MoveToAndPlaceInAmp> {
  public:
-  OnePieceTaxiAuto(SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
-                      ArmSubsystem* arm, ElevatorSubsystem* elevator, VisionSubsystem* vision);
+  MoveToAndPlaceInAmp(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator,
+                      VisionSubsystem* vision);
 };

@@ -42,15 +42,15 @@ class RobotContainer {
 
   LEDSubsystem m_leds;
   SwerveDriveSubsystem m_swerveDrive;
-  ArmSubsystem m_arm;
   ClimberSubsystem m_climber;
   ElevatorSubsystem m_elevator;
   IntakeSubsystem m_intake;
-  ShooterSubsystem m_shooter;
   VisionSubsystem m_vision;
 
   frc2::CommandPS5Controller m_driverController{0};
   frc2::CommandXboxController m_operatorController{1};
+
+  frc2::Command *climbandtrapcmd{nullptr};
 
   ControllerAxis vx_axis{m_driverController, frc::PS5Controller::Axis::kLeftY, true};
   ControllerAxis vy_axis{m_driverController, frc::PS5Controller::Axis::kLeftX, true};
@@ -59,4 +59,7 @@ class RobotContainer {
   ControllerAxis wrist_angle_axis{ m_operatorController, frc::XboxController::Axis::kRightY, true };
   ControllerAxis elevator_axis{ m_operatorController, frc::XboxController::Axis::kLeftX, true };
 
+public:
+  ArmSubsystem m_arm;
+  ShooterSubsystem m_shooter;
 };

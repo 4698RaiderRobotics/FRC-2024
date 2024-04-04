@@ -8,11 +8,15 @@
 
 #include <frc/DriverStation.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/Preferences.h>
 
 ArmSubsystem::ArmSubsystem() {
+    frc::Preferences::InitDouble("ArmOffset", 0.0);
+    frc::Preferences::InitDouble("WristOffset", 0.0);
+
     ctre::phoenix6::configs::CANcoderConfiguration wristAbsoluteEncoderConfigs{};
     wristAbsoluteEncoderConfigs.MagnetSensor.SensorDirection = true;
-    wristAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = -0.03;
+    wristAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = frc::Preferences::GetDouble("WristOffset");
     m_wristEncoder.GetConfigurator().Apply(wristAbsoluteEncoderConfigs, 50_ms);
 
     m_wristMotor.GetConfigurator().Apply(ctre::phoenix6::configs::TalonFXConfiguration{});
@@ -33,7 +37,7 @@ ArmSubsystem::ArmSubsystem() {
 
     ctre::phoenix6::configs::CANcoderConfiguration armAbsoluteEncoderConfigs{};
     armAbsoluteEncoderConfigs.MagnetSensor.SensorDirection = true;
-    armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = 0.078;
+    armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = frc::Preferences::GetDouble("ArmOffset");
     m_armEncoder.GetConfigurator().Apply(armAbsoluteEncoderConfigs, 50_ms);
 
     m_armMotor.GetConfigurator().Apply(ctre::phoenix6::configs::TalonFXConfiguration{});
@@ -69,12 +73,7 @@ void ArmSubsystem::Periodic() {
 
     DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
     DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/IsAtGoal", IsAtGoal() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
-
+ 
     // frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
     // frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);
     // frc::SmartDashboard::PutNumber("Wrist Motion Magic Vel", wristVelReference.GetValueAsDouble());
@@ -92,9 +91,16 @@ void ArmSubsystem::Periodic() {
 
         m_wristGoal.position = m_wristAngle;
         m_wristGoal.velocity = 0_deg_per_s;
-
         return;
     }
+
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/IsAtGoal", IsAtGoal() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Current", m_armMotor.GetSupplyCurrent().GetValueAsDouble() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Current", m_wristMotor.GetSupplyCurrent().GetValueAsDouble() );
 
     m_wristMotor.SetControl( m_wristPositionDC.WithPosition( m_wristGoal.position ) ); 
     
@@ -140,4 +146,28 @@ units::degree_t ArmSubsystem::GetWristAngle() {
 bool ArmSubsystem::IsAtGoal( units::degree_t arm_tol ) {
     return units::math::abs(m_wristAngle - m_wristGoal.position) < arm_tol &&
            units::math::abs(m_armAngle - m_armGoal.position) < arm_tol;
+}
+
+void ArmSubsystem::UpdateEncoderOffsets() {
+    ctre::phoenix6::configs::CANcoderConfiguration armAbsoluteEncoderConfigs{};
+    m_armEncoder.GetConfigurator().Refresh( armAbsoluteEncoderConfigs );
+
+    double offset = armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset - m_armEncoder.GetAbsolutePosition().GetValueAsDouble();
+
+    frc::Preferences::SetDouble("ArmOffset", offset);
+
+    armAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = offset;
+    m_armEncoder.GetConfigurator().Apply(armAbsoluteEncoderConfigs, 50_ms);
+
+
+    ctre::phoenix6::configs::CANcoderConfiguration wristAbsoluteEncoderConfigs{};
+    m_wristEncoder.GetConfigurator().Refresh( wristAbsoluteEncoderConfigs );
+
+    offset = wristAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset - m_wristEncoder.GetAbsolutePosition().GetValueAsDouble();
+
+    frc::Preferences::SetDouble("WristOffset", offset);
+
+    wristAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = offset;
+    m_wristEncoder.GetConfigurator().Apply(wristAbsoluteEncoderConfigs, 50_ms);
+
 }

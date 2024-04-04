@@ -14,14 +14,15 @@ ClimberSubsystem::ClimberSubsystem() {
 
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {
-    frc::SmartDashboard::PutNumber("Climber Current", m_climberMotor.GetOutputCurrent());
-    frc::SmartDashboard::PutNumber("Climber Rotations", GetRotations());
-    frc::SmartDashboard::PutBoolean("isZeroed", isZeroed);
-    frc::SmartDashboard::PutBoolean("Limit Switch", AtLimit());
 
     if ( frc::DriverStation::IsDisabled() ) {
         return;
     }
+
+    frc::SmartDashboard::PutNumber("Climber Current", m_climberMotor.GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Climber Rotations", GetRotations());
+    frc::SmartDashboard::PutBoolean("isZeroed", isZeroed);
+    frc::SmartDashboard::PutBoolean("Limit Switch", AtLimit());
 
     if( !isZeroed ) {
         if( !isHoming ) {
@@ -39,7 +40,7 @@ void ClimberSubsystem::Periodic() {
 void ClimberSubsystem::SetSpeed(double speed) {
     if( isHoming ) {
         if( fabs( speed ) < 0.01 ) {
-                // Ignore setting a zero speed.
+                // Ignore setting a zero speed while homing.
             return;
         } else {
                 // Speed was set to non-zero value during homing (Nudge was done)
@@ -85,10 +86,7 @@ double ClimberSubsystem::GetRotations() {
     return m_climberEncoder.GetPosition();
 }
 
-void ClimberSubsystem::Climb() {
-    
-}
-
 bool ClimberSubsystem::AtLimit() {
     return !m_limit.Get();
 }
+

@@ -35,13 +35,11 @@
 #include "commands/Climb.h"
 #include "commands/ClimbAndTrap.h"
 #include "commands/ChangeElevatorHeight.h"
-#include "commands/autonomous/FollowTrajectory.h"
 #include "commands/MoveMechanism.h"
+#include "commands/MoveToAndPlaceInAmp.h"
+#include "commands/AutoClimbAndTrap.h"
 
-#include "commands/autonomous/TwoPieceMiddleAuto.h"
-#include "commands/autonomous/OnePieceAuto.h"
-#include "commands/autonomous/TwoPieceSideAuto.h"
-#include "commands/autonomous/OnePieceTaxiAuto.h"
+
 
 RobotContainer::RobotContainer() 
 : m_swerveDrive{&m_vision}, m_intake{&m_leds} {
@@ -112,7 +110,7 @@ void RobotContainer::ConfigureBindings() {
   (m_driverController.L1() && m_driverController.R1() )
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }).ToPtr());
 
-  m_driverController.R2().OnTrue(frc2::SequentialCommandGroup(
+  m_driverController.L2().OnTrue(frc2::SequentialCommandGroup(
     frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 117_deg)),
     frc2::InstantCommand([this] {m_intake.SpinIntake(0.5);}, {&m_intake}),
     frc2::WaitCommand(0.2_s),
@@ -121,6 +119,18 @@ void RobotContainer::ConfigureBindings() {
     ChangeElevatorHeight(&m_elevator, 0_m),
     frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 170_deg), ChangeWristAngle(&m_arm, 35_deg))).ToPtr().WithName( "Driver Put in Amp")
   );
+
+  // m_driverController.Square().OnTrue(
+  //   AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision)
+  //   .ToPtr().WithName("Driver AutoClimbAndTrap"));
+
+  m_operatorController.LeftTrigger().OnTrue( frc2::InstantCommand( [this] { delete climbandtrapcmd;
+      climbandtrapcmd = new AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision);
+      climbandtrapcmd->Schedule();}, {}).ToPtr() );
+
+  m_driverController.R2().OnTrue(
+    MoveToAndPlaceInAmp(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_vision)
+    .ToPtr().WithName("Driver Auto MoveToAndPlaceInAmp"));
 
 
   // m_operatorController.A().OnTrue(SpinShooter(&m_shooter, 1700_rpm).ToPtr()).OnFalse(SpinShooter(&m_shooter, 0_rpm).ToPtr());
@@ -203,7 +213,7 @@ void RobotContainer::ConfigureBindings() {
   // m_operatorController.RightTrigger().OnTrue(ChangeClimberHeight(&m_climber, 10).ToPtr());
 
   m_driverController.Cross()
-    .OnTrue( frc2::InstantCommand([this] {m_intake.SpinIntake(-1);}, {&m_intake}).ToPtr().WithName("Driver X - Note Eject"))
+    .OnTrue( frc2::InstantCommand([this] {m_intake.SpinIntake(-0.5);}, {&m_intake}).ToPtr().WithName("Driver X - Note Eject"))
     .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr().WithName("Driver X - Note Eject Stop"));
 
   // frc2::JoystickButton(&m_driverController, frc::PS5Controller::Button::kCircle).WhileTrue(frc2::RunCommand([this] {m_elevator.NudgeHeight(0.1_in);}, {&m_elevator}).ToPtr());
@@ -234,6 +244,7 @@ void RobotContainer::ConfigureAutos() {
     { "Source Two Piece", "SourceTwoPiece" },
     { "Source Two Piece Center", "SourceTwoPieceCenter" },
     { "Source Three Piece Center", "SourceThreePieceCenter" },
+    { "Source Three Piece Center Wait", "SourceThreePieceCenterWait" },
     { "Source Four Piece Center", "SourceFourPieceCenter" },
     { "Source One Piece Taxi", "SourceOnePieceTaxi" },
 

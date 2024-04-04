@@ -7,9 +7,14 @@
 #include "DataLogger.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <frc/Preferences.h>
 
 void Robot::RobotInit() {
     LoggedRobot::RobotInit();
+  
+  frc::SmartDashboard::PutBoolean("Update Arm Preferences", false);
+  frc::SmartDashboard::PutBoolean("Update Shooter Preferences", false);
+
 }
 
 void Robot::RobotPeriodic() {
@@ -20,7 +25,16 @@ void Robot::RobotPeriodic() {
 
 void Robot::DisabledInit() {}
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() {
+  if(frc::SmartDashboard::GetBoolean("Update Arm Preferences", false)) {
+    m_container.m_arm.UpdateEncoderOffsets();
+    frc::SmartDashboard::PutBoolean("Update Arm Preferences", false);
+  }
+  if(frc::SmartDashboard::GetBoolean("Update Shooter Preferences", false)) {
+    m_container.m_shooter.UpdateEncoderOffset();
+    frc::SmartDashboard::PutBoolean("Update Shooter Preferences", false);
+  }
+}
 
 void Robot::DisabledExit() {}
 

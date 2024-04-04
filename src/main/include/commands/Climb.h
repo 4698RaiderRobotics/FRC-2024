@@ -20,7 +20,7 @@
 class Climb
     : public frc2::CommandHelper<LoggedCommand, Climb> {
  public:
-  Climb(ClimberSubsystem *climber);
+  Climb(ClimberSubsystem *climber, double rotation_target = -1.0);
 
   void Init() override;
 
@@ -32,4 +32,6 @@ class Climb
 
  private:
   ClimberSubsystem *m_climber;
-};
+  double rot_target;
+  bool going_up;
+  };

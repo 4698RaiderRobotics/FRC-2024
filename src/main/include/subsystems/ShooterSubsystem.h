@@ -47,6 +47,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
     // Checks if the shooter is at the right speed and angle
   bool IsAtGoal();
 
+  void UpdateEncoderOffset();
+
   units::degree_t GetShooter_ArmAngle()
     { return arm_lut.lookup( m_shooterPosition.value() ) * 1_deg; }
   units::meter_t GetShooter_ElevatorHeight()

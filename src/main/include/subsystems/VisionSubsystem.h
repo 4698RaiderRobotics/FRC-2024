@@ -21,6 +21,8 @@ class VisionSubsystem : public frc2::SubsystemBase {
 
   void UpdateVisionPose(frc::SwerveDrivePoseEstimator<4> &odometry);
 
+  frc::Pose2d GetRelativePose();
+
  private:
   const char * m_frontRightCameraName = "CameraA_1MP";
   photon::PhotonPoseEstimator m_frontRightPoseEstimator;

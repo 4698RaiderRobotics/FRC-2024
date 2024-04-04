@@ -12,19 +12,13 @@
 IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds)
  : m_leds{leds} {
 
+    m_intakeMotor.SetSmartCurrentLimit( 40 );
 };
 
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
 
     DataLogger::GetInstance().SendNT( "IntakeSubsys/BeamBroken", IsBeamBroken() );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Speed", m_intakeMotor.Get() );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/HasNote", m_hasNote );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Centered", m_centered );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Reversing", m_reversing );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/isIndexed", m_isIndexed );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/start Pos", m_startPos );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Rotations", GetRotations() );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_intakeMotor.Set(0);
@@ -36,9 +30,19 @@ void IntakeSubsystem::Periodic() {
         return;
     }
 
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Speed", m_intakeMotor.Get() );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Current", m_intakeMotor.GetOutputCurrent() );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/HasNote", m_hasNote );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Centered", m_centered );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Reversing", m_reversing );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/isIndexed", m_isIndexed );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/start Pos", m_startPos );
+    DataLogger::GetInstance().SendNT( "IntakeSubsys/Rotations", GetRotations() );
+
         // For some reason this condition happens some times ????
         // Probably when IntakeNote is interrupted.
     if( !m_reversing && !m_centered && !m_isIndexed && IsBeamBroken() ) {
+        m_leds->SetColor(0, 255, 0);
         m_hasNote = true;
     }
 
@@ -71,7 +75,7 @@ void IntakeSubsystem::Periodic() {
         m_intakeMotor.Set(0.0);
         m_startPos = GetRotations();
         m_intakeMotor.Set(0.1);
-    } else if(m_isIndexed && GetRotations() - m_startPos > 2.5) {
+    } else if(m_isIndexed && GetRotations() - m_startPos > GearRatio * 0.75) {
             // Note has been backed out to the resting position.
         // fmt::print("    IntakeSubsystem -- Note is in resting position r{}\n", GetRotations());
         m_centered = true;

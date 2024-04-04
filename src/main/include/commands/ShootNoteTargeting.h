@@ -53,9 +53,14 @@ private:
 
     units::second_t spin_start;
 
+    const double yawOffset = -5;  // Correct for note shooting to the left
+
       // NOTE: Should change to Geometry based calculation.
     // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {18.0, 22.0, 25.0, 45.0}};
     // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {20.0, 24.0, 27.0, 45.0}};
     // LUT pitchToAngle{ {-17.0, -11.7, -7.29, 12.3}, {22.0, 26.0, 29.0, 45.0}};
-      LUT azimuthCorrection{ {0.0, 4.0, 6.0}, {0.0, 1.5, 3.0} };
+      LUT azimuthCorrection{ 
+                            {0.0, 3.0, 6.0},    // Distance in meters..
+                            {0.0, 3.0, 5.0}     // Correction angle in degrees.
+      };
 };

@@ -9,6 +9,7 @@
 
 #include "LoggedCommand.h"
 #include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
 
 /**
  * An example command.
@@ -20,7 +21,7 @@
 class ProfiledDriveToPose
     : public frc2::CommandHelper<LoggedCommand, ProfiledDriveToPose> {
  public:
-  ProfiledDriveToPose(SwerveDriveSubsystem *swerve, frc::Pose2d targetPose);
+  ProfiledDriveToPose(SwerveDriveSubsystem *swerve, VisionSubsystem *vision, frc::Pose2d targetPose);
 
   void Init() override;
 
@@ -32,12 +33,13 @@ class ProfiledDriveToPose
 
  private:
   SwerveDriveSubsystem *m_swerve;
+  VisionSubsystem *m_vision;
 
   frc::Pose2d m_targetPose;
 
   frc::TrapezoidProfile<units::meters> m_xProfile{{2_mps, 1_mps_sq}};
   frc::TrapezoidProfile<units::meters> m_yProfile{{2_mps, 1_mps_sq}};
-  frc::TrapezoidProfile<units::degrees> m_omegaProfile{{180_deg_per_s, 360_deg_per_s_sq}};
+  frc::TrapezoidProfile<units::degrees> m_omegaProfile{{180_deg_per_s, 180_deg_per_s_sq}};
 
   frc::TrapezoidProfile<units::meters>::State m_xSetpoint;
   frc::TrapezoidProfile<units::meters>::State m_ySetpoint;

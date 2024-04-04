@@ -47,31 +47,31 @@ SwerveDriveSubsystem::SwerveDriveSubsystem(VisionSubsystem *ll)
                             swerve::pidf::Th_Holo_MaxVel, swerve::pidf::Th_Holo_MaxAcc }}}
 
 {
-#ifdef TUNING
-        // Holonomic Controller parameters
-    frc::SmartDashboard::PutNumber("X_Holo P", m_controller.getXController().GetP() );
-    frc::SmartDashboard::PutNumber("X_Holo I", m_controller.getXController().GetI() );
-    frc::SmartDashboard::PutNumber("X_Holo D", m_controller.getXController().GetD() );
-    frc::SmartDashboard::PutNumber("Y_Holo P", m_controller.getYController().GetP() );
-    frc::SmartDashboard::PutNumber("Y_Holo I", m_controller.getYController().GetI() );
-    frc::SmartDashboard::PutNumber("Y_Holo D", m_controller.getYController().GetD() );
-    frc::SmartDashboard::PutNumber("Th_Holo P", m_controller.getThetaController().GetP() );
-    frc::SmartDashboard::PutNumber("Th_Holo I", m_controller.getThetaController().GetI() );
-    frc::SmartDashboard::PutNumber("Th_Holo D", m_controller.getThetaController().GetD() );
-    frc::SmartDashboard::PutNumber("Th_Holo MaxVel", swerve::pidf::Th_Holo_MaxVel.value() );
-    frc::SmartDashboard::PutNumber("Th_Holo MaxAcc", swerve::pidf::Th_Holo_MaxAcc.value() );
+// #ifdef TUNING
+//         // Holonomic Controller parameters
+//     frc::SmartDashboard::PutNumber("X_Holo P", m_controller.getXController().GetP() );
+//     frc::SmartDashboard::PutNumber("X_Holo I", m_controller.getXController().GetI() );
+//     frc::SmartDashboard::PutNumber("X_Holo D", m_controller.getXController().GetD() );
+//     frc::SmartDashboard::PutNumber("Y_Holo P", m_controller.getYController().GetP() );
+//     frc::SmartDashboard::PutNumber("Y_Holo I", m_controller.getYController().GetI() );
+//     frc::SmartDashboard::PutNumber("Y_Holo D", m_controller.getYController().GetD() );
+//     frc::SmartDashboard::PutNumber("Th_Holo P", m_controller.getThetaController().GetP() );
+//     frc::SmartDashboard::PutNumber("Th_Holo I", m_controller.getThetaController().GetI() );
+//     frc::SmartDashboard::PutNumber("Th_Holo D", m_controller.getThetaController().GetD() );
+//     frc::SmartDashboard::PutNumber("Th_Holo MaxVel", swerve::pidf::Th_Holo_MaxVel.value() );
+//     frc::SmartDashboard::PutNumber("Th_Holo MaxAcc", swerve::pidf::Th_Holo_MaxAcc.value() );
     
-        // Swerve Module parameters
-    // frc::SmartDashboard::PutNumber("Drive P", m_modules[0].m_drivePIDController.GetP() );
-    // frc::SmartDashboard::PutNumber("Drive I", m_modules[0].m_drivePIDController.GetI() );
-    // frc::SmartDashboard::PutNumber("Drive D", m_modules[0].m_drivePIDController.GetD() );
-    // frc::SmartDashboard::PutNumber("Drive FF", m_modules[0].m_drivePIDController.GetFF() );
-    frc::SmartDashboard::PutNumber("Turn P", m_modules[0].m_turnPIDController.GetP() );
-    frc::SmartDashboard::PutNumber("Turn I", m_modules[0].m_turnPIDController.GetI() );
-    frc::SmartDashboard::PutNumber("Turn D", m_modules[0].m_turnPIDController.GetD() );
+//         // Swerve Module parameters
+//     // frc::SmartDashboard::PutNumber("Drive P", m_modules[0].m_drivePIDController.GetP() );
+//     // frc::SmartDashboard::PutNumber("Drive I", m_modules[0].m_drivePIDController.GetI() );
+//     // frc::SmartDashboard::PutNumber("Drive D", m_modules[0].m_drivePIDController.GetD() );
+//     // frc::SmartDashboard::PutNumber("Drive FF", m_modules[0].m_drivePIDController.GetFF() );
+//     frc::SmartDashboard::PutNumber("Turn P", m_modules[0].m_turnPIDController.GetP() );
+//     frc::SmartDashboard::PutNumber("Turn I", m_modules[0].m_turnPIDController.GetI() );
+//     frc::SmartDashboard::PutNumber("Turn D", m_modules[0].m_turnPIDController.GetD() );
 
-    frc::SmartDashboard::PutBoolean("Update Parameters", false );
-#endif /* TUNING */
+//     frc::SmartDashboard::PutBoolean("Update Parameters", false );
+// #endif /* TUNING */
 
         // Reset the gyro
     ResetGyro(0_deg);
@@ -127,10 +127,19 @@ void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double
 
 void SwerveDriveSubsystem::Drive( frc::ChassisSpeeds speeds, bool fieldRelative ) {
     if(fieldRelative) {
-        m_robotRelativeSpeeds = speeds.FromFieldRelativeSpeeds(speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue());
+        m_robotRelativeSpeeds = speeds.FromFieldRelativeSpeeds(speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue() + field_offset );
+        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Field Rel X", speeds.vx.value() );
+        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Field Rel Y", speeds.vy.value() );
+        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Field Rel Omega", static_cast<units::revolutions_per_minute_t>(speeds.omega).value() );
+        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Gyro Angle", m_gyro.GetYaw().GetValue().value() );
     } else {
         m_robotRelativeSpeeds = speeds;
     }
+
+    // DataLogger::GetInstance().SendNT( "Swerve/Drive/Robot Rel X", m_robotRelativeSpeeds.vx.value() );
+    // DataLogger::GetInstance().SendNT( "Swerve/Drive/Robot Rel Y", m_robotRelativeSpeeds.vy.value() );
+    // DataLogger::GetInstance().SendNT( "Swerve/Drive/Robot Rel Omega", static_cast<units::revolutions_per_minute_t>(m_robotRelativeSpeeds.omega).value() );
+
 
     // An array of SwerveModuleStates computed from the ChassisSpeeds object
     // m_desiredStates = m_kinematics.ToSwerveModuleStates( fieldRelative ? speeds.FromFieldRelativeSpeeds( 
@@ -150,41 +159,27 @@ void SwerveDriveSubsystem::DriveTrajectory( frc::Trajectory::State trajState, co
 
 void SwerveDriveSubsystem::Periodic( void ) {
 
-#ifdef TUNING
-    if( frc::SmartDashboard::GetBoolean("Update Parameters", false ) ) {
-        TuneSwerveDrive();
-        frc::SmartDashboard::PutBoolean("Update Parameters", false );
-    }
+// #ifdef TUNING
+//     if( frc::SmartDashboard::GetBoolean("Update Parameters", false ) ) {
+//         TuneSwerveDrive();
+//         frc::SmartDashboard::PutBoolean("Update Parameters", false );
+//     }
 
-    frc::SmartDashboard::PutNumber("Front Left Absolute Position", m_modules[0].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
-    frc::SmartDashboard::PutNumber("Front Right Absolute Position", m_modules[1].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
-    frc::SmartDashboard::PutNumber("Back Left Absolute Position", m_modules[2].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
-    frc::SmartDashboard::PutNumber("Back Right Absolute Position", m_modules[3].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
+//     frc::SmartDashboard::PutNumber("Front Left Absolute Position", m_modules[0].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
+//     frc::SmartDashboard::PutNumber("Front Right Absolute Position", m_modules[1].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
+//     frc::SmartDashboard::PutNumber("Back Left Absolute Position", m_modules[2].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
+//     frc::SmartDashboard::PutNumber("Back Right Absolute Position", m_modules[3].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble());
 
-    frc::SmartDashboard::PutNumber("Turn Motor Position", m_modules[0].GetPosition().angle.Degrees().value());
-    frc::SmartDashboard::PutNumber("Turn Motor Position Setpoint", m_desiredStates[0].angle.Degrees().value());
-    frc::SmartDashboard::PutNumber("Drive Motor Velocity", m_modules[0].GetState().speed.value());
-    frc::SmartDashboard::PutNumber("Drive Motor Velocity Setpoint", m_desiredStates[0].speed.value());
+//     frc::SmartDashboard::PutNumber("Turn Motor Position", m_modules[0].GetPosition().angle.Degrees().value());
+//     frc::SmartDashboard::PutNumber("Turn Motor Position Setpoint", m_desiredStates[0].angle.Degrees().value());
+//     frc::SmartDashboard::PutNumber("Drive Motor Velocity", m_modules[0].GetState().speed.value());
+//     frc::SmartDashboard::PutNumber("Drive Motor Velocity Setpoint", m_desiredStates[0].speed.value());
 
-    //m_swerve_display.SetState( m_desiredStates );
+//     //m_swerve_display.SetState( m_desiredStates );
 
-#else
-    for(int i = 0; i < 4; i++) {
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
+// #else
 
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Delta Theta", m_modules[i].dTheta.value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Desired RPM", m_modules[i].speed.value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Optimized RPM", m_modules[i].opSpeed.value() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Motor Speed", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() );
-        DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Motor Speed", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() );
-    }
-
-#endif /* TUNING */
+// #endif /* TUNING */
 
     // Sets each SwerveModule to the correct SwerveModuleState
     for( int i=0; i<4; ++i ) {
@@ -193,21 +188,22 @@ void SwerveDriveSubsystem::Periodic( void ) {
 
     if(frc::DriverStation::IsDisabled() && !m_have_driver_offset ) {
         auto pose = m_odometry.GetEstimatedPosition();
+        field_offset = pose.Rotation().Degrees();
         if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
-            driver_offset =  pose.Rotation().Degrees() + 180_deg;
+            driver_offset = field_offset + 180_deg;
         } else {
-            driver_offset = pose.Rotation().Degrees();
+            driver_offset = field_offset;
         }
     } else if( !frc::DriverStation::IsDisabled() && !m_have_driver_offset ) {
             // Only get a driver offset on the first enabling..
         m_have_driver_offset = true;
-         fmt::print( "Stop getting offset has{} = {:.5}\n", m_have_driver_offset, driver_offset.value() );
-   }
+         fmt::print( "Stop getting offset has {} = {:.5}\n", m_have_driver_offset, driver_offset.value() );
+    }
 
     // Updates the odometry of the robot given the SwerveModules' states
     //needs to be an array
 
-frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() );
+    frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() );
 
     m_odometry.Update( m_gyro.GetYaw().GetValue(),
     {
@@ -217,7 +213,24 @@ frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() 
 
     m_vision->UpdateVisionPose( m_odometry );
 
-    if( m_logging ) {
+    if( frc::DriverStation::IsEnabled() ) {
+        for(int i = 0; i < 4; i++) {
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 360 );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
+
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Delta Theta", m_modules[i].dTheta.value() );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Desired RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].speed).value() );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Optimized RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].opSpeed).value() );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Motor RPM", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() * 60 );
+            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Motor RPM", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() * 60 );
+        }
+    }
+
+    if( m_logging && frc::DriverStation::IsEnabled() ) {
         // Log the swerve states
         for( int i=0; i<4; ++i ) {
             m_actualStates[i] = m_modules[i].GetState();
@@ -235,7 +248,7 @@ frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() 
                                  currentPose.Rotation().Degrees().value() } );
     }
 
-    m_field.SetRobotPose(GetPose());
+    m_field.SetRobotPose( m_odometry.GetEstimatedPosition() );
 }
 
 frc::ChassisSpeeds SwerveDriveSubsystem::GetRobotRelativeSpeeds() {
@@ -250,7 +263,8 @@ frc::Pose2d SwerveDriveSubsystem::GetPose( void ) {
 // Resets the gyro to an angle
 void SwerveDriveSubsystem::ResetGyro( units::degree_t angle ) {
     driver_offset -= angle;
-    fmt::print( "   RESET GYRO, angle ({:.5}), driver_offset ({:.5})\n", angle, driver_offset );
+    field_offset -= angle;
+    // fmt::print( "   RESET GYRO, angle ({:.5}), driver_offset ({:.5})\n", angle, driver_offset );
     m_gyro.SetYaw(angle);
 }
 
@@ -291,35 +305,35 @@ void SwerveDriveSubsystem::LogSwerveStateArray( wpi::log::DoubleArrayLogEntry& l
     logEntry.Append( state_array );
 }
 
-void SwerveDriveSubsystem::TuneSwerveDrive() {
-#ifdef TUNING
-    double val;
-    static units::radians_per_second_t MaxVel{ swerve::pidf::Th_Holo_MaxVel };
-    static units::radians_per_second_squared_t MaxAcc{ swerve::pidf::Th_Holo_MaxAcc };
+// void SwerveDriveSubsystem::TuneSwerveDrive() {
+// #ifdef TUNING
+//     double val;
+//     static units::radians_per_second_t MaxVel{ swerve::pidf::Th_Holo_MaxVel };
+//     static units::radians_per_second_squared_t MaxAcc{ swerve::pidf::Th_Holo_MaxAcc };
 
-#define SET_HOLO_IF_CHANGED( name, pidc, getf, setf ) \
+// #define SET_HOLO_IF_CHANGED( name, pidc, getf, setf ) \
             val = frc::SmartDashboard::GetNumber((name), pidc.getf() ); \
             if( val != pidc.getf() ) { pidc.setf( val ); }
 
-    SET_HOLO_IF_CHANGED( "X_Holo P", m_controller.getXController(), GetP, SetP )
-    SET_HOLO_IF_CHANGED( "X_Holo I", m_controller.getXController(), GetI, SetI )
-    SET_HOLO_IF_CHANGED( "X_Holo D", m_controller.getXController(), GetD, SetD )
-    SET_HOLO_IF_CHANGED( "Y_Holo P", m_controller.getYController(), GetP, SetP )
-    SET_HOLO_IF_CHANGED( "Y_Holo I", m_controller.getYController(), GetI, SetI )
-    SET_HOLO_IF_CHANGED( "Y_Holo D", m_controller.getYController(), GetD, SetD )
-    SET_HOLO_IF_CHANGED( "Th_Holo P", m_controller.getThetaController(), GetP, SetP )
-    SET_HOLO_IF_CHANGED( "Th_Holo I", m_controller.getThetaController(), GetI, SetI )
-    SET_HOLO_IF_CHANGED( "Th_Holo D", m_controller.getThetaController(), GetD, SetD )
+//     SET_HOLO_IF_CHANGED( "X_Holo P", m_controller.getXController(), GetP, SetP )
+//     SET_HOLO_IF_CHANGED( "X_Holo I", m_controller.getXController(), GetI, SetI )
+//     SET_HOLO_IF_CHANGED( "X_Holo D", m_controller.getXController(), GetD, SetD )
+//     SET_HOLO_IF_CHANGED( "Y_Holo P", m_controller.getYController(), GetP, SetP )
+//     SET_HOLO_IF_CHANGED( "Y_Holo I", m_controller.getYController(), GetI, SetI )
+//     SET_HOLO_IF_CHANGED( "Y_Holo D", m_controller.getYController(), GetD, SetD )
+//     SET_HOLO_IF_CHANGED( "Th_Holo P", m_controller.getThetaController(), GetP, SetP )
+//     SET_HOLO_IF_CHANGED( "Th_Holo I", m_controller.getThetaController(), GetI, SetI )
+//     SET_HOLO_IF_CHANGED( "Th_Holo D", m_controller.getThetaController(), GetD, SetD )
 
-    double sd_maxVel = frc::SmartDashboard::GetNumber( "Th_Holo MaxVel", swerve::pidf::Th_Holo_MaxVel.value() );
-    double sd_maxAcc = frc::SmartDashboard::GetNumber( "Th_Holo MaxAcc", swerve::pidf::Th_Holo_MaxAcc.value() );
-    if( sd_maxVel != MaxVel.value() || sd_maxAcc != MaxAcc.value() ) {
-        MaxVel = units::radians_per_second_t{ sd_maxVel };
-        MaxAcc = units::radians_per_second_squared_t{ sd_maxAcc };
-        m_controller.getThetaController().SetConstraints( { MaxVel, MaxAcc } );
-    }
+//     double sd_maxVel = frc::SmartDashboard::GetNumber( "Th_Holo MaxVel", swerve::pidf::Th_Holo_MaxVel.value() );
+//     double sd_maxAcc = frc::SmartDashboard::GetNumber( "Th_Holo MaxAcc", swerve::pidf::Th_Holo_MaxAcc.value() );
+//     if( sd_maxVel != MaxVel.value() || sd_maxAcc != MaxAcc.value() ) {
+//         MaxVel = units::radians_per_second_t{ sd_maxVel };
+//         MaxAcc = units::radians_per_second_squared_t{ sd_maxAcc };
+//         m_controller.getThetaController().SetConstraints( { MaxVel, MaxAcc } );
+//     }
 
-#define SET_MODULES_IF_CHANGED( name, mods, pidc, getf, setf ) \
+// #define SET_MODULES_IF_CHANGED( name, mods, pidc, getf, setf ) \
             val = frc::SmartDashboard::GetNumber((name), mods[0].pidc.getf() ); \
             if( val != mods[0].pidc.getf() ) { \
                 for(int i=0; i<4; ++i ) { \
@@ -327,12 +341,12 @@ void SwerveDriveSubsystem::TuneSwerveDrive() {
                 } \
             }
 
-    // SET_MODULES_IF_CHANGED( "Drive P", m_modules, m_drivePIDController, GetP, SetP )
-    // SET_MODULES_IF_CHANGED( "Drive I", m_modules, m_drivePIDController, GetI, SetI )
-    // SET_MODULES_IF_CHANGED( "Drive D", m_modules, m_drivePIDController, GetD, SetD )
-    // SET_MODULES_IF_CHANGED( "Drive FF", m_modules, m_drivePIDController, GetFF, SetFF )
-    SET_MODULES_IF_CHANGED( "Turn P", m_modules, m_turnPIDController, GetP, SetP )
-    SET_MODULES_IF_CHANGED( "Turn I", m_modules, m_turnPIDController, GetI, SetI )
-    SET_MODULES_IF_CHANGED( "Turn D", m_modules, m_turnPIDController, GetD, SetD )
-#endif /* TUNING */
-}
+//     // SET_MODULES_IF_CHANGED( "Drive P", m_modules, m_drivePIDController, GetP, SetP )
+//     // SET_MODULES_IF_CHANGED( "Drive I", m_modules, m_drivePIDController, GetI, SetI )
+//     // SET_MODULES_IF_CHANGED( "Drive D", m_modules, m_drivePIDController, GetD, SetD )
+//     // SET_MODULES_IF_CHANGED( "Drive FF", m_modules, m_drivePIDController, GetFF, SetFF )
+//     SET_MODULES_IF_CHANGED( "Turn P", m_modules, m_turnPIDController, GetP, SetP )
+//     SET_MODULES_IF_CHANGED( "Turn I", m_modules, m_turnPIDController, GetI, SetI )
+//     SET_MODULES_IF_CHANGED( "Turn D", m_modules, m_turnPIDController, GetD, SetD )
+// #endif /* TUNING */
+// }

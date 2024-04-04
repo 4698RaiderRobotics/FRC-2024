@@ -39,6 +39,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
 
   bool IsAtGoal(units::degree_t arm_tol = 6_deg);
 
+  void UpdateEncoderOffsets();
+  
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

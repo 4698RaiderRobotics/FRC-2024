@@ -49,6 +49,8 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   double m_startPos;
 
+  const double GearRatio = 3;
+
     // We have a note?
   bool m_hasNote = false;
     // We are moving the note backward to center it

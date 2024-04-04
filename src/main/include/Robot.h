@@ -9,6 +9,7 @@
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc/PowerDistribution.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "LoggedRobot.h"
 #include "RobotContainer.h"
@@ -36,5 +37,9 @@ class Robot : public LoggedRobot {
   RobotContainer m_container;
 
 //  frc::PowerDistribution m_pdp{ 1, frc::PowerDistribution::ModuleType::kRev };
+
+  std::string_view kArmOffsetKey = "ArmOffset";
+  std::string_view kWristOffsetKey = "WristOffset";
+  std::string_view kShooterOffsetKey = "ShooterOffset";
 
 };

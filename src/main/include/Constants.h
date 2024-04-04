@@ -74,13 +74,23 @@ namespace deviceIDs {
 
 namespace physical {
 
-    const frc::Transform3d kFrontRightRobotToCam = frc::Transform3d(frc::Translation3d{0.025_m, -0.26_m, 0.66_m}, frc::Rotation3d{-6_deg, -8_deg, 30_deg});
+        // Camera "CameraA_1MP"
+    // const frc::Transform3d kFrontRightRobotToCam = frc::Transform3d(frc::Translation3d{0.025_m, -0.26_m, 0.66_m}, frc::Rotation3d{-6_deg, -8_deg, 30_deg});
+    const frc::Transform3d kFrontRightRobotToCam = 
+            frc::Transform3d(frc::Translation3d{-1.9015_in, -10.8912_in, 30.2843_in}, frc::Rotation3d{-8.2028_deg, -23.9351_deg, 36.3362_deg});
 
-    const frc::Transform3d kBackRightRobotToCam = frc::Transform3d(frc::Translation3d{-0.06_m, -0.26_m, 0.66_m}, frc::Rotation3d{10_deg, -15_deg, 150_deg});
+
+         // Camera "CameraB_2MP"
+//    const frc::Transform3d kBackRightRobotToCam = frc::Transform3d(frc::Translation3d{-0.06_m, -0.26_m, 0.66_m}, frc::Rotation3d{10_deg, -15_deg, 150_deg});
+   const frc::Transform3d kBackRightRobotToCam = 
+            frc::Transform3d(frc::Translation3d{-3.3483_in, -10.3919_in, 26.2791_in}, frc::Rotation3d{9.487_deg, -14.549_deg, 148.395_deg});
 
     // const frc::Transform3d kFrontLeftRobotToCam = frc::Transform3d(frc::Translation3d(0_m, 0_m, 0_m), frc::Rotation3d(0_deg, 0_deg, 0_deg));
 
-    const frc::Transform3d kBackLeftRobotToCam = frc::Transform3d(frc::Translation3d(-0.06_m, 0.26_m, 0.66_m), frc::Rotation3d(-8_deg, -14_deg, 207_deg));
+         // Camera "CameraC_2MP"
+    // const frc::Transform3d kBackLeftRobotToCam = frc::Transform3d(frc::Translation3d(-0.06_m, 0.26_m, 0.66_m), frc::Rotation3d(-8_deg, -14_deg, 207_deg));
+    const frc::Transform3d kBackLeftRobotToCam = 
+            frc::Transform3d(frc::Translation3d(-6.7061_in, 9.7004_in, 24.6382_in), frc::Rotation3d(-8.760_deg, -13.443_deg, -149.618_deg));
 
     // Maximum velocity for the shooter angle TrapezoidProfile
     constexpr units::degrees_per_second_t kShooterMaxSpeed = 360_deg_per_s;
