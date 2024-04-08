@@ -111,9 +111,9 @@ void RobotContainer::ConfigureBindings() {
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }).ToPtr());
 
   m_driverController.L2().OnTrue(frc2::SequentialCommandGroup(
-    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 117_deg)),
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 112_deg)),
     frc2::InstantCommand([this] {m_intake.SpinIntake(0.5);}, {&m_intake}),
-    frc2::WaitCommand(0.2_s),
+    frc2::WaitCommand(0.5_s),
     frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}),
     frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 75_deg), ChangeWristAngle(&m_arm, 90_deg)),
     ChangeElevatorHeight(&m_elevator, 0_m),
@@ -125,8 +125,8 @@ void RobotContainer::ConfigureBindings() {
   //   .ToPtr().WithName("Driver AutoClimbAndTrap"));
 
   m_operatorController.LeftTrigger().OnTrue( frc2::InstantCommand( [this] { delete climbandtrapcmd;
-      climbandtrapcmd = new AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision);
-      climbandtrapcmd->Schedule();}, {}).ToPtr() );
+        climbandtrapcmd = new AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision);
+        climbandtrapcmd->Schedule();}, {}).ToPtr() );
 
   m_driverController.R2().OnTrue(
     MoveToAndPlaceInAmp(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_vision)

@@ -42,7 +42,7 @@ MoveToAndPlaceInAmp::MoveToAndPlaceInAmp(SwerveDriveSubsystem* drive, IntakeSubs
     frc2::WaitCommand(0.5_s),
     frc2::InstantCommand([this, drive] {drive->Drive({0_mps, 0_mps, 0_deg_per_s});}, {drive}),
     // ProfiledDriveToPose(drive, vision, {targetPose.X(), targetPose.Y() + 6_in, targetPose.Rotation()}),
-    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 117_deg)),
+    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 112_deg)),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.75);}, {intake}),
     frc2::WaitCommand(0.5_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
