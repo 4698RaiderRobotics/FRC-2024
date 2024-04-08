@@ -124,13 +124,25 @@ void RobotContainer::ConfigureBindings() {
   //   AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision)
   //   .ToPtr().WithName("Driver AutoClimbAndTrap"));
 
-  m_operatorController.LeftTrigger().OnTrue( frc2::InstantCommand( [this] { delete climbandtrapcmd;
-        climbandtrapcmd = new AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision);
-        climbandtrapcmd->Schedule();}, {}).ToPtr() );
+  m_operatorController.LeftTrigger().OnTrue( 
+    frc2::InstantCommand( 
+      [this] { 
+        delete m_climbAndTrapCmd;
+        m_climbAndTrapCmd = new AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision);
+        m_climbAndTrapCmd->Schedule();
+      }, {}
+    ).ToPtr() 
+  );
 
   m_driverController.R2().OnTrue(
-    MoveToAndPlaceInAmp(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_vision)
-    .ToPtr().WithName("Driver Auto MoveToAndPlaceInAmp"));
+    frc2::InstantCommand( 
+      [this] { 
+        delete m_moveToAmpCmd;
+        m_moveToAmpCmd = new MoveToAndPlaceInAmp(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_vision);
+        m_moveToAmpCmd->Schedule();
+      }, {}
+    ).ToPtr() 
+  );
 
 
   // m_operatorController.A().OnTrue(SpinShooter(&m_shooter, 1700_rpm).ToPtr()).OnFalse(SpinShooter(&m_shooter, 0_rpm).ToPtr());
