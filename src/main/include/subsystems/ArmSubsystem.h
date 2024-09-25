@@ -42,8 +42,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
   void UpdateEncoderOffsets();
   
  private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+   const double kWristGearRatio = 36.0 * 42 / 38;
 
   ctre::phoenix6::hardware::TalonFX m_wristMotor{deviceIDs::kWristMotorID};
   ctre::phoenix6::hardware::CANcoder m_wristEncoder{deviceIDs::kWristEncoderID};
