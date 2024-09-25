@@ -111,4 +111,6 @@ frc::Pose2d VisionSubsystem::GetRelativePose() {
             return frc::Pose3d{target.GetBestCameraToTarget().Translation(), target.GetBestCameraToTarget().Rotation()}.ToPose2d();
         }
     }
+
+    return frc::Pose2d{};
 }
