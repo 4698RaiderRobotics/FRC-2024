@@ -33,10 +33,10 @@ namespace pidf {
     constexpr double kWristI = 0.0;
     constexpr double kWristD = 0.0;
 
-    constexpr double kWristG = 0.0115;
-    constexpr double kWristV = 0.65;
+    constexpr double kWristG = 0.018;
+    constexpr double kWristV = 0.38;
     constexpr double kWristA = 0.0;
-    constexpr double kWristS = 0.0;
+    constexpr double kWristS = 0.005;
 
     constexpr double kElevatorP = 6.666;
     constexpr double kElevatorI = 0.0;
@@ -92,10 +92,27 @@ namespace physical {
     const frc::Transform3d kBackLeftRobotToCam = 
             frc::Transform3d(frc::Translation3d(-6.7061_in, 9.7004_in, 24.6382_in), frc::Rotation3d(-8.760_deg, -13.443_deg, -149.618_deg));
 
+
+    // *****************     SHOOTER SUBSYSTEM      **********************
+
     // Maximum velocity for the shooter angle TrapezoidProfile
     constexpr units::degrees_per_second_t kShooterMaxSpeed = 360_deg_per_s;
     // Maximum acceleration for the shooter angle TrapezoidProfile
     constexpr units::degrees_per_second_squared_t kShooterMaxAcceleration = 360_deg_per_s_sq;
+
+    // Maximum angle for the shooter position
+    constexpr units::degree_t kShooterMaxAngle = 75_deg;
+    // Minimum angle for the shooter position
+    constexpr units::degree_t kShooterMinAngle = 0_deg;
+
+    // Angle for the shooter to shoot from speaker
+    constexpr units::degree_t kShooterSpeakerAngle = 60_deg;
+    // Angle for the shooter to shoot from podium
+    constexpr units::degree_t kShooterPodiumAngle = 22_deg;
+
+
+
+    // *****************     ARM SUBSYSTEM      **********************
 
     // Maximum velocity for the arm angle TrapezoidProfile
     constexpr units::degrees_per_second_t kArmMaxSpeed = 540_deg_per_s;
@@ -109,16 +126,6 @@ namespace physical {
     // Units in rotations per second squared
     constexpr double kWristMaxAcceleration = 3;
 
-    // Maximum velocity for the elevator height TrapezoidProfile
-    constexpr units::meters_per_second_t kElevatorMaxSpeed = 2_mps;
-    // Maximum acceleration for the elevator height TrapezoidProfile
-    constexpr units::meters_per_second_squared_t kElevatorMaxAcceleration = 4_mps_sq;
-
-    // Maximum angle for the shooter position
-    constexpr units::degree_t kShooterMaxAngle = 75_deg;
-    // Minimum angle for the shooter position
-    constexpr units::degree_t kShooterMinAngle = 0_deg;
-
     // Maximum angle for the arm position
     constexpr units::degree_t kArmMaxAngle = 180_deg;
     // Minimum angle for the arm position
@@ -129,45 +136,57 @@ namespace physical {
     // Minimum angle for the wrist position
     constexpr units::degree_t kWristMinAngle = -90_deg;
 
-    // Maximum height for the elevator position
-    constexpr units::meter_t kElevatorMaxHeight = 27_in;
-    // Minimum height for the elevator position
-    constexpr units::meter_t kElevatorMinHeight = 0_in;
-
-    // Angle for the shooter to shoot from speaker
-    constexpr units::degree_t kShooterSpeakerAngle = 60_deg;
-    // Angle for the shooter to shoot from podium
-    constexpr units::degree_t kShooterPodiumAngle = 22_deg;
-
     // Angle for the wrist to pick up off the ground
     constexpr units::degree_t kWristGroundPickUpAngle = -35_deg;
     // Angle for the arm to pick up off the ground
     constexpr units::degree_t kArmGroundPickUpAngle = -8_deg;
 
     // Angle for the wrist to rest at
-    constexpr units::degree_t kWristPassiveAngle = 30_deg;
+    constexpr units::degree_t kWristPassiveAngle = 40_deg;
     // Angle for the arm to rest at
-    constexpr units::degree_t kArmPassiveAngle = 170_deg;
+    constexpr units::degree_t kArmPassiveAngle = 155_deg;
 
-    // Angle for the wrist to shoot from
-    constexpr units::degree_t kWristShootingAngle = 140_deg;
-    // Angle for the arm to shoot from
-    constexpr units::degree_t kArmShootingAngle = 170_deg;
+    // // Angle for the wrist to shoot from
+    // constexpr units::degree_t kWristShootingAngle = 140_deg;
+    // // Angle for the arm to shoot from
+    // constexpr units::degree_t kArmShootingAngle = 170_deg;
 
     // Angle for the wrist to place in amp
     constexpr units::degree_t kWristAmpAngle = 90_deg;
     // Angle for the arm to place in amp
     constexpr units::degree_t kArmAmpAngle = 45_deg;
 
+
+    // *****************     ELEVATOR SUBSYSTEM      **********************
+
+    // Maximum velocity for the elevator height TrapezoidProfile
+    constexpr units::meters_per_second_t kElevatorMaxSpeed = 2_mps;
+    // Maximum acceleration for the elevator height TrapezoidProfile
+    constexpr units::meters_per_second_squared_t kElevatorMaxAcceleration = 4_mps_sq;
+
+    // Maximum height for the elevator position
+    constexpr units::inch_t kElevatorMaxHeight = 27_in;
+    // Minimum height for the elevator position
+    constexpr units::inch_t kElevatorMinHeight = 0_in;
+
     // Height for the elevator to place in amp
-    constexpr units::meter_t kElevatorAmpHeight = 10_in;
+    constexpr units::inch_t kElevatorAmpHeight = 10_in;
 
     // Height for the elevator to place in trap
-    constexpr units::meter_t kElevatorTrapHeight = 0_m;
+    // constexpr units::meter_t kElevatorTrapHeight = 0_m;
 
-    constexpr double kShooterAbsoluteOffset = -0.068;
-    constexpr double kWristAbsoluteOffset = 0.314;
-    constexpr double kArmAbsoluteOffset = -0.243;
+
+    // *****************     CLIMBER SUBSYSTEM      **********************
+
+    // Maximum height for the climber position
+    constexpr units::inch_t kClimberMaxHeight = 18.5_in;
+    // Minimum height for the climber position
+    constexpr units::inch_t kClimberMinHeight = 0_in;
+    // Resting height for the climber 
+    constexpr units::inch_t kClimberRestHeight = 13_in;
+
+    // Intermediate height for the auto climb and trap command
+    constexpr units::inch_t kClimberMidHeight = 7_in;
 
     constexpr units::second_t kDt = 20_ms;
 }
