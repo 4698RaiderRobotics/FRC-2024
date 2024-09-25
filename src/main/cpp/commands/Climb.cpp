@@ -4,8 +4,8 @@
 
 #include "commands/Climb.h"
 
-Climb::Climb(ClimberSubsystem *climber, double rotation_target )
- : m_climber{climber}, rot_target{rotation_target} {
+Climb::Climb(ClimberSubsystem *climber, units::inch_t height_target )
+ : m_climber{climber}, height_target{height_target} {
   SetName( "Climb" );
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements({climber});
@@ -13,7 +13,7 @@ Climb::Climb(ClimberSubsystem *climber, double rotation_target )
 
 // Called when the command is initially scheduled.
 void Climb::Init() {
-  if( rot_target < m_climber->GetRotations() ) {
+  if( height_target < m_climber->GetHeight() ) {
     going_up = false;
     m_climber->SetSpeed(-1);
   } else {
@@ -32,20 +32,19 @@ void Climb::Ending(bool interrupted) {
 
 // Returns true when the command should end.
 bool Climb::IsFinished() {
-  bool at_rotations = false; 
 
   if( m_climber->AtLimit() ) {
     return true;
   }
-
-  double rotations_left = m_climber->GetRotations() - rot_target;
+  
+  units::inch_t height_error = m_climber->GetHeight() - height_target;
   if( going_up ) {
-    if( rotations_left > 0.0 ) {
+    if( height_error > 0.0_in ) {
       // Climber is at target
       return true;
     }
   } else {
-    if( rotations_left <  0.0 ) {
+    if( height_error <  0.0_in ) {
       return true;
     }
   }

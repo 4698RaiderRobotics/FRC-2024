@@ -24,7 +24,7 @@ class ClimberSubsystem : public frc2::SubsystemBase {
 
   void Home();
 
-  double GetRotations();
+  units::inch_t GetHeight();
 
   void Climb();
 
@@ -43,4 +43,9 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   bool isZeroed{ false };
   bool isHoming{ false };
   bool isRaising{ false };
+
+
+  const double kHomingSpeed = 0.3;
+  const units::inch_t kSpoolDiameter = 1.0_in;
+  const double kGearRatio = 60;
 };

@@ -4,8 +4,8 @@
 
 #include "commands/ChangeClimberHeight.h"
 
-ChangeClimberHeight::ChangeClimberHeight(ClimberSubsystem *climber, double rotations) 
- : m_climber{climber}, m_rotations{rotations} {
+ChangeClimberHeight::ChangeClimberHeight(ClimberSubsystem *climber, units::inch_t target_height) 
+ : m_climber{climber}, m_target_height{target_height} {
   SetName( "ChangeClimberHeight" );
   // Use addRequirements() here to declare subsystem dependencies.
   AddRequirements({climber});
@@ -14,10 +14,12 @@ ChangeClimberHeight::ChangeClimberHeight(ClimberSubsystem *climber, double rotat
 // Called when the command is initially scheduled.
 void ChangeClimberHeight::Init() {
 
-  if(m_rotations - m_climber->GetRotations() > 0.0) {
+  if(m_target_height - m_climber->GetHeight() > 0.0_in) {
     m_climber->SetSpeed(0.5);
+    going_up = true;
   } else {
     m_climber->SetSpeed(-0.5);
+    going_up = false;
   }
 }
 
@@ -26,11 +28,26 @@ void ChangeClimberHeight::Execute() {}
 
 // Called once the command ends or is interrupted.
 void ChangeClimberHeight::Ending(bool interrupted) {
-  // fmt::print("ChangeClimberHeight::IsFinished()");
   m_climber->SetSpeed(0.0);
 }
 
 // Returns true when the command should end.
 bool ChangeClimberHeight::IsFinished() {
-  return std::abs(m_climber->GetRotations() - m_rotations) < 5;
+  if( m_climber->AtLimit() ) {
+    return true;
+  }
+  
+  units::inch_t height_error = m_climber->GetHeight() - m_target_height;
+  if( going_up ) {
+    if( height_error > 0.0_in ) {
+      // Climber is at target
+      return true;
+    }
+  } else {
+    if( height_error <  0.0_in ) {
+      return true;
+    }
+  }
+
+  return false;
 }

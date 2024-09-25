@@ -70,7 +70,7 @@ AutoClimbAndTrap::AutoClimbAndTrap(SwerveDriveSubsystem* drive, IntakeSubsystem*
       // Drive to the initial target pose and raise the climber hooks
     frc2::ParallelCommandGroup( 
       ProfiledDriveToPose(drive, vision, targetPose),
-      Climb( climb, 450 ),
+      Climb( climb, physical::kClimberMaxHeight ),
       ChangeShooterAngle(shooter, 60_deg)
     ),
 
@@ -83,7 +83,7 @@ AutoClimbAndTrap::AutoClimbAndTrap(SwerveDriveSubsystem* drive, IntakeSubsystem*
       // Drive forward and then drop the climber hooks.
     ProfiledDriveToPose(drive, vision, hook_pose),
     frc2::WaitCommand(1_s),
-    Climb( climb, 150 ),
+    Climb( climb, physical::kClimberMidHeight ),
     // ProfiledDriveToPose(drive, vision, climb_pose),
 
       // Put the arm up

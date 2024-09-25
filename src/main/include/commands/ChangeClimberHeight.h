@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <units/length.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
@@ -20,7 +21,7 @@
 class ChangeClimberHeight
     : public frc2::CommandHelper<LoggedCommand, ChangeClimberHeight> {
  public:
-  ChangeClimberHeight(ClimberSubsystem *climber, double rotations);
+  ChangeClimberHeight(ClimberSubsystem *climber, units::inch_t target_height);
 
   void Init() override;
 
@@ -32,5 +33,6 @@ class ChangeClimberHeight
 
  private:
   ClimberSubsystem *m_climber;
-  double m_rotations;
+  units::inch_t m_target_height;
+  bool going_up;
 };
