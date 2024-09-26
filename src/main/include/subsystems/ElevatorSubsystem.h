@@ -48,5 +48,5 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   frc::TrapezoidProfile<units::meters>::State m_elevatorGoal;
   frc::TrapezoidProfile<units::meters>::State m_elevatorSetpoint{};
 
-  units::meter_t m_elevatorPosition;
+  units::inch_t m_elevatorPosition;
 };

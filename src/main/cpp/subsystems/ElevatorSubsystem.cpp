@@ -29,7 +29,7 @@ void ElevatorSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Goal Height", m_elevatorGoal.position.value() );
+    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Goal Height", units::inch_t(m_elevatorGoal.position).value() );
     DataLogger::GetInstance().SendNT( "ElevatorSubsys/IsAtGoal", IsAtGoal() );
 
     m_elevatorSetpoint = m_elevatorProfile.Calculate(physical::kDt, m_elevatorSetpoint, m_elevatorGoal);
