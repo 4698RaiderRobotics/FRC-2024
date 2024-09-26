@@ -129,7 +129,7 @@ namespace physical {
     // Maximum angle for the arm position
     constexpr units::degree_t kArmMaxAngle = 180_deg;
     // Minimum angle for the arm position
-    constexpr units::degree_t kArmMinAngle = -8_deg;
+    constexpr units::degree_t kArmMinAngle = -15_deg;
 
     // Maximum angle for the wrist position
     constexpr units::degree_t kWristMaxAngle = 180_deg;
@@ -137,24 +137,25 @@ namespace physical {
     constexpr units::degree_t kWristMinAngle = -90_deg;
 
     // Angle for the wrist to pick up off the ground
-    constexpr units::degree_t kWristGroundPickUpAngle = -35_deg;
+    constexpr units::degree_t kWristGroundPickUpAngle = -45_deg;
     // Angle for the arm to pick up off the ground
-    constexpr units::degree_t kArmGroundPickUpAngle = -8_deg;
+    constexpr units::degree_t kArmGroundPickUpAngle = -15_deg;
 
     // Angle for the wrist to rest at
     constexpr units::degree_t kWristPassiveAngle = 40_deg;
     // Angle for the arm to rest at
     constexpr units::degree_t kArmPassiveAngle = 155_deg;
 
-    // // Angle for the wrist to shoot from
-    // constexpr units::degree_t kWristShootingAngle = 140_deg;
-    // // Angle for the arm to shoot from
-    // constexpr units::degree_t kArmShootingAngle = 170_deg;
-
     // Angle for the wrist to place in amp
     constexpr units::degree_t kWristAmpAngle = 90_deg;
     // Angle for the arm to place in amp
-    constexpr units::degree_t kArmAmpAngle = 45_deg;
+    constexpr units::degree_t kArmAmpAngle = 60_deg;
+    // Angle for the wrist to spit note in amp
+    constexpr units::degree_t kWristAmpSpitAngle = 112_deg;
+     // Angle for the wrist to drop down from amp
+    constexpr units::degree_t kWristAmpDropAngle = 80_deg;
+    // Angle for the arm to drop down from amp
+    constexpr units::degree_t kArmAmpDropAngle = 70_deg;
 
 
     // *****************     ELEVATOR SUBSYSTEM      **********************
@@ -170,10 +171,10 @@ namespace physical {
     constexpr units::inch_t kElevatorMinHeight = 0_in;
 
     // Height for the elevator to place in amp
-    constexpr units::inch_t kElevatorAmpHeight = 10_in;
+    constexpr units::inch_t kElevatorAmpHeight = 19_in;
 
     // Height for the elevator to place in trap
-    // constexpr units::meter_t kElevatorTrapHeight = 0_m;
+    constexpr units::inch_t kElevatorTrapHeight = 25_in;
 
 
     // *****************     CLIMBER SUBSYSTEM      **********************
