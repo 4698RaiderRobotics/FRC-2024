@@ -9,7 +9,8 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "LoggedCommand.h"
-#include "subsystems/ClimberSubsystem.h"
+
+class ClimberSubsystem;
 
 /**
  * An example command.

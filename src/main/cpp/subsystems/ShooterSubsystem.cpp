@@ -9,7 +9,20 @@
 #include "DataLogger.h"
 #include "subsystems/ShooterSubsystem.h"
 
-ShooterSubsystem::ShooterSubsystem() {
+#include "DeviceConstants.h"
+#include "Constants.h"
+
+ShooterSubsystem::ShooterSubsystem() :
+    m_rightShooterMotor{deviceIDs::kRightShooterID, rev::CANSparkFlex::MotorType::kBrushless},
+    m_leftShooterMotor{deviceIDs::kLeftShooterID, rev::CANSparkFlex::MotorType::kBrushless},
+    m_angleShooterMotor{deviceIDs::kShooterAngleID, rev::CANSparkMax::MotorType::kBrushless},
+    m_shooterAngleEncoder{deviceIDs::kShooterEncoderID},
+    m_shooterPID{pidf::kShooterP, pidf::kShooterI, pidf::kShooterD},
+    m_shooterFeedforward{units::volt_t{pidf::kShooterS}, units::volt_t{pidf::kShooterG}, 
+                         units::unit_t<frc::ArmFeedforward::kv_unit> {pidf::kShooterV}, 
+                         units::unit_t<frc::ArmFeedforward::ka_unit> {pidf::kShooterA}},
+    m_shooterProfile{{physical::kShooterMaxSpeed, physical::kShooterMaxAcceleration}}
+{
     frc::Preferences::InitDouble("ShooterOffset", 0.0);
 
     m_leftShooterMotor.RestoreFactoryDefaults();

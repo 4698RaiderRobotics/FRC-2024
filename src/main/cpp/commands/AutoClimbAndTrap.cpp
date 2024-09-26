@@ -2,9 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "commands/AutoClimbAndTrap.h"
 #include <frc/DriverStation.h>
+#include <frc2/command/WaitCommand.h>
+#include <frc2/command/InstantCommand.h>
+#include <frc2/command/ParallelCommandGroup.h>
 
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ClimberSubsystem.h"
+#include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
+
+#include "commands/AutoClimbAndTrap.h"
 #include "commands/ProfiledDriveToPose.h"
 #include "commands/Climb.h"
 #include "commands/ChangeArmAngle.h"
@@ -12,9 +23,7 @@
 #include "commands/ChangeElevatorHeight.h"
 #include "commands/ChangeShooterAngle.h"
 
-#include <frc2/command/WaitCommand.h>
-#include <frc2/command/InstantCommand.h>
-#include <frc2/command/ParallelCommandGroup.h>
+#include "Constants.h"
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.
 // For more information, see:

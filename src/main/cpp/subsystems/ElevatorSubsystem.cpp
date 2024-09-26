@@ -8,8 +8,18 @@
 #include "DataLogger.h"
 #include "subsystems/ElevatorSubsystem.h"
 
+#include "DeviceConstants.h"
+#include "Constants.h"
 
-ElevatorSubsystem::ElevatorSubsystem() {
+
+ElevatorSubsystem::ElevatorSubsystem() :
+    m_elevatorMotor{deviceIDs::kElevatorID, rev::CANSparkFlex::MotorType::kBrushless},
+    m_elevatorPID{pidf::kElevatorP, pidf::kElevatorI, pidf::kElevatorD},
+    m_elevatorFeedforward{units::volt_t{pidf::kElevatorS}, units::volt_t{pidf::kElevatorG}, 
+                          units::unit_t<frc::ElevatorFeedforward::kv_unit> {pidf::kElevatorV}, 
+                          units::unit_t<frc::ElevatorFeedforward::ka_unit> {pidf::kElevatorA}},
+    m_elevatorProfile{{physical::kElevatorMaxSpeed, physical::kElevatorMaxAcceleration}}
+{
     m_elevatorEncoder.SetPosition(0.0);
 };
 

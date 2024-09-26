@@ -12,8 +12,6 @@
 
 #include <rev/CANSparkFlex.h>
 
-#include "Constants.h"
-
 class ElevatorSubsystem : public frc2::SubsystemBase {
  public:
   ElevatorSubsystem();
@@ -35,18 +33,15 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
-  rev::CANSparkFlex m_elevatorMotor{deviceIDs::kElevatorID, rev::CANSparkFlex::MotorType::kBrushless};
-
+  rev::CANSparkFlex m_elevatorMotor;
   rev::SparkRelativeEncoder m_elevatorEncoder = m_elevatorMotor.GetEncoder();
 
-  frc::PIDController m_elevatorPID{pidf::kElevatorP, pidf::kElevatorI, pidf::kElevatorD};
-  frc::ElevatorFeedforward m_elevatorFeedforward{units::volt_t{pidf::kElevatorS}, units::volt_t{pidf::kElevatorG}, 
-                                        units::unit_t<frc::ElevatorFeedforward::kv_unit> {pidf::kElevatorV}, 
-                                        units::unit_t<frc::ElevatorFeedforward::ka_unit> {pidf::kElevatorA}};
+  frc::PIDController m_elevatorPID;
+  frc::ElevatorFeedforward m_elevatorFeedforward;
   
-  frc::TrapezoidProfile<units::meters> m_elevatorProfile{{physical::kElevatorMaxSpeed, physical::kElevatorMaxAcceleration}};
+  frc::TrapezoidProfile<units::meters> m_elevatorProfile;
   frc::TrapezoidProfile<units::meters>::State m_elevatorGoal;
-  frc::TrapezoidProfile<units::meters>::State m_elevatorSetpoint{};
+  frc::TrapezoidProfile<units::meters>::State m_elevatorSetpoint;
 
   units::inch_t m_elevatorPosition;
 };

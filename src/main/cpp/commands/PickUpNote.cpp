@@ -6,6 +6,10 @@
 
 #include "Constants.h"
 
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
+
 #include "commands/ChangeArmAngle.h"
 #include "commands/ChangeWristAngle.h"
 #include "commands/IntakeNote.h"
@@ -17,7 +21,7 @@
 // NOTE:  Consider using this command inline, rather than writing a subclass.
 // For more information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-PickUpNote::PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator) {
+PickUpNote::PickUpNote( IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator) {
   // Add your commands here, e.g.
   // AddCommands(FooCommand{}, BarCommand{});
 

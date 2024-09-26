@@ -8,8 +8,9 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "LoggedCommand.h"
-#include "subsystems/SwerveDriveSubsystem.h"
-#include "subsystems/VisionSubsystem.h"
+
+class SwerveDriveSubsystem;
+class VisionSubsystem;
 
 /**
  * An example command.

@@ -11,8 +11,6 @@
 #include <photon/PhotonCamera.h>
 #include <photon/PhotonPoseEstimator.h>
 
-#include "Constants.h"
-
 class VisionSubsystem : public frc2::SubsystemBase {
  public:
   VisionSubsystem();

@@ -4,6 +4,9 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
+
 #include "commands/ProfiledDriveToPose.h"
 
 #include "DataLogger.h"

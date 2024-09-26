@@ -2,8 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
+
 #include "commands/GoToRestPosition.h"
 #include "commands/ChangeWristAngle.h"
+
+#include "Constants.h"
 
 GoToRestPosition::GoToRestPosition(ArmSubsystem *arm, ElevatorSubsystem* elev, IntakeSubsystem *intake)
  : m_arm{arm}, m_elev{elev}, m_intake{intake} {

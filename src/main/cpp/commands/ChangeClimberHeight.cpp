@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include "subsystems/ClimberSubsystem.h"
+
 #include "commands/ChangeClimberHeight.h"
 
 ChangeClimberHeight::ChangeClimberHeight(ClimberSubsystem *climber, units::inch_t target_height) 

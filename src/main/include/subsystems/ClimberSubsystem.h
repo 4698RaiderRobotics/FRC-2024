@@ -4,12 +4,12 @@
 
 #pragma once
 
+#include <units/length.h>
 #include <frc2/command/SubsystemBase.h>
 
 #include <rev/CANSparkFlex.h>
 #include <frc/DigitalInput.h>
 
-#include "Constants.h"
 
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
@@ -34,7 +34,7 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
 
-  rev::CANSparkFlex m_climberMotor{deviceIDs::kClimberID, rev::CANSparkFlex::MotorType::kBrushless};
+  rev::CANSparkFlex m_climberMotor;
 
   rev::SparkRelativeEncoder m_climberEncoder = m_climberMotor.GetEncoder();
 

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <units/angle.h>
+
 #include <frc2/command/SubsystemBase.h>
 
 #include <frc/controller/ArmFeedforward.h>
@@ -12,8 +14,6 @@
 
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/TalonFX.hpp>
-
-#include "Constants.h"
 
 class ArmSubsystem : public frc2::SubsystemBase {
  public:
@@ -43,8 +43,8 @@ class ArmSubsystem : public frc2::SubsystemBase {
  private:
    const double kWristGearRatio = 36.0 * 42 / 38;
 
-  ctre::phoenix6::hardware::TalonFX m_wristMotor{deviceIDs::kWristMotorID};
-  ctre::phoenix6::hardware::CANcoder m_wristEncoder{deviceIDs::kWristEncoderID};
+  ctre::phoenix6::hardware::TalonFX m_wristMotor;
+  ctre::phoenix6::hardware::CANcoder m_wristEncoder;
   ctre::phoenix6::controls::MotionMagicDutyCycle m_wristPositionDC{0_deg};
   ctre::phoenix6::StatusSignal<units::turn_t> wristPos = m_wristMotor.GetPosition();
   ctre::phoenix6::StatusSignal<units::turns_per_second_t> wristVel = m_wristMotor.GetVelocity();
@@ -57,20 +57,18 @@ class ArmSubsystem : public frc2::SubsystemBase {
   
 
 
-  ctre::phoenix6::hardware::TalonFX m_armMotor{deviceIDs::kArmMotorID};
-  ctre::phoenix6::hardware::CANcoder m_armEncoder{deviceIDs::kArmEncoderID};
+  ctre::phoenix6::hardware::TalonFX m_armMotor;
+  ctre::phoenix6::hardware::CANcoder m_armEncoder;
   ctre::phoenix6::controls::MotionMagicDutyCycle m_armPositionDC{0_deg};
   ctre::phoenix6::StatusSignal<units::turn_t> armPos = m_armMotor.GetPosition();
   ctre::phoenix6::StatusSignal<units::turns_per_second_t> armVel = m_armMotor.GetRotorVelocity();
   ctre::phoenix6::StatusSignal<double> armPosReference = m_armMotor.GetClosedLoopReference();
   ctre::phoenix6::StatusSignal<double> armVelReference = m_armMotor.GetClosedLoopReferenceSlope();
 
-  frc::PIDController m_armPID{pidf::kArmP, pidf::kArmI, pidf::kArmD};
-  frc::ArmFeedforward m_armFeedforward{units::volt_t{pidf::kArmS}, units::volt_t{pidf::kArmG}, 
-                                        units::unit_t<frc::ArmFeedforward::kv_unit> {pidf::kArmV}, 
-                                        units::unit_t<frc::ArmFeedforward::ka_unit> {pidf::kArmA}};
+  frc::PIDController m_armPID;
+  frc::ArmFeedforward m_armFeedforward;
   
-  frc::TrapezoidProfile<units::degrees> m_armProfile{{physical::kArmMaxSpeed, physical::kArmMaxAcceleration}};
+  frc::TrapezoidProfile<units::degrees> m_armProfile;
   frc::TrapezoidProfile<units::degrees>::State m_armGoal;
   frc::TrapezoidProfile<units::degrees>::State m_armSetpoint{};
 

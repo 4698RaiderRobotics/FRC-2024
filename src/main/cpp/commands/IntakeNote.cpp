@@ -5,6 +5,9 @@
 #include <frc/Timer.h>
 
 #include "DataLogger.h"
+
+#include "subsystems/IntakeSubsystem.h"
+
 #include "commands/IntakeNote.h"
 
 IntakeNote::IntakeNote(IntakeSubsystem* intake)

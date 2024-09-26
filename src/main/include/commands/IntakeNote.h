@@ -8,9 +8,8 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "LoggedCommand.h"
-#include "subsystems/IntakeSubsystem.h"
 
-#include "Constants.h"
+class IntakeSubsystem;
 
 /**
  * An example command.

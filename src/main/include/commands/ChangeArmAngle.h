@@ -11,11 +11,7 @@
 #include "subsystems/ArmSubsystem.h"
 
 /**
- * An example command.
- *
- * <p>Note that this extends CommandHelper, rather extending Command
- * directly; this is crucially important, or else the decorator functions in
- * Command will *not* work!
+ * Change the Arm Angle Set Point and return immediately.
  */
 class ChangeArmAngle
     : public frc2::CommandHelper<LoggedCommand, ChangeArmAngle> {

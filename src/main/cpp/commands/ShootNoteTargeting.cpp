@@ -6,8 +6,14 @@
 
 #include "Constants.h"
 
+#include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
+
 #include "commands/ChangeShooterAngle.h"
-#include "commands/SpinShooter.h"
 #include "commands/ChangeArmAngle.h"
 #include "commands/ChangeWristAngle.h"
 

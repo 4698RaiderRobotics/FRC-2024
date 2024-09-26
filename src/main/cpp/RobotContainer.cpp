@@ -19,16 +19,13 @@
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 
-#include "commands/SpinShooter.h"
 #include "commands/ChangeShooterAngle.h"
 #include "commands/ChangeArmAngle.h"
 #include "commands/ChangeWristAngle.h"
 #include "commands/IntakeNote.h"
 #include "commands/PickUpNote.h"
-#include "commands/ShootNote.h"
 #include "commands/ShootNoteTargeting.h"
 #include "commands/StageNoteInShooter.h"
-#include "commands/PlaceInAmp.h"
 #include "commands/GotoRestPosition.h"
 #include "commands/ProfiledDriveToPose.h"
 #include "commands/ChangeClimberHeight.h"
@@ -39,7 +36,7 @@
 #include "commands/MoveToAndPlaceInAmp.h"
 #include "commands/AutoClimbAndTrap.h"
 
-
+#include "Constants.h"
 
 RobotContainer::RobotContainer() 
 : m_swerveDrive{&m_vision}, m_intake{&m_leds} {
@@ -146,7 +143,7 @@ void RobotContainer::ConfigureBindings() {
   //    **********************  OPERATOR CONTROLS *********************
 
     // Pickup Note
-  m_operatorController.A().OnTrue(PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
+  m_operatorController.A().OnTrue(PickUpNote(&m_intake, &m_arm, &m_elevator).ToPtr());
 
     // Goto Rest Position
   m_operatorController.B().OnTrue(
@@ -222,7 +219,7 @@ void RobotContainer::ConfigureBindings() {
 
 void RobotContainer::ConfigureAutos() {
 
- pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_swerveDrive, &m_intake, &m_arm, &m_elevator).ToPtr());
+ pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_intake, &m_arm, &m_elevator).ToPtr());
   pathplanner::NamedCommands::registerCommand("shootNoteTargeting", 
     frc2::SequentialCommandGroup(
       MoveMechanism( &m_arm, &m_elevator, physical::kArmPassiveAngle, 130_deg, 0_in ), 

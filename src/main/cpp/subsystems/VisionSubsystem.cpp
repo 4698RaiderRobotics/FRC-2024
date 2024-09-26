@@ -8,6 +8,8 @@
 #include "DataLogger.h"
 #include "subsystems/VisionSubsystem.h"
 
+#include "Constants.h"
+
 void UpdatePoseEstimator( std::string camName, 
                           photon::PhotonPoseEstimator &estimator, 
                           frc::SwerveDrivePoseEstimator<4> &odometry );

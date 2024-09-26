@@ -8,8 +8,12 @@
 #include "DataLogger.h"
 #include "subsystems/ClimberSubsystem.h"
 
+#include "DeviceConstants.h"
+#include "Constants.h"
 
-ClimberSubsystem::ClimberSubsystem() {
+ClimberSubsystem::ClimberSubsystem() :
+    m_climberMotor{deviceIDs::kClimberID, rev::CANSparkFlex::MotorType::kBrushless}
+{
     m_climberMotor.SetSmartCurrentLimit(30);
     m_climberMotor.EnableVoltageCompensation(12);
 
