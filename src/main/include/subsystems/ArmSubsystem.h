@@ -14,7 +14,6 @@
 #include <ctre/phoenix6/TalonFX.hpp>
 
 #include "Constants.h"
-// #include "AbsoluteEncoder.h"
 
 class ArmSubsystem : public frc2::SubsystemBase {
  public:

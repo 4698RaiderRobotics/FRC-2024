@@ -115,11 +115,11 @@ void RobotContainer::ConfigureBindings() {
 
     // Eject Note into the amp.
   m_driverController.L2().OnTrue(frc2::SequentialCommandGroup(
-    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 60_deg), ChangeWristAngle(&m_arm, 112_deg)),
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, physical::kArmAmpAngle), ChangeWristAngle(&m_arm, physical::kWristAmpSpitAngle)),
     frc2::InstantCommand([this] {m_intake.SpinIntake(0.5);}, {&m_intake}),
     frc2::WaitCommand(0.5_s),
     frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}),
-    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, 60_deg), ChangeWristAngle(&m_arm, 90_deg)),
+    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, physical::kArmAmpDropAngle), ChangeWristAngle(&m_arm, physical::kWristAmpDropAngle)),
     ChangeElevatorHeight(&m_elevator, 0_m),
     GoToRestPosition( &m_arm, &m_elevator, &m_intake )).ToPtr().WithName( "Driver Put in Amp")
   );
@@ -163,10 +163,10 @@ void RobotContainer::ConfigureBindings() {
   m_operatorController.X().OnTrue(
     frc2::SequentialCommandGroup(
       frc2::SequentialCommandGroup(
-        ChangeArmAngle(&m_arm, 60_deg), 
-        ChangeWristAngle(&m_arm, 90_deg)
+        ChangeArmAngle(&m_arm, physical::kArmAmpAngle), 
+        ChangeWristAngle(&m_arm, physical::kWristAmpAngle)
       ),
-      ChangeElevatorHeight(&m_elevator, 19_in)
+      ChangeElevatorHeight(&m_elevator, physical::kElevatorAmpHeight)
     ).ToPtr().WithName("Button X -- Prepare for Amp")
   );
 
@@ -175,12 +175,12 @@ void RobotContainer::ConfigureBindings() {
     frc2::SequentialCommandGroup(
       frc2::ParallelCommandGroup(
         frc2::SequentialCommandGroup(
-          ChangeArmAngle(&m_arm, 60_deg), 
-          ChangeWristAngle(&m_arm, 90_deg)
+          ChangeArmAngle(&m_arm, physical::kArmAmpAngle), 
+          ChangeWristAngle(&m_arm, physical::kWristAmpAngle)
         ),
         ChangeShooterAngle(&m_shooter, 60_deg)
       ), 
-      ChangeElevatorHeight(&m_elevator, 25_in)
+      ChangeElevatorHeight(&m_elevator, physical::kElevatorTrapHeight)
     ).ToPtr().WithName( "Button Y - Pre Climb")
   );
 
