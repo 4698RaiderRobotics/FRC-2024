@@ -84,36 +84,20 @@ AutoClimbAndTrap::AutoClimbAndTrap(SwerveDriveSubsystem* drive, IntakeSubsystem*
     ProfiledDriveToPose(drive, vision, hook_pose),
     frc2::WaitCommand(1_s),
     Climb( climb, physical::kClimberMidHeight ),
-    // ProfiledDriveToPose(drive, vision, climb_pose),
 
       // Put the arm up
     frc2::SequentialCommandGroup(
-      ChangeArmAngle(arm, 82_deg), 
+      ChangeArmAngle(arm, 70_deg), 
       ChangeWristAngle(arm, 90_deg)
     ),
-    ChangeElevatorHeight(elevator, 25_in),
+    ChangeElevatorHeight(elevator, physical::kElevatorTrapHeight),
 
       // Climb the rest of the way and deposit the note.
     Climb( climb ),
-    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 80_deg), ChangeWristAngle(arm, 63_deg)),
+    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 70_deg), ChangeWristAngle(arm, 63_deg)),
     frc2::WaitCommand(2_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(-0.5);}, {intake}),
     frc2::WaitCommand(5_s),
     frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake})
-
-    // frc2::SequentialCommandGroup(
-    //     ChangeArmAngle(arm, 75_deg), 
-    //     ChangeWristAngle(arm, 90_deg)),
-    // ChangeElevatorHeight(elevator, 22_in),
-    // ProfiledDriveToPose(drive, vision, {targetPose.X(), targetPose.Y() + 4.5_in, targetPose.Rotation()}),
-    // frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 117_deg)),
-    // frc2::InstantCommand([this, intake] {intake->SpinIntake(0.75);}, {intake}),
-    // frc2::WaitCommand(0.5_s),
-    // frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
-    // frc2::ParallelCommandGroup(
-    //   frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 90_deg)),
-    //   ProfiledDriveToPose(drive, vision, {targetPose.X(), targetPose.Y() - 3_in, targetPose.Rotation()})),
-    // ChangeElevatorHeight(elevator, 0_m),
-    // frc2::SequentialCommandGroup(ChangeArmAngle(arm, 170_deg), ChangeWristAngle(arm, 35_deg))
   );
 }

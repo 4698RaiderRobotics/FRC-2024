@@ -4,11 +4,11 @@
 
 #include "commands/PlaceInAmp.h"
 
-#include "commands/ChangeArmAngle.h"
-#include "commands/ChangeWristAngle.h"
-#include "commands/ChangeElevatorHeight.h"
+// #include "commands/ChangeArmAngle.h"
+// #include "commands/ChangeWristAngle.h"
+// #include "commands/ChangeElevatorHeight.h"
 
-#include "Constants.h"
+// #include "Constants.h"
 
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/WaitCommand.h>
@@ -23,16 +23,18 @@ PlaceInAmp::PlaceInAmp(SwerveDriveSubsystem* swerveDrive, ElevatorSubsystem* ele
 
   SetName( "PlaceInAmp" );
 
-  AddCommands(
-    // Drive to amp
-    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 90_deg)),
-    ChangeElevatorHeight(elevator, 22_in),
-    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 117_deg)),
-    frc2::InstantCommand([this, intake] {intake->SpinIntake(0.5);}, {intake}),
-    frc2::WaitCommand(0.2_s),
-    frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
-    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 90_deg)),
-    ChangeElevatorHeight(elevator, 0_m),
-    frc2::SequentialCommandGroup(ChangeArmAngle(arm, 170_deg), ChangeWristAngle(arm, 35_deg))
-  );
+      // Not used at this time
+
+  // AddCommands(
+  //   // Drive to amp
+  //   frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 90_deg)),
+  //   ChangeElevatorHeight(elevator, 22_in),
+  //   frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 117_deg)),
+  //   frc2::InstantCommand([this, intake] {intake->SpinIntake(0.5);}, {intake}),
+  //   frc2::WaitCommand(0.2_s),
+  //   frc2::InstantCommand([this, intake] {intake->SpinIntake(0.0);}, {intake}),
+  //   frc2::SequentialCommandGroup(ChangeArmAngle(arm, 75_deg), ChangeWristAngle(arm, 90_deg)),
+  //   ChangeElevatorHeight(elevator, 0_m),
+  //   frc2::SequentialCommandGroup(ChangeArmAngle(arm, 170_deg), ChangeWristAngle(arm, 35_deg))
+  // );
 }
