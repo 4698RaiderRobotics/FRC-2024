@@ -84,9 +84,9 @@ RobotContainer::RobotContainer()
     [this] {
 
       if( m_operatorController.GetPOV() == 0 ) {
-        m_climber.SetSpeed( 0.75 ); 
+        m_climber.SetSpeed( 0.5 ); 
       } else if( m_operatorController.GetPOV() == 180 ) {
-        m_climber.SetSpeed( -0.75 );
+        m_climber.SetSpeed( -0.5 );
       } else {
         m_climber.SetSpeed( 0.0 );
       }

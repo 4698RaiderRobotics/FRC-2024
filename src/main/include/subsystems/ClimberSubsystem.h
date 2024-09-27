@@ -45,7 +45,7 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   bool isRaising{ false };
 
 
-  const double kHomingSpeed = 0.3;
+  const double kHomingSpeed = 0.1;
   const units::inch_t kSpoolDiameter = 1.0_in;
-  const double kGearRatio = 60;
+  const double kGearRatio = 25;
 };

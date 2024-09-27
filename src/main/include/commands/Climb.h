@@ -22,7 +22,7 @@ class ClimberSubsystem;
 class Climb
     : public frc2::CommandHelper<LoggedCommand, Climb> {
  public:
-  Climb(ClimberSubsystem *climber, units::inch_t height_target = -1.0_in);
+  Climb(ClimberSubsystem *climber, units::inch_t height_target = 0.25_in);
 
   void Init() override;
 
@@ -35,5 +35,4 @@ class Climb
  private:
   ClimberSubsystem *m_climber;
   units::inch_t height_target;
-  bool going_up;
   };

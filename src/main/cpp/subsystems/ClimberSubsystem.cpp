@@ -14,7 +14,6 @@
 ClimberSubsystem::ClimberSubsystem() :
     m_climberMotor{deviceIDs::kClimberID, rev::CANSparkFlex::MotorType::kBrushless}
 {
-    m_climberMotor.SetSmartCurrentLimit(30);
     m_climberMotor.EnableVoltageCompensation(12);
 
     DataLogger::GetInstance().SendNT( "ClimberSubsys/isZeroed", isZeroed);
