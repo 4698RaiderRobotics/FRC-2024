@@ -47,10 +47,9 @@ namespace pidf {
     constexpr double kClimberI = 0.0;
     constexpr double kClimberD = 0.0;
 
-    constexpr double kClimberG = 0.0;
+    constexpr double kClimberS = 0.0;
     constexpr double kClimberV = 0.0;
     constexpr double kClimberA = 0.0;
-    constexpr double kClimberS = 0.0;
 }
 
 namespace deviceIDs {

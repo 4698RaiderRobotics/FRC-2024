@@ -7,7 +7,7 @@
 #include <frc/DigitalInput.h>
 #include <frc2/command/SubsystemBase.h>
 
-#include <frc/controller/ElevatorFeedforward.h>
+#include <frc/controller/SimpleMotorFeedforward.h>
 #include <frc/controller/PIDController.h>
 #include <frc/trajectory/TrapezoidProfile.h>
 
@@ -36,16 +36,18 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   void Home();
   void SetOpenloopSpeed(double percent);
 
+  using Feedforward = frc::SimpleMotorFeedforward<units::meter>;
+  using TrapProfile = frc::TrapezoidProfile<units::meter>;
 
   rev::CANSparkFlex m_Motor;
   rev::SparkRelativeEncoder m_Encoder = m_Motor.GetEncoder();
 
   frc::PIDController m_PID;
-  frc::ElevatorFeedforward m_Feedforward;
+  Feedforward m_Feedforward;
   
-  frc::TrapezoidProfile<units::meters> m_Profile;
-  frc::TrapezoidProfile<units::meters>::State m_Goal;
-  frc::TrapezoidProfile<units::meters>::State m_Setpoint;
+  TrapProfile m_Profile;
+  TrapProfile::State m_Goal;
+  TrapProfile::State m_Setpoint;
 
   units::meter_t m_Position;
 

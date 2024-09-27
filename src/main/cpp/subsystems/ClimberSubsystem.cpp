@@ -14,9 +14,9 @@
 ClimberSubsystem::ClimberSubsystem() :
     m_Motor{deviceIDs::kClimberID, rev::CANSparkFlex::MotorType::kBrushless},
     m_PID{pidf::kClimberP, pidf::kClimberI, pidf::kClimberD},
-    m_Feedforward{units::volt_t{pidf::kClimberS}, units::volt_t{pidf::kClimberG}, 
-                          units::unit_t<frc::ElevatorFeedforward::kv_unit> {pidf::kClimberV}, 
-                          units::unit_t<frc::ElevatorFeedforward::ka_unit> {pidf::kClimberA}},
+    m_Feedforward{units::volt_t{pidf::kClimberS}, 
+                  units::unit_t<Feedforward::kv_unit> {pidf::kClimberV}, 
+                  units::unit_t<Feedforward::ka_unit> {pidf::kClimberA}},
     m_Profile{{physical::kClimberMaxSpeed, physical::kClimberMaxAcceleration}}
 {
     m_Motor.SetSmartCurrentLimit(30);
@@ -64,7 +64,8 @@ void ClimberSubsystem::Periodic() {
 
     DataLogger::GetInstance().SendNT( "ClimberSubsys/Goal Height", units::inch_t(m_Goal.position).value() );
     DataLogger::GetInstance().SendNT( "ClimberSubsys/IsAtGoal", IsAtGoal() );
-    DataLogger::GetInstance().SendNT( "ClimberSubsys/Goal Velocity(m/s)", m_Setpoint.velocity.value() );
+    DataLogger::GetInstance().SendNT( "ClimberSubsys/Spt Position", units::inch_t(m_Setpoint.position).value() );
+    DataLogger::GetInstance().SendNT( "ClimberSubsys/Spt Velocity(m/s)", m_Setpoint.velocity.value() );
 
         // We are not homing.  Track the goal height....
     m_Setpoint = m_Profile.Calculate(physical::kDt, m_Setpoint, m_Goal);
