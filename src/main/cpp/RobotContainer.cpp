@@ -28,7 +28,6 @@
 #include "commands/StageNoteInShooter.h"
 #include "commands/GotoRestPosition.h"
 #include "commands/ProfiledDriveToPose.h"
-#include "commands/ChangeClimberHeight.h"
 #include "commands/Climb.h"
 #include "commands/ClimbAndTrap.h"
 #include "commands/ChangeElevatorHeight.h"
@@ -84,12 +83,10 @@ RobotContainer::RobotContainer()
     [this] {
 
       if( m_operatorController.GetPOV() == 0 ) {
-        m_climber.SetSpeed( 0.75 ); 
+        m_climber.NudgeHeight( 0.1_in ); 
       } else if( m_operatorController.GetPOV() == 180 ) {
-        m_climber.SetSpeed( -0.75 );
-      } else {
-        m_climber.SetSpeed( 0.0 );
-      }
+        m_climber.NudgeHeight( -0.1_in );
+      } 
     },
     { &m_climber }
     ).WithName("Climber Nudge"));

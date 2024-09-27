@@ -20,6 +20,8 @@ ElevatorSubsystem::ElevatorSubsystem() :
                           units::unit_t<frc::ElevatorFeedforward::ka_unit> {pidf::kElevatorA}},
     m_elevatorProfile{{physical::kElevatorMaxSpeed, physical::kElevatorMaxAcceleration}}
 {
+    m_elevatorMotor.SetSmartCurrentLimit(30);
+    m_elevatorMotor.EnableVoltageCompensation(12);
     m_elevatorEncoder.SetPosition(0.0);
 };
 

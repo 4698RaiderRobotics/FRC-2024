@@ -22,18 +22,13 @@ class ClimberSubsystem;
 class Climb
     : public frc2::CommandHelper<LoggedCommand, Climb> {
  public:
-  Climb(ClimberSubsystem *climber, units::inch_t height_target = -1.0_in);
-
-  void Init() override;
+  Climb(ClimberSubsystem *climber, units::inch_t height_target = 0.0_in);
 
   void Execute() override;
-
-  void Ending(bool interrupted) override;
 
   bool IsFinished() override;
 
  private:
   ClimberSubsystem *m_climber;
   units::inch_t height_target;
-  bool going_up;
   };

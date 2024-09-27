@@ -4,12 +4,14 @@
 
 #pragma once
 
-#include <units/length.h>
+#include <frc/DigitalInput.h>
 #include <frc2/command/SubsystemBase.h>
 
-#include <rev/CANSparkFlex.h>
-#include <frc/DigitalInput.h>
+#include <frc/controller/ElevatorFeedforward.h>
+#include <frc/controller/PIDController.h>
+#include <frc/trajectory/TrapezoidProfile.h>
 
+#include <rev/CANSparkFlex.h>
 
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
@@ -20,32 +22,41 @@ class ClimberSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  void SetSpeed(double speed);
+  void GoToHeight(units::meter_t heightGoal);
 
-  void Home();
+  void NudgeHeight(units::meter_t deltaHeight);
 
   units::inch_t GetHeight();
 
-  void Climb();
+  bool IsAtGoal();
 
   bool AtLimit();
 
  private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+  void Home();
+  void SetOpenloopSpeed(double percent);
 
-  rev::CANSparkFlex m_climberMotor;
 
-  rev::SparkRelativeEncoder m_climberEncoder = m_climberMotor.GetEncoder();
+  rev::CANSparkFlex m_Motor;
+  rev::SparkRelativeEncoder m_Encoder = m_Motor.GetEncoder();
+
+  frc::PIDController m_PID;
+  frc::ElevatorFeedforward m_Feedforward;
+  
+  frc::TrapezoidProfile<units::meters> m_Profile;
+  frc::TrapezoidProfile<units::meters>::State m_Goal;
+  frc::TrapezoidProfile<units::meters>::State m_Setpoint;
+
+  units::meter_t m_Position;
 
   frc::DigitalInput m_limit{1};
 
   bool isZeroed{ false };
   bool isHoming{ false };
-  bool isRaising{ false };
+  bool homingCanceled{ false };
 
 
-  const double kHomingSpeed = 0.3;
+  const double kHomingSpeed = 0.05;
   const units::inch_t kSpoolDiameter = 1.0_in;
-  const double kGearRatio = 60;
+  const double kGearRatio = 25;
 };
