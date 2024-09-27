@@ -20,6 +20,9 @@ ElevatorSubsystem::ElevatorSubsystem() :
                           units::unit_t<frc::ElevatorFeedforward::ka_unit> {pidf::kElevatorA}},
     m_elevatorProfile{{physical::kElevatorMaxSpeed, physical::kElevatorMaxAcceleration}}
 {
+    m_elevatorMotor.EnableVoltageCompensation(12);
+    m_elevatorMotor.SetInverted(true);
+
     m_elevatorEncoder.SetPosition(0.0);
 };
 
@@ -27,7 +30,9 @@ ElevatorSubsystem::ElevatorSubsystem() :
 void ElevatorSubsystem::Periodic() {
 
     m_elevatorPosition = m_elevatorEncoder.GetPosition() / 15.0 * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
+    units::meters_per_second_t linearVel = m_elevatorEncoder.GetVelocity() * 1_rpm / 15.0_tr * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
     DataLogger::GetInstance().SendNT( "ElevatorSubsys/Height", units::inch_t(m_elevatorPosition).value() );
+    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Velocity(mps)", linearVel.value() );
 
     if (frc::DriverStation::IsDisabled()) {
         m_elevatorSetpoint.position = m_elevatorPosition;
@@ -40,7 +45,9 @@ void ElevatorSubsystem::Periodic() {
     }
 
     DataLogger::GetInstance().SendNT( "ElevatorSubsys/Goal Height", units::inch_t(m_elevatorGoal.position).value() );
+    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Spt Velocity(mps)", m_elevatorSetpoint.velocity.value() );
     DataLogger::GetInstance().SendNT( "ElevatorSubsys/IsAtGoal", IsAtGoal() );
+    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Current", m_elevatorMotor.GetOutputCurrent());
 
     m_elevatorSetpoint = m_elevatorProfile.Calculate(physical::kDt, m_elevatorSetpoint, m_elevatorGoal);
 
