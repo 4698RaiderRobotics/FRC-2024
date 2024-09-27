@@ -27,7 +27,7 @@ ElevatorSubsystem::ElevatorSubsystem() :
 void ElevatorSubsystem::Periodic() {
 
     m_elevatorPosition = m_elevatorEncoder.GetPosition() / 15.0 * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
-    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Height", m_elevatorPosition.value() );
+    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Height", units::inch_t(m_elevatorPosition).value() );
 
     if (frc::DriverStation::IsDisabled()) {
         m_elevatorSetpoint.position = m_elevatorPosition;
@@ -47,7 +47,7 @@ void ElevatorSubsystem::Periodic() {
     double elevatorOutput = m_elevatorPID.Calculate(m_elevatorPosition.value(), m_elevatorSetpoint.position.value());
     double elevatorFFOutput = m_elevatorFeedforward.Calculate(m_elevatorSetpoint.velocity).value();
 
-    frc::SmartDashboard::PutNumber("Elevator Height", m_elevatorPosition.value());
+    // frc::SmartDashboard::PutNumber("Elevator Height", m_elevatorPosition.value());
 
     m_elevatorMotor.Set(elevatorOutput + elevatorFFOutput / 12);
 }
