@@ -27,20 +27,21 @@ class DataLogger {
       // delete copy constructor
     DataLogger(const DataLogger& obj) = delete; 
 
-    static void Send( std::string_view s, double val );
-    static void Send( std::string_view s, std::span<const double> a );
-    static void Send( std::string_view s, std::string_view val );
-    static void Send( std::string_view s, int val );
-    static void Send( std::string_view s, bool val );
-    static void Send( std::string_view s, frc::Pose2d p );
+    static void Send( const std::string &s, double val );
+    static void Send( const std::string &s, std::span<const double> a );
+    static void Send( const std::string &s, const std::string &val );
+    static void Send( const std::string &s, int val );
+    static void Send( const std::string &s, bool val );
+    static void Send( const std::string &s, frc::Pose2d p );
 
-    static void SendNT( std::string s, double val );
-    static void SendNT( std::string s, std::span<const double> a );
-    static void SendNT( std::string s, frc::Pose2d p );
-    static void SendNT( std::string s, std::string_view val );
+    static void SendNT( const std::string &s, double val );
+    static void SendNT( const std::string &s, std::span<const double> a );
+    static void SendNT( const std::string &s, const std::string &val );
+    static void SendNT( const std::string &s, int val );
+    static void SendNT( const std::string &s, bool val );
+    static void SendNT( const std::string &s, frc::Pose2d p );
 
-    static void Log(  std::string s );
-
+    static void Log( const std::string &s );
     static void LogMetadata( void );
 
   private:
@@ -48,6 +49,6 @@ class DataLogger {
     std::shared_ptr<nt::NetworkTable> nt_table;
     std::map<std::string, nt::GenericPublisher> nt_map;
 
-    void SendMetadata( std::string_view s, std::string_view val );
+    void SendMetadata( const std::string &s, const std::string &val );
 
 };
