@@ -21,27 +21,26 @@ class DataLogger {
 
       // Constructor is private
     DataLogger() {}
-  public:
+    static DataLogger& GetInstance();
+public:
 
       // delete copy constructor
     DataLogger(const DataLogger& obj) = delete; 
 
-    static DataLogger& GetInstance();
+    static void Send( std::string_view s, double val );
+    static void Send( std::string_view s, std::span<const double> a );
+    static void Send( std::string_view s, std::string_view val );
+    static void Send( std::string_view s, int val );
+    static void Send( std::string_view s, bool val );
+    static void Send( std::string_view s, frc::Pose2d p );
 
-    void Send( std::string_view s, double val );
-    void Send( std::string_view s, std::span<const double> a );
-    void Send( std::string_view s, std::string_view val );
-    void Send( std::string_view s, int val );
-    void Send( std::string_view s, bool val );
-    void Send( std::string_view s, frc::Pose2d p );
+    static void SendNT( std::string s, double val );
+    static void SendNT( std::string s, std::span<const double> a );
+    static void SendNT( std::string s, frc::Pose2d p );
 
-    void SendNT( std::string s, double val );
-    void SendNT( std::string s, std::span<const double> a );
-    void SendNT( std::string s, frc::Pose2d p );
+    static void Log(  std::string s );
 
-    void Log(  std::string s );
-
-    void LogMetadata( void );
+    static void LogMetadata( void );
 
   private:
     wpi::log::DataLog *log;

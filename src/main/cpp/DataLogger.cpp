@@ -17,58 +17,58 @@ DataLogger& DataLogger::GetInstance() {
         // If there is no instance of class
         // then we can create an instance.
     if (singleton == nullptr)  {
-    singleton = new DataLogger();
-    singleton->log = &frc::DataLogManager::GetLog();
-    singleton->nt_inst = nt::NetworkTableInstance::GetDefault();
+        singleton = new DataLogger();
+        singleton->log = &frc::DataLogManager::GetLog();
+        singleton->nt_inst = nt::NetworkTableInstance::GetDefault();
     }
         
     return *singleton;
 }
 
 void DataLogger::Send( std::string_view s, double val ) { 
-    wpi::log::DoubleLogEntry le{ *(log), s };
+    wpi::log::DoubleLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
 void DataLogger::Send( std::string_view s, std::span<const double> a ) { 
-    wpi::log::DoubleArrayLogEntry le{ *(log), s };
+    wpi::log::DoubleArrayLogEntry le{ *(GetInstance().log), s };
     le.Append( a );
 }
 
 void DataLogger::Send( std::string_view s, int val ) { 
-    wpi::log::IntegerLogEntry le{ *(log), s };
+    wpi::log::IntegerLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
 void DataLogger::Send( std::string_view s, std::string_view val ) { 
-    wpi::log::StringLogEntry le{ *(log), s };
+    wpi::log::StringLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
 void DataLogger::Send( std::string_view s, bool val ) {
-    wpi::log::BooleanLogEntry le{ *(log), s };
+    wpi::log::BooleanLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
 void DataLogger::Send( std::string_view s, frc::Pose2d p ) {
-    wpi::log::DoubleArrayLogEntry le{ *(log), s };
+    wpi::log::DoubleArrayLogEntry le{ *(GetInstance().log), s };
     le.Append( {p.X().value(),
                 p.Y().value(),
                 p.Rotation().Degrees().value()} );
 }
 
 void DataLogger::SendNT( std::string s, double val ) {
-    if( !nt_map.contains( s ) ) {
-        nt_map[s] = nt_inst.GetDoubleTopic( s ).GenericPublish( "double" );
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_inst.GetDoubleTopic( s ).GenericPublish( "double" );
     }
-    nt_map[s].SetDouble( val );
+    GetInstance().nt_map[s].SetDouble( val );
 }
 
 void DataLogger::SendNT( std::string s, std::span<const double> a ) {
-    if( !nt_map.contains( s ) ) {
-        nt_map[s] = nt_inst.GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_inst.GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
     }
-    nt_map[s].SetDoubleArray( a );
+    GetInstance().nt_map[s].SetDoubleArray( a );
 }
 
 void DataLogger::SendNT( std::string s, frc::Pose2d p ) {
@@ -92,13 +92,13 @@ void DataLogger::LogMetadata( void ) {
     binfo.open( path, std::ios::in );
     if( binfo.is_open() ) {
         binfo.getline( line, 255 );
-        this->SendMetadata( "BUILD_DATE", line );
+        GetInstance().SendMetadata( "BUILD_DATE", line );
         binfo.getline( line, 255 );
-        this->SendMetadata( "GIT_REPO", line );
+        GetInstance().SendMetadata( "GIT_REPO", line );
         binfo.getline( line, 255 );
-        this->SendMetadata( "GIT_BRANCH", line );
+        GetInstance().SendMetadata( "GIT_BRANCH", line );
         binfo.getline( line, 255 );
-        this->SendMetadata( "GIT_VERSION", line );
+        GetInstance().SendMetadata( "GIT_VERSION", line );
         binfo.close();
     } else {
         Log( "Cannot open METADATA file: " + path );

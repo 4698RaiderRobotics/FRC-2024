@@ -17,7 +17,7 @@ ElevatorSubsystem::ElevatorSubsystem() {
 void ElevatorSubsystem::Periodic() {
 
     m_elevatorPosition = m_elevatorEncoder.GetPosition() / 15.0 * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
-    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Height", m_elevatorPosition.value() );
+    DataLogger::SendNT( "ElevatorSubsys/Height", m_elevatorPosition.value() );
 
     if (frc::DriverStation::IsDisabled()) {
         m_elevatorSetpoint.position = m_elevatorPosition;
@@ -29,8 +29,8 @@ void ElevatorSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Goal Height", m_elevatorGoal.position.value() );
-    DataLogger::GetInstance().SendNT( "ElevatorSubsys/IsAtGoal", IsAtGoal() );
+    DataLogger::SendNT( "ElevatorSubsys/Goal Height", m_elevatorGoal.position.value() );
+    DataLogger::SendNT( "ElevatorSubsys/IsAtGoal", IsAtGoal() );
 
     m_elevatorSetpoint = m_elevatorProfile.Calculate(physical::kDt, m_elevatorSetpoint, m_elevatorGoal);
 

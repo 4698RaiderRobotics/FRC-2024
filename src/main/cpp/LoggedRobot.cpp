@@ -23,29 +23,29 @@ void LoggedRobot::RobotInit() {
     frc::DriverStation::StartDataLog( frc::DataLogManager::GetLog() );
 
         // Send the metadata from the buildinfo.txt file
-    DataLogger::GetInstance().LogMetadata();
+    DataLogger::LogMetadata();
 
         // Determine the number of PDP channels
     m_pdpChannels = (m_pdp.GetType() == frc::PowerDistribution::ModuleType::kRev) ? 24 : 16;
 
     frc2::CommandScheduler::GetInstance().OnCommandInitialize(  
         [](const frc2::Command& command) {
-            DataLogger::GetInstance().Log( "Command " + command.GetName() + 
+            DataLogger::Log( "Command " + command.GetName() + 
                                         " starting..." );
-            DataLogger::GetInstance().SendNT( "Command/" + command.GetName(), true );
+            DataLogger::SendNT( "Command/" + command.GetName(), true );
         }
         );
     frc2::CommandScheduler::GetInstance().OnCommandFinish(  
         [](const frc2::Command& command) {
-            DataLogger::GetInstance().Log( "Command " + command.GetName() + 
+            DataLogger::Log( "Command " + command.GetName() + 
                                         " finished." );
-            DataLogger::GetInstance().SendNT( "Command/" + command.GetName(), false );
+            DataLogger::SendNT( "Command/" + command.GetName(), false );
         }
     );
     frc2::CommandScheduler::GetInstance().OnCommandInterrupt(  
         [](const frc2::Command& command, const std::optional<frc2::Command*>& int_cmd) {
-            DataLogger::GetInstance().SendNT( "Command/" + command.GetName(), false );
-            DataLogger::GetInstance().Log( "Command <" + command.GetName() + 
+            DataLogger::SendNT( "Command/" + command.GetName(), false );
+            DataLogger::Log( "Command <" + command.GetName() + 
                                         "> interrupted by <" + (int_cmd.has_value() ? int_cmd.value()->GetName() : "<DISABLED>") + ">" );
         }
     );
@@ -55,43 +55,41 @@ void LoggedRobot::RobotPeriodic() {
     static double currents[24];
     frc::PowerDistribution::Faults faults;
 
-    DataLogger &logger = DataLogger::GetInstance();
-
     frc::CANStatus cs;
 
         // Log the RoboRIO Information
-    logger.SendNT( "RoboRIO/Input Voltage", frc::RobotController::GetInputVoltage() );
-    logger.SendNT( "RoboRIO/Input Current", frc::RobotController::GetInputCurrent() );
-    logger.SendNT( "RoboRIO/BrownedOut", frc::RobotController::IsBrownedOut() );
-    logger.SendNT( "RoboRIO/3V3 Volts", frc::RobotController::GetVoltage3V3() );
-    logger.SendNT( "RoboRIO/3V3 Amps", frc::RobotController::GetCurrent3V3() );
-    logger.SendNT( "RoboRIO/3V3 Fault Count", frc::RobotController::GetFaultCount3V3() );
-    logger.SendNT( "RoboRIO/5V Volts", frc::RobotController::GetVoltage5V() );
-    logger.SendNT( "RoboRIO/5V Amps", frc::RobotController::GetCurrent5V() );
-    logger.SendNT( "RoboRIO/5V Fault Count", frc::RobotController::GetFaultCount5V() );
+     DataLogger::SendNT( "RoboRIO/Input Voltage", frc::RobotController::GetInputVoltage() );
+     DataLogger::SendNT( "RoboRIO/Input Current", frc::RobotController::GetInputCurrent() );
+     DataLogger::SendNT( "RoboRIO/BrownedOut", frc::RobotController::IsBrownedOut() );
+     DataLogger::SendNT( "RoboRIO/3V3 Volts", frc::RobotController::GetVoltage3V3() );
+     DataLogger::SendNT( "RoboRIO/3V3 Amps", frc::RobotController::GetCurrent3V3() );
+     DataLogger::SendNT( "RoboRIO/3V3 Fault Count", frc::RobotController::GetFaultCount3V3() );
+     DataLogger::SendNT( "RoboRIO/5V Volts", frc::RobotController::GetVoltage5V() );
+     DataLogger::SendNT( "RoboRIO/5V Amps", frc::RobotController::GetCurrent5V() );
+     DataLogger::SendNT( "RoboRIO/5V Fault Count", frc::RobotController::GetFaultCount5V() );
 
         // Log the RoboRIO CANBus Stats
     cs = frc::RobotController::GetCANStatus();
-    logger.SendNT( "RoboRIO/CAN Percent Utilization", cs.percentBusUtilization );
-    logger.SendNT( "RoboRIO/CAN OffCount", cs.busOffCount );
-    logger.SendNT( "RoboRIO/CAN receiveErrorCount", cs.receiveErrorCount );
-    logger.SendNT( "RoboRIO/CAN transmitErrorCount", cs.transmitErrorCount );
-    logger.SendNT( "RoboRIO/CAN txFullCount", cs.txFullCount );
+     DataLogger::SendNT( "RoboRIO/CAN Percent Utilization", cs.percentBusUtilization );
+     DataLogger::SendNT( "RoboRIO/CAN OffCount", cs.busOffCount );
+     DataLogger::SendNT( "RoboRIO/CAN receiveErrorCount", cs.receiveErrorCount );
+     DataLogger::SendNT( "RoboRIO/CAN transmitErrorCount", cs.transmitErrorCount );
+     DataLogger::SendNT( "RoboRIO/CAN txFullCount", cs.txFullCount );
 
         // Log the PDP Information
     faults = m_pdp.GetFaults();
 
-    logger.SendNT( "PDP/Bus Voltage", m_pdp.GetVoltage() );
-    logger.SendNT( "PDP/Total Current", m_pdp.GetTotalCurrent() );
-    logger.SendNT( "PDP/Temperature", m_pdp.GetTemperature() );
-    logger.SendNT( "PDP/Total Power", m_pdp.GetTotalPower() );
-    logger.SendNT( "PDP/Total Energy", m_pdp.GetTotalEnergy() );
-    logger.SendNT( "PDP/Brown Out", (bool) faults.Brownout );
-    logger.SendNT( "PDP/Can Warning", (bool) faults.CanWarning );
-    logger.SendNT( "PDP/Hardware Fault", (bool) faults.HardwareFault );
+     DataLogger::SendNT( "PDP/Bus Voltage", m_pdp.GetVoltage() );
+     DataLogger::SendNT( "PDP/Total Current", m_pdp.GetTotalCurrent() );
+     DataLogger::SendNT( "PDP/Temperature", m_pdp.GetTemperature() );
+     DataLogger::SendNT( "PDP/Total Power", m_pdp.GetTotalPower() );
+     DataLogger::SendNT( "PDP/Total Energy", m_pdp.GetTotalEnergy() );
+     DataLogger::SendNT( "PDP/Brown Out", (bool) faults.Brownout );
+     DataLogger::SendNT( "PDP/Can Warning", (bool) faults.CanWarning );
+     DataLogger::SendNT( "PDP/Hardware Fault", (bool) faults.HardwareFault );
 
     for( int i=0; i<m_pdpChannels; ++i ) {
         currents[i] = m_pdp.GetCurrent( i );
     }
-    logger.SendNT( "PDP/Currents", std::span<double> ( currents, m_pdpChannels) );
+    DataLogger::SendNT( "PDP/Currents", std::span<double> ( currents, m_pdpChannels) );
 }

@@ -71,8 +71,8 @@ void ArmSubsystem::Periodic() {
 
     m_armAngle = m_wristAngle - phi;
 
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
+    DataLogger::SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
  
     // frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
     // frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);
@@ -94,13 +94,13 @@ void ArmSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/IsAtGoal", IsAtGoal() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Current", m_armMotor.GetSupplyCurrent().GetValueAsDouble() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Current", m_wristMotor.GetSupplyCurrent().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
+    DataLogger::SendNT( "ArmSubsys/IsAtGoal", IsAtGoal() );
+    DataLogger::SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Arm Mtr Current", m_armMotor.GetSupplyCurrent().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Mtr Current", m_wristMotor.GetSupplyCurrent().GetValueAsDouble() );
 
     m_wristMotor.SetControl( m_wristPositionDC.WithPosition( m_wristGoal.position ) ); 
     

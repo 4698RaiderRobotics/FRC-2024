@@ -18,7 +18,7 @@ IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds)
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
 
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/BeamBroken", IsBeamBroken() );
+    DataLogger::SendNT( "IntakeSubsys/BeamBroken", IsBeamBroken() );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_intakeMotor.Set(0);
@@ -30,14 +30,14 @@ void IntakeSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Speed", m_intakeMotor.Get() );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Current", m_intakeMotor.GetOutputCurrent() );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/HasNote", m_hasNote );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Centered", m_centered );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Reversing", m_reversing );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/isIndexed", m_isIndexed );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/start Pos", m_startPos );
-    DataLogger::GetInstance().SendNT( "IntakeSubsys/Rotations", GetRotations() );
+    DataLogger::SendNT( "IntakeSubsys/Speed", m_intakeMotor.Get() );
+    DataLogger::SendNT( "IntakeSubsys/Current", m_intakeMotor.GetOutputCurrent() );
+    DataLogger::SendNT( "IntakeSubsys/HasNote", m_hasNote );
+    DataLogger::SendNT( "IntakeSubsys/Centered", m_centered );
+    DataLogger::SendNT( "IntakeSubsys/Reversing", m_reversing );
+    DataLogger::SendNT( "IntakeSubsys/isIndexed", m_isIndexed );
+    DataLogger::SendNT( "IntakeSubsys/start Pos", m_startPos );
+    DataLogger::SendNT( "IntakeSubsys/Rotations", GetRotations() );
 
         // For some reason this condition happens some times ????
         // Probably when IntakeNote is interrupted.
@@ -108,7 +108,7 @@ void IntakeSubsystem::NotePickedUp() {
     m_reversing = false;
     m_intakeMotor.Set(0);
     m_startPos = GetRotations();
-    DataLogger::GetInstance().Log( "        IntakeSubsystem::NotePickedUp()  -- NOTE Picked !");
+    DataLogger::Log( "        IntakeSubsystem::NotePickedUp()  -- NOTE Picked !");
 }
 
 bool IntakeSubsystem::HasNote() {

@@ -21,7 +21,7 @@ void IntakeNote::Init() {
   m_startTime = frc::Timer::GetFPGATimestamp();
   beamHasBroken = false;
 
-  DataLogger::GetInstance().SendNT( "IntakeNote/beamHasBroken", beamHasBroken );
+  DataLogger::SendNT( "IntakeNote/beamHasBroken", beamHasBroken );
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -30,7 +30,7 @@ void IntakeNote::Execute() {
     beamHasBroken = true;
     m_intake->NotePickedUp();
   }
-  DataLogger::GetInstance().SendNT( "IntakeNote/beamHasBroken", beamHasBroken );
+  DataLogger::SendNT( "IntakeNote/beamHasBroken", beamHasBroken );
 }
 
 // Called once the command ends or is interrupted.

@@ -76,7 +76,7 @@ void ShootNoteTargeting::Execute() {
 
     
 
-    DataLogger::GetInstance().SendNT( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
+    DataLogger::SendNT( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
 
     units::degree_t azimuthAngle;
     units::degree_t azimuthCorrAngle;
@@ -122,24 +122,24 @@ void ShootNoteTargeting::Execute() {
       m_drive->ArcadeDrive( 0, 0, turnCorrection );
     }
 
-    // DataLogger::GetInstance().SendNT( "ShootNote/Shooter Angle Goal", shooterAngle.value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle Goal", 180 - shooterAngle.value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Elevator Height", m_elev->GetHeight().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Elevator Goal",  m_shooter->GetShooter_ElevatorHeight().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Target Yaw", t_yaw.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/DeltaX", delta_x.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/DeltaY", delta_y.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Azimuth", azimuthAngle.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Azimuth Correction", azimuthCorrAngle.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Plane Angle", planeAngle.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Turn Correction", turnCorrection );
+    // DataLogger::SendNT( "ShootNote/Shooter Angle Goal", shooterAngle.value() );
+    // DataLogger::SendNT( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Wrist Angle Goal", 180 - shooterAngle.value() );
+    // DataLogger::SendNT( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Elevator Height", m_elev->GetHeight().value() );
+    // DataLogger::SendNT( "ShootNote/Elevator Goal",  m_shooter->GetShooter_ElevatorHeight().value() );
+    // DataLogger::SendNT( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
+    // DataLogger::SendNT( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
+    // DataLogger::SendNT( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
+    DataLogger::SendNT( "ShootNote/Target Yaw", t_yaw.value() );
+    DataLogger::SendNT( "ShootNote/DeltaX", delta_x.value() );
+    DataLogger::SendNT( "ShootNote/DeltaY", delta_y.value() );
+    DataLogger::SendNT( "ShootNote/Azimuth", azimuthAngle.value() );
+    DataLogger::SendNT( "ShootNote/Azimuth Correction", azimuthCorrAngle.value() );
+    DataLogger::SendNT( "ShootNote/Plane Angle", planeAngle.value() );
+    DataLogger::SendNT( "ShootNote/Turn Correction", turnCorrection );
 
     // fmt::print( "    Arm/Wrist Angles:  atGoal({}), Curr_arm({}), Arm_target({}), Curr_wrist({}), Wrist_target({})\n", 
     //                 m_arm->IsAtGoal( arm_tolerance ), m_arm->GetArmAngle(), m_shooter->GetShooter_ArmAngle(),
@@ -153,8 +153,7 @@ void ShootNoteTargeting::Execute() {
     }
     
     // else {
-    //   std::string mesg = fmt::format( "ShootNoteTargeting -- TOO Far from target dist = {}", dist_to_speaker );
-    //   DataLogger::GetInstance().Log( mesg);
+    //   DataLogger::Log( fmt::format( "ShootNoteTargeting -- TOO Far from target dist = {}", dist_to_speaker ));
     //   noTargets = true;
     // }
   } else {

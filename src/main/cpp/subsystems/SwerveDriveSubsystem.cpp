@@ -215,18 +215,18 @@ void SwerveDriveSubsystem::Periodic( void ) {
 
     if( frc::DriverStation::IsEnabled() ) {
         for(int i = 0; i < 4; i++) {
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 360 );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
+            DataLogger::SendNT( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
+            DataLogger::SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 360 );
+            DataLogger::SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
+            DataLogger::SendNT( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
 
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Delta Theta", m_modules[i].dTheta.value() );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Desired RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].speed).value() );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Optimized RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].opSpeed).value() );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Drive Motor RPM", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() * 60 );
-            DataLogger::GetInstance().SendNT( m_modules[i].m_name + "/Turn Motor RPM", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() * 60 );
+            DataLogger::SendNT( m_modules[i].m_name + "/Delta Theta", m_modules[i].dTheta.value() );
+            DataLogger::SendNT( m_modules[i].m_name + "/Desired RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].speed).value() );
+            DataLogger::SendNT( m_modules[i].m_name + "/Optimized RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].opSpeed).value() );
+            DataLogger::SendNT( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
+            DataLogger::SendNT( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
+            DataLogger::SendNT( m_modules[i].m_name + "/Drive Motor RPM", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() * 60 );
+            DataLogger::SendNT( m_modules[i].m_name + "/Turn Motor RPM", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() * 60 );
         }
     }
 
