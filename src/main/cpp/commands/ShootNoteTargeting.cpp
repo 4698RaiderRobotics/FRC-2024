@@ -6,8 +6,14 @@
 
 #include "Constants.h"
 
+#include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
+
 #include "commands/ChangeShooterAngle.h"
-#include "commands/SpinShooter.h"
 #include "commands/ChangeArmAngle.h"
 #include "commands/ChangeWristAngle.h"
 
@@ -87,9 +93,12 @@ void ShootNoteTargeting::Execute() {
       shooterAngle = azimuthAngle + azimuthCorrAngle;
       m_shooter->Spin( 1300_rpm + 225_rpm * dist_to_speaker.value() );
     } else {
+        // Lob shot from more than 6_m away
       azimuthAngle = 50_deg;
       shooterAngle = 50_deg;
       m_shooter->Spin( 1000_rpm + 100_rpm * (dist_to_speaker - 6_m ).value() );
+        // Bias toward the Amp
+      delta_y += 50_in;
     }
     units::degree_t planeAngle =  units::math::atan2( delta_y, delta_x );
 

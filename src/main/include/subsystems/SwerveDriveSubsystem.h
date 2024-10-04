@@ -20,7 +20,7 @@
 using namespace units::literals;
 
 #include "SwerveModule.h"
-#include "SwerveModuleDisplay.h"
+// #include "SwerveModuleDisplay.h"
 #include "subsystems/VisionSubsystem.h"
 
 class SwerveDriveSubsystem : public frc2::SubsystemBase {

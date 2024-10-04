@@ -7,11 +7,11 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/ShooterSubsystem.h"
-#include "subsystems/ArmSubsystem.h"
-#include "subsystems/ClimberSubsystem.h"
-#include "subsystems/ElevatorSubsystem.h"
+class IntakeSubsystem;
+class ShooterSubsystem;
+class ArmSubsystem;
+class ClimberSubsystem;
+class ElevatorSubsystem;
 
 class ClimbAndTrap
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,

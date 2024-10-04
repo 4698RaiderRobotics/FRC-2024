@@ -12,12 +12,13 @@
 #include "ControllerAxis.h"
 
 #include "LoggedCommand.h"
-#include "subsystems/SwerveDriveSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/ShooterSubsystem.h"
-#include "subsystems/ArmSubsystem.h"
-#include "subsystems/VisionSubsystem.h"
-#include "subsystems/ElevatorSubsystem.h"
+
+class SwerveDriveSubsystem;
+class IntakeSubsystem;
+class ShooterSubsystem;
+class ArmSubsystem;
+class VisionSubsystem;
+class ElevatorSubsystem;
 
 class ShootNoteTargeting
     : public frc2::CommandHelper<LoggedCommand, ShootNoteTargeting> {

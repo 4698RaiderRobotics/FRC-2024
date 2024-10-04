@@ -311,9 +311,7 @@ void SwerveDriveSubsystem::LogSwerveStateArray( wpi::log::DoubleArrayLogEntry& l
 //     static units::radians_per_second_t MaxVel{ swerve::pidf::Th_Holo_MaxVel };
 //     static units::radians_per_second_squared_t MaxAcc{ swerve::pidf::Th_Holo_MaxAcc };
 
-// #define SET_HOLO_IF_CHANGED( name, pidc, getf, setf ) \
-            val = frc::SmartDashboard::GetNumber((name), pidc.getf() ); \
-            if( val != pidc.getf() ) { pidc.setf( val ); }
+// #define SET_HOLO_IF_CHANGED( name, pidc, getf, setf )  val = frc::SmartDashboard::GetNumber((name), pidc.getf() ); if( val != pidc.getf() ) { pidc.setf( val ); }
 
 //     SET_HOLO_IF_CHANGED( "X_Holo P", m_controller.getXController(), GetP, SetP )
 //     SET_HOLO_IF_CHANGED( "X_Holo I", m_controller.getXController(), GetI, SetI )
@@ -333,13 +331,7 @@ void SwerveDriveSubsystem::LogSwerveStateArray( wpi::log::DoubleArrayLogEntry& l
 //         m_controller.getThetaController().SetConstraints( { MaxVel, MaxAcc } );
 //     }
 
-// #define SET_MODULES_IF_CHANGED( name, mods, pidc, getf, setf ) \
-            val = frc::SmartDashboard::GetNumber((name), mods[0].pidc.getf() ); \
-            if( val != mods[0].pidc.getf() ) { \
-                for(int i=0; i<4; ++i ) { \
-                    mods[i].pidc.setf( val ); \
-                } \
-            }
+// #define SET_MODULES_IF_CHANGED( name, mods, pidc, getf, setf )  val = frc::SmartDashboard::GetNumber((name), mods[0].pidc.getf() ); if( val != mods[0].pidc.getf() ) { for(int i=0; i<4; ++i ) {    mods[i].pidc.setf( val );  }  }
 
 //     // SET_MODULES_IF_CHANGED( "Drive P", m_modules, m_drivePIDController, GetP, SetP )
 //     // SET_MODULES_IF_CHANGED( "Drive I", m_modules, m_drivePIDController, GetI, SetI )

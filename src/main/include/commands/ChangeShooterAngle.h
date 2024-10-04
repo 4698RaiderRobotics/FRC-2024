@@ -8,7 +8,8 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "LoggedCommand.h"
-#include "subsystems/ShooterSubsystem.h"
+
+class ShooterSubsystem;
 
 /**
  * An example command.

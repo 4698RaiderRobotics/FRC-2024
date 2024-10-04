@@ -5,18 +5,13 @@
 #pragma once
 
 #include <frc2/command/CommandHelper.h>
-#include <frc2/command/SequentialCommandGroup.h>
-
-#include "LUT.h"
-#include "ControllerAxis.h"
 
 #include "LoggedCommand.h"
-#include "subsystems/SwerveDriveSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/ShooterSubsystem.h"
-#include "subsystems/ArmSubsystem.h"
-#include "subsystems/VisionSubsystem.h"
-#include "subsystems/ElevatorSubsystem.h"
+
+class IntakeSubsystem;
+class ShooterSubsystem;
+class ArmSubsystem;
+class ElevatorSubsystem;
 
 class StageNoteInShooter
     : public frc2::CommandHelper<LoggedCommand, StageNoteInShooter> {

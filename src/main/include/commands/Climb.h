@@ -4,11 +4,13 @@
 
 #pragma once
 
+#include <units/length.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
 
 #include "LoggedCommand.h"
-#include "subsystems/ClimberSubsystem.h"
+
+class ClimberSubsystem;
 
 /**
  * An example command.
@@ -20,7 +22,7 @@
 class Climb
     : public frc2::CommandHelper<LoggedCommand, Climb> {
  public:
-  Climb(ClimberSubsystem *climber, double rotation_target = -1.0);
+  Climb(ClimberSubsystem *climber, units::inch_t height_target = 0.25_in);
 
   void Init() override;
 
@@ -32,6 +34,5 @@ class Climb
 
  private:
   ClimberSubsystem *m_climber;
-  double rot_target;
-  bool going_up;
+  units::inch_t height_target;
   };

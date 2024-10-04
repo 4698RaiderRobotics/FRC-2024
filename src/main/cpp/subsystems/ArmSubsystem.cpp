@@ -10,7 +10,21 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Preferences.h>
 
-ArmSubsystem::ArmSubsystem() {
+#include "DeviceConstants.h"
+#include "Constants.h"
+
+ArmSubsystem::ArmSubsystem() :
+    m_wristMotor{deviceIDs::kWristMotorID},
+    m_wristEncoder{deviceIDs::kWristEncoderID},
+    m_armMotor{deviceIDs::kArmMotorID},
+    m_armEncoder{deviceIDs::kArmEncoderID},
+    m_armPID{pidf::kArmP, pidf::kArmI, pidf::kArmD},
+    m_armFeedforward{units::volt_t{pidf::kArmS}, units::volt_t{pidf::kArmG}, 
+                     units::unit_t<frc::ArmFeedforward::kv_unit> {pidf::kArmV}, 
+                     units::unit_t<frc::ArmFeedforward::ka_unit> {pidf::kArmA} },
+    m_armProfile{{physical::kArmMaxSpeed, physical::kArmMaxAcceleration}}
+
+{
     frc::Preferences::InitDouble("ArmOffset", 0.0);
     frc::Preferences::InitDouble("WristOffset", 0.0);
 
@@ -30,6 +44,7 @@ ArmSubsystem::ArmSubsystem() {
     wristConfigs.Slot0.kD = pidf::kWristD;
     wristConfigs.Feedback.FeedbackRemoteSensorID = m_wristEncoder.GetDeviceID();
     wristConfigs.Feedback.FeedbackSensorSource = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
+    wristConfigs.Feedback.RotorToSensorRatio = kWristGearRatio;
     wristConfigs.MotionMagic.MotionMagicAcceleration = physical::kWristMaxSpeed;
     wristConfigs.MotionMagic.MotionMagicCruiseVelocity = physical::kWristMaxAcceleration;
     m_wristMotor.GetConfigurator().Apply(wristConfigs, 50_ms);
@@ -128,11 +143,11 @@ void ArmSubsystem::GoToWristAngle(units::degree_t wristAngleGoal) {
 }
 
 void ArmSubsystem::NudgeArmAngle(units::degree_t deltaAngle) {
-    m_armGoal.position += deltaAngle;
+    GoToArmAngle( m_armGoal.position + deltaAngle );
 }
 
 void ArmSubsystem::NudgeWristAngle(units::degree_t deltaAngle) {
-    m_wristGoal.position += deltaAngle;
+    GoToWristAngle( m_wristGoal.position + deltaAngle );
 }
 
 units::degree_t ArmSubsystem::GetArmAngle() {

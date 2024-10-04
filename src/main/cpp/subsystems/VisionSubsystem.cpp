@@ -8,6 +8,8 @@
 #include "DataLogger.h"
 #include "subsystems/VisionSubsystem.h"
 
+#include "Constants.h"
+
 void UpdatePoseEstimator( std::string camName, 
                           photon::PhotonPoseEstimator &estimator, 
                           frc::SwerveDrivePoseEstimator<4> &odometry );
@@ -111,4 +113,6 @@ frc::Pose2d VisionSubsystem::GetRelativePose() {
             return frc::Pose3d{target.GetBestCameraToTarget().Translation(), target.GetBestCameraToTarget().Rotation()}.ToPose2d();
         }
     }
+
+    return frc::Pose2d{};
 }

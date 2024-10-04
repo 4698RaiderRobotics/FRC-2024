@@ -9,8 +9,7 @@
 #include <rev/CANSparkMax.h>
 #include <frc/DigitalInput.h>
 
-#include "Constants.h"
-#include "subsystems/LEDSubsystem.h"
+class LEDSubsystem;
 
 class IntakeSubsystem : public frc2::SubsystemBase {
  public:
@@ -41,7 +40,7 @@ class IntakeSubsystem : public frc2::SubsystemBase {
 
   LEDSubsystem* m_leds;
 
-  rev::CANSparkMax m_intakeMotor{deviceIDs::kIntakeID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_intakeMotor;
 
   rev::SparkRelativeEncoder m_intakeEncoder = m_intakeMotor.GetEncoder();
 

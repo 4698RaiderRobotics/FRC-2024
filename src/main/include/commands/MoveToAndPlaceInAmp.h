@@ -7,11 +7,11 @@
 #include <frc2/command/CommandHelper.h>
 #include <frc2/command/SequentialCommandGroup.h>
 
-#include "subsystems/ArmSubsystem.h"
-#include "subsystems/ElevatorSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/SwerveDriveSubsystem.h"
-#include "subsystems/VisionSubsystem.h"
+class ArmSubsystem;
+class ElevatorSubsystem;
+class IntakeSubsystem;
+class SwerveDriveSubsystem;
+class VisionSubsystem;
 
 class MoveToAndPlaceInAmp
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,

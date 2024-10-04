@@ -8,6 +8,12 @@
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
 
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/ClimberSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
+
 #include "commands/ChangeArmAngle.h"
 #include "commands/ChangeWristAngle.h"
 #include "commands/ChangeElevatorHeight.h"

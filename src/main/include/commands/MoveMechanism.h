@@ -8,8 +8,9 @@
 #include <frc2/command/CommandHelper.h>
 
 #include "LoggedCommand.h"
-#include "subsystems/ArmSubsystem.h"
-#include "subsystems/ElevatorSubsystem.h"
+
+class ArmSubsystem;
+class ElevatorSubsystem;
 
 /**
  * An example command.

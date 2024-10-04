@@ -4,6 +4,9 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "subsystems/SwerveDriveSubsystem.h"
+#include "subsystems/VisionSubsystem.h"
+
 #include "commands/ProfiledDriveToPose.h"
 
 #include "DataLogger.h"
@@ -25,10 +28,6 @@ void ProfiledDriveToPose::Init() {
   m_ySetpoint.position = m_swerve->GetPose().Y();
   m_omegaSetpoint.position = m_swerve->GetPose().Rotation().Degrees();
 
-  // m_xSetpoint.position = 0_m;
-  // m_ySetpoint.position = 0_m;
-  // m_omegaSetpoint.position = 0_deg;
-
   m_xGoal.position = m_targetPose.X();
   m_xGoal.velocity = 0_mps;
   m_yGoal.position = m_targetPose.Y();
@@ -37,6 +36,10 @@ void ProfiledDriveToPose::Init() {
   m_omegaGoal.velocity = 0_rpm;
 
   m_startTime = frc::Timer::GetFPGATimestamp();
+
+  DataLogger::SendNT( "Profiled Drive/xGoal",m_xGoal.position.value() );
+  DataLogger::SendNT( "Profiled Drive/yGoal",m_yGoal.position.value() );
+  DataLogger::SendNT( "Profiled Drive/omegaGoal",m_omegaGoal.position.value() );
 
   // fmt::print( "Initial profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
 }
@@ -53,8 +56,6 @@ void ProfiledDriveToPose::Execute() {
     m_omegaSetpoint.position -= 360_deg;
   }
 
-  
-
   m_xSetpoint = m_xProfile.Calculate(20_ms, m_xSetpoint, m_xGoal);
   m_ySetpoint = m_yProfile.Calculate(20_ms, m_ySetpoint, m_yGoal);
   m_omegaSetpoint = m_omegaProfile.Calculate(20_ms, m_omegaSetpoint, m_omegaGoal);
@@ -64,9 +65,6 @@ void ProfiledDriveToPose::Execute() {
   frc::SmartDashboard::PutNumber( "ProfileVX", m_xSetpoint.velocity.value() );
   frc::SmartDashboard::PutNumber( "ProfileVY", m_ySetpoint.velocity.value() );
   DataLogger::SendNT( "Profiled Drive/Pose",m_swerve->GetPose() );
-  DataLogger::SendNT( "Profiled Drive/xGoal",m_xGoal.position.value() );
-  DataLogger::SendNT( "Profiled Drive/yGoal",m_yGoal.position.value() );
-  DataLogger::SendNT( "Profiled Drive/omegaGoal",m_omegaGoal.position.value() );
 
   // fmt::print( "Profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
 
@@ -80,8 +78,6 @@ void ProfiledDriveToPose::Execute() {
   if(units::math::abs(m_swerve->GetPose().Rotation().Degrees() - m_omegaGoal.position) > 3_deg) {
     speeds.omega = m_omegaSetpoint.velocity;
   }
-
-
 
   m_swerve->Drive( speeds, true );
 }

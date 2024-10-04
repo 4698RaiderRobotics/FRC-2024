@@ -8,9 +8,16 @@
 #include "DataLogger.h"
 
 #include "subsystems/IntakeSubsystem.h"
+#include "subsystems/LEDSubsystem.h"
 
-IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds)
- : m_leds{leds} {
+#include "DeviceConstants.h"
+#include "Constants.h"
+
+
+IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds) : 
+    m_leds{leds},
+    m_intakeMotor{deviceIDs::kIntakeID, rev::CANSparkMax::MotorType::kBrushless}
+{
 
     m_intakeMotor.SetSmartCurrentLimit( 40 );
 };

@@ -50,7 +50,8 @@ class RobotContainer {
   frc2::CommandPS5Controller m_driverController{0};
   frc2::CommandXboxController m_operatorController{1};
 
-  frc2::Command *climbandtrapcmd{nullptr};
+  frc2::Command *m_climbAndTrapCmd{nullptr};
+  frc2::Command *m_moveToAmpCmd{nullptr};
 
   ControllerAxis vx_axis{m_driverController, frc::PS5Controller::Axis::kLeftY, true};
   ControllerAxis vy_axis{m_driverController, frc::PS5Controller::Axis::kLeftX, true};

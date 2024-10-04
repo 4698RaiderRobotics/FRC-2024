@@ -59,7 +59,7 @@ namespace swerve {
 
     namespace physical {
         // Max drive speed of Mk3 swerve modules * a scalar value
-        constexpr units::meters_per_second_t kMaxDriveSpeed = 15.7_fps;
+        constexpr units::meters_per_second_t kMaxDriveSpeed = 15.7_fps * 0.5;
 
         // The max speed of the turn motors
         constexpr auto kMaxTurnSpeed =  5_rad_per_s;

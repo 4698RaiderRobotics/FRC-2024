@@ -5,6 +5,7 @@
 #pragma once
 
 #include <vector>
+#include <units/length.h>
 
 #include <frc2/command/SubsystemBase.h>
 
@@ -16,7 +17,6 @@
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix6/CANcoder.hpp>
 
-#include "Constants.h"
 #include "LUT.h"
 
 class ShooterSubsystem : public frc2::SubsystemBase {
@@ -58,26 +58,24 @@ class ShooterSubsystem : public frc2::SubsystemBase {
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
-  rev::CANSparkFlex m_rightShooterMotor{deviceIDs::kRightShooterID, rev::CANSparkFlex::MotorType::kBrushless};
-  rev::CANSparkFlex m_leftShooterMotor{deviceIDs::kLeftShooterID, rev::CANSparkFlex::MotorType::kBrushless};
+  rev::CANSparkFlex m_rightShooterMotor;
+  rev::CANSparkFlex m_leftShooterMotor;
 
   rev::SparkPIDController m_speedPID = m_rightShooterMotor.GetPIDController();
 
   rev::SparkRelativeEncoder m_rightEncoder = m_rightShooterMotor.GetEncoder();
 
-  rev::CANSparkMax m_angleShooterMotor{deviceIDs::kShooterAngleID, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_angleShooterMotor;
 
-  ctre::phoenix6::hardware::CANcoder m_shooterAngleEncoder{deviceIDs::kShooterEncoderID};
+  ctre::phoenix6::hardware::CANcoder m_shooterAngleEncoder;
   
 
-  frc::PIDController m_shooterPID{pidf::kShooterP, pidf::kShooterI, pidf::kShooterD};
-  frc::ArmFeedforward m_shooterFeedforward{units::volt_t{pidf::kShooterS}, units::volt_t{pidf::kShooterG}, 
-                                        units::unit_t<frc::ArmFeedforward::kv_unit> {pidf::kShooterV}, 
-                                        units::unit_t<frc::ArmFeedforward::ka_unit> {pidf::kShooterA}};
+  frc::PIDController m_shooterPID;
+  frc::ArmFeedforward m_shooterFeedforward;
   
-  frc::TrapezoidProfile<units::degrees> m_shooterProfile{{physical::kShooterMaxSpeed, physical::kShooterMaxAcceleration}};
+  frc::TrapezoidProfile<units::degrees> m_shooterProfile;
   frc::TrapezoidProfile<units::degrees>::State m_shooterGoal;
-  frc::TrapezoidProfile<units::degrees>::State m_shooterSetpoint{};
+  frc::TrapezoidProfile<units::degrees>::State m_shooterSetpoint;
 
   units::degree_t m_shooterAngleGoal;
   units::degree_t m_shooterPosition;
@@ -92,7 +90,7 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   // LUT arm_lut{ {26.0, 33.5, 45.0}, {158.0, 169, 177.5} };
 //  LUT arm_lut{ {18.0, 26.0, 33.5, 45.0}, {159.0, 155.0, 166, 174.5} };
   // LUT arm_lut{ {18.0, 26.0, 33.5, 45.0}, {156.0, 155.0, 166, 174.5} };
-  LUT arm_lut{ {15.0, 20.0, 25.0, 30.0, 35.0, 45.0, 90.0}, {178.0, 178.0, 178, 178, 178, 178, 178} };
+  LUT arm_lut{ {15.0, 20.0, 25.0, 30.0, 35.0, 45.0, 90.0}, {150.0, 150.0, 150, 150, 150, 150, 150} };
 //  LUT wrist_lut{ {18.0, 26.0, 33.5, 45.0}, {153.0, 152.3, 142.5, 136.3} };
 
     // Elevator Height (meters) versus shooting angle.

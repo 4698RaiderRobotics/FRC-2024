@@ -8,14 +8,14 @@
 #include <frc2/command/SequentialCommandGroup.h>
 
 #include "LoggedCommand.h"
-#include "subsystems/IntakeSubsystem.h"
-#include "subsystems/ArmSubsystem.h"
-#include "subsystems/SwerveDriveSubsystem.h"
-#include "subsystems/ElevatorSubsystem.h"
+
+class IntakeSubsystem;
+class ArmSubsystem;
+class ElevatorSubsystem;
 
 class PickUpNote
     : public frc2::CommandHelper<frc2::SequentialCommandGroup,
                                  PickUpNote> {
  public:
-    PickUpNote(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator);
+    PickUpNote(IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator);
 };

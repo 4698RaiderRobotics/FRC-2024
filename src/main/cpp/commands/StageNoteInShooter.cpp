@@ -2,20 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include <frc/DriverStation.h>
+
 #include "commands/StageNoteInShooter.h"
 
-#include "Constants.h"
-
-#include "commands/ChangeShooterAngle.h"
-#include "commands/SpinShooter.h"
-#include "commands/ChangeArmAngle.h"
-#include "commands/ChangeWristAngle.h"
-
-#include <frc2/command/InstantCommand.h>
-#include <frc2/command/WaitCommand.h>
-#include <frc2/command/ParallelCommandGroup.h>
-
-#include <frc/DriverStation.h>
+#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ShooterSubsystem.h"
+#include "subsystems/ArmSubsystem.h"
+#include "subsystems/ElevatorSubsystem.h"
 
 #include "DataLogger.h"
 
