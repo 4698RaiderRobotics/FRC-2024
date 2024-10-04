@@ -22,8 +22,8 @@ class DataLogger {
       // Constructor is private
     DataLogger() {}
     static DataLogger& GetInstance();
-public:
 
+  public:
       // delete copy constructor
     DataLogger(const DataLogger& obj) = delete; 
 
@@ -37,6 +37,7 @@ public:
     static void SendNT( std::string s, double val );
     static void SendNT( std::string s, std::span<const double> a );
     static void SendNT( std::string s, frc::Pose2d p );
+    static void SendNT( std::string s, std::string_view val );
 
     static void Log(  std::string s );
 
@@ -44,7 +45,7 @@ public:
 
   private:
     wpi::log::DataLog *log;
-    nt::NetworkTableInstance nt_inst;
+    std::shared_ptr<nt::NetworkTable> nt_table;
     std::map<std::string, nt::GenericPublisher> nt_map;
 
     void SendMetadata( std::string_view s, std::string_view val );

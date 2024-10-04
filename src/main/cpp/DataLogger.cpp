@@ -19,7 +19,7 @@ DataLogger& DataLogger::GetInstance() {
     if (singleton == nullptr)  {
         singleton = new DataLogger();
         singleton->log = &frc::DataLogManager::GetLog();
-        singleton->nt_inst = nt::NetworkTableInstance::GetDefault();
+        singleton->nt_table = nt::NetworkTableInstance::GetDefault().GetTable("");
     }
         
     return *singleton;
@@ -59,16 +59,23 @@ void DataLogger::Send( std::string_view s, frc::Pose2d p ) {
 
 void DataLogger::SendNT( std::string s, double val ) {
     if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_inst.GetDoubleTopic( s ).GenericPublish( "double" );
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetDoubleTopic( s ).GenericPublish( "double" );
     }
     GetInstance().nt_map[s].SetDouble( val );
 }
 
 void DataLogger::SendNT( std::string s, std::span<const double> a ) {
     if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_inst.GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
     }
     GetInstance().nt_map[s].SetDoubleArray( a );
+}
+
+void DataLogger::SendNT( std::string s, std::string_view val ) {
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetStringTopic( s ).GetGenericEntry();
+    }
+    GetInstance().nt_map[s].SetString( val );
 }
 
 void DataLogger::SendNT( std::string s, frc::Pose2d p ) {
