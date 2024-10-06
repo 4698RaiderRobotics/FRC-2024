@@ -30,14 +30,14 @@ void LoggedRobot::RobotInit() {
 
     frc2::CommandScheduler::GetInstance().OnCommandInitialize(  
         [](const frc2::Command& command) {
-            DataLogger::Log( "Command " + command.GetName() + 
+            DataLogger::SendNT( "Command/Log", "Command " + command.GetName() + 
                                         " starting..." );
             DataLogger::SendNT( "Command/" + command.GetName(), true );
         }
         );
     frc2::CommandScheduler::GetInstance().OnCommandFinish(  
         [](const frc2::Command& command) {
-            DataLogger::Log( "Command " + command.GetName() + 
+            DataLogger::SendNT( "Command/Log", "Command " + command.GetName() + 
                                         " finished." );
             DataLogger::SendNT( "Command/" + command.GetName(), false );
         }
@@ -45,8 +45,8 @@ void LoggedRobot::RobotInit() {
     frc2::CommandScheduler::GetInstance().OnCommandInterrupt(  
         [](const frc2::Command& command, const std::optional<frc2::Command*>& int_cmd) {
             DataLogger::SendNT( "Command/" + command.GetName(), false );
-            DataLogger::Log( "Command <" + command.GetName() + 
-                                        "> interrupted by <" + (int_cmd.has_value() ? int_cmd.value()->GetName() : "<DISABLED>") + ">" );
+            DataLogger::SendNT( "Command/Log", "Command <" + command.GetName() + 
+                   "> interrupted by <" + (int_cmd.has_value() ? int_cmd.value()->GetName() : "<DISABLED>") + ">" );
         }
     );
 }
