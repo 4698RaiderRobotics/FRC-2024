@@ -26,7 +26,7 @@ StageNoteInShooter::StageNoteInShooter( ShooterSubsystem* shooter,
 void StageNoteInShooter::Init() {
 
     // Start moving to the correct wrist positions.
-      m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle() );
+      m_arm->SetWristGoal( 180_deg - m_shooter->GetAngle() );
 
 }
 
@@ -39,10 +39,10 @@ void StageNoteInShooter::Execute() {
   arm_tolerance = 5_deg;
 
     if( m_arm->GetWristAngle() > 80_deg ) {
-      m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
-      m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
+      m_arm->SetArmGoal( m_shooter->GetShooter_ArmAngle() );
+      m_elev->SetGoal( m_shooter->GetShooter_ElevatorHeight() );
     }
-    m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle( ) );
+    m_arm->SetWristGoal( 180_deg - m_shooter->GetAngle( ) );
       
 
     // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Shooter Angle", m_shooter->GetAngle().value() );
@@ -65,5 +65,5 @@ void StageNoteInShooter::Ending(bool interrupted) {
 // Returns true when the command should end.
 bool StageNoteInShooter::IsFinished() {
 
-  return m_shooter->IsAtAngle() && m_arm->IsAtGoal() && m_elev->IsAtGoal();
+  return m_shooter->AtAngle() && m_arm->AtGoal() && m_elev->AtGoal();
 }

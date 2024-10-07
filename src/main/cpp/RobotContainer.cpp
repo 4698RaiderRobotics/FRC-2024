@@ -19,22 +19,13 @@
 #include <pathplanner/lib/auto/AutoBuilder.h>
 #include <pathplanner/lib/auto/NamedCommands.h>
 
-#include "commands/ChangeShooterAngle.h"
-#include "commands/ChangeArmAngle.h"
-#include "commands/ChangeWristAngle.h"
 #include "commands/IntakeNote.h"
-#include "commands/PickUpNote.h"
 #include "commands/ShootNoteTargeting.h"
 #include "commands/StageNoteInShooter.h"
 #include "commands/GotoRestPosition.h"
 #include "commands/ProfiledDriveToPose.h"
-#include "commands/ChangeClimberHeight.h"
-#include "commands/Climb.h"
-#include "commands/ClimbAndTrap.h"
-#include "commands/ChangeElevatorHeight.h"
 #include "commands/MoveMechanism.h"
-#include "commands/MoveToAndPlaceInAmp.h"
-#include "commands/AutoClimbAndTrap.h"
+#include "commands/ComplexCmds.h"
 
 #include "Constants.h"
 
@@ -84,11 +75,9 @@ RobotContainer::RobotContainer()
     [this] {
 
       if( m_operatorController.GetPOV() == 0 ) {
-        m_climber.SetSpeed( 0.5 ); 
+        m_climber.SetGoal( m_climber.GetHeight() + 0.1_in ); 
       } else if( m_operatorController.GetPOV() == 180 ) {
-        m_climber.SetSpeed( -0.5 );
-      } else {
-        m_climber.SetSpeed( 0.0 );
+        m_climber.SetGoal( m_climber.GetHeight() - 0.1_in );
       }
     },
     { &m_climber }
@@ -111,26 +100,10 @@ void RobotContainer::ConfigureBindings() {
     .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }).ToPtr());
 
     // Eject Note into the amp.
-  m_driverController.L2().OnTrue(frc2::SequentialCommandGroup(
-    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, physical::kArmAmpAngle), ChangeWristAngle(&m_arm, physical::kWristAmpSpitAngle)),
-    frc2::InstantCommand([this] {m_intake.SpinIntake(0.5);}, {&m_intake}),
-    frc2::WaitCommand(0.5_s),
-    frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}),
-    frc2::SequentialCommandGroup(ChangeArmAngle(&m_arm, physical::kArmAmpDropAngle), ChangeWristAngle(&m_arm, physical::kWristAmpDropAngle)),
-    ChangeElevatorHeight(&m_elevator, 0_m),
-    GoToRestPosition( &m_arm, &m_elevator, &m_intake )).ToPtr().WithName( "Driver Put in Amp")
-  );
+  m_driverController.L2().OnTrue( DriverPlaceInAmp( &m_arm, &m_elevator, &m_intake ) );
 
     // Automatically move to the amp and place piece
-  m_driverController.R2().OnTrue(
-    frc2::InstantCommand( 
-      [this] { 
-        delete m_moveToAmpCmd;
-        m_moveToAmpCmd = new MoveToAndPlaceInAmp(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_vision);
-        m_moveToAmpCmd->Schedule();
-      }, {}
-    ).ToPtr() 
-  );
+  m_driverController.R2().OnTrue( frc2::cmd::RunOnce( [this] { m_moveToAmpCmd.Schedule(); } ) );
 
     // Manual eject of the Note
   m_driverController.Cross()
@@ -143,49 +116,43 @@ void RobotContainer::ConfigureBindings() {
   //    **********************  OPERATOR CONTROLS *********************
 
     // Pickup Note
-  m_operatorController.A().OnTrue(PickUpNote(&m_intake, &m_arm, &m_elevator).ToPtr());
+  m_operatorController.A().OnTrue( PickUpNote(&m_intake, &m_arm, &m_elevator) );
 
     // Goto Rest Position
   m_operatorController.B().OnTrue(
-      frc2::SequentialCommandGroup(
-        ChangeElevatorHeight(&m_elevator, 0_in), 
+      frc2::cmd::Sequence(
+        m_elevator.ChangeHeight( 0_in ), 
         frc2::ParallelCommandGroup(
           GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
-          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0); m_shooter.Spin(0_rpm);}, {&m_intake, &m_shooter})
-        )
-      ).ToPtr().WithName( "B Button - Rest Position" )
+          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0); m_shooter.SetRPMGoal(0_rpm);}, {&m_intake, &m_shooter})
+        ).ToPtr()
+      ).WithName( "B Button - Rest Position" )
     );
 
     // Prepare to Place in Amp
   m_operatorController.X().OnTrue(
-    frc2::SequentialCommandGroup(
-      frc2::SequentialCommandGroup(
-        ChangeArmAngle(&m_arm, physical::kArmAmpAngle), 
-        ChangeWristAngle(&m_arm, physical::kWristAmpAngle)
-      ),
-      ChangeElevatorHeight(&m_elevator, physical::kElevatorAmpHeight)
-    ).ToPtr().WithName("Button X -- Prepare for Amp")
+    frc2::cmd::Sequence(
+      m_arm.MoveJoints( physical::kArmAmpAngle, physical::kWristAmpAngle ),
+      m_elevator.ChangeHeight( physical::kElevatorAmpHeight )
+    ).WithName("Button X -- Prepare for Amp")
   );
 
     // Prepare to Climb
   m_operatorController.Y().OnTrue(
-    frc2::SequentialCommandGroup(
-      frc2::ParallelCommandGroup(
-        frc2::SequentialCommandGroup(
-          ChangeArmAngle(&m_arm, physical::kArmAmpAngle), 
-          ChangeWristAngle(&m_arm, physical::kWristAmpAngle)
-        ),
-        ChangeShooterAngle(&m_shooter, 60_deg)
+    frc2::cmd::Sequence(
+      frc2::cmd::Parallel(
+        m_arm.MoveJoints( physical::kArmAmpAngle, physical::kWristAmpAngle ),
+        m_shooter.ChangeAngle( 60_deg )
       ), 
-      ChangeElevatorHeight(&m_elevator, physical::kElevatorTrapHeight)
-    ).ToPtr().WithName( "Button Y - Pre Climb")
+      m_elevator.ChangeHeight( physical::kElevatorTrapHeight )
+    ).WithName( "Button Y - Pre Climb")
   );
 
     // Shoot Note
   (m_operatorController.RightBumper() && !m_operatorController.LeftStick()).OnTrue(
     frc2::ConditionalCommand(
       frc2::SequentialCommandGroup(
-        frc2::InstantCommand( [this] { m_shooter.Spin( 1000_rpm ); m_swerveDrive.ArcadeDrive( 0, 0, 0 ); }, {&m_swerveDrive, &m_shooter} ),
+        frc2::InstantCommand( [this] { m_shooter.SetRPMGoal( 1000_rpm ); m_swerveDrive.ArcadeDrive( 0, 0, 0 ); }, {&m_swerveDrive, &m_shooter} ),
         GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
         ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )),
       frc2::InstantCommand(), 
@@ -194,18 +161,10 @@ void RobotContainer::ConfigureBindings() {
   );
 
     // Auto Climb and Trap
-  m_operatorController.LeftTrigger().OnTrue( 
-    frc2::InstantCommand( 
-      [this] { 
-        delete m_climbAndTrapCmd;
-        m_climbAndTrapCmd = new AutoClimbAndTrap(&m_swerveDrive, &m_intake, &m_arm, &m_elevator, &m_climber, &m_shooter, &m_vision);
-        m_climbAndTrapCmd->Schedule();
-      }, {}
-    ).ToPtr() 
-  );
+  m_operatorController.LeftTrigger().OnTrue( frc2::cmd::RunOnce( [this] { m_climbAndTrapCmd.Schedule(); } ) );
 
     // Climb and Trap after Pre-setup with Button Y
-  m_operatorController.RightTrigger().OnTrue(ClimbAndTrap(&m_shooter, &m_intake, &m_climber, &m_arm, &m_elevator).ToPtr());
+  m_operatorController.RightTrigger().OnTrue(ClimbAndTrap(&m_shooter, &m_intake, &m_climber, &m_arm, &m_elevator));
 
     // Stage Note in Shooter for testing purposes
  (m_operatorController.RightBumper() && m_operatorController.LeftStick()).OnTrue(
@@ -219,7 +178,7 @@ void RobotContainer::ConfigureBindings() {
 
 void RobotContainer::ConfigureAutos() {
 
- pathplanner::NamedCommands::registerCommand("pickUpNote", PickUpNote(&m_intake, &m_arm, &m_elevator).ToPtr());
+ pathplanner::NamedCommands::registerCommand( "pickUpNote", PickUpNote(&m_intake, &m_arm, &m_elevator) );
   pathplanner::NamedCommands::registerCommand("shootNoteTargeting", 
     frc2::SequentialCommandGroup(
       MoveMechanism( &m_arm, &m_elevator, physical::kArmPassiveAngle, 130_deg, 0_in ), 
@@ -255,7 +214,7 @@ void RobotContainer::ConfigureAutos() {
 
   for( unsigned int i=0; i<autos.size(); ++i ) {
       m_chooser.AddOption( autos[i].Description, i );
-       AutoCommands.push_back( pathplanner::AutoBuilder::buildAuto( autos[i].AutoName ).WithName(autos[i].AutoName) );
+      AutoCommands.push_back( pathplanner::AutoBuilder::buildAuto( autos[i].AutoName ).WithName(autos[i].AutoName) );
   }
   m_chooser.SetDefaultOption( autos[0].Description, 0 );
 

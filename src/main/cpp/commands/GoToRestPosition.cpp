@@ -7,7 +7,6 @@
 #include "subsystems/ElevatorSubsystem.h"
 
 #include "commands/GoToRestPosition.h"
-#include "commands/ChangeWristAngle.h"
 
 #include "Constants.h"
 
@@ -21,7 +20,7 @@ GoToRestPosition::GoToRestPosition(ArmSubsystem *arm, ElevatorSubsystem* elev, I
 // Called when the command is initially scheduled.
 void GoToRestPosition::Init() {
   fmt::print( "GoToRestPosition::Initialize() -- hasNote ({})\n", m_intake->HasNote() );
-  m_elev->GoToHeight( 0_in );
+  m_elev->SetGoal( 0_in );
   // m_arm->GoToArmAngle(physical::kArmPassiveAngle);
   // m_arm->GoToWristAngle(physical::kWristPassiveAngle);
 
@@ -30,15 +29,15 @@ void GoToRestPosition::Init() {
 // Called repeatedly when this Command is scheduled to run
 void GoToRestPosition::Execute() {
 
-  if( m_elev->IsAtGoal() ) {
-    m_arm->GoToArmAngle(physical::kArmPassiveAngle);
+  if( m_elev->AtGoal() ) {
+    m_arm->SetArmGoal(physical::kArmPassiveAngle);
     if( m_arm->GetArmAngle() < 150_deg ) {
-        m_arm->GoToWristAngle(physical::kWristPassiveAngle);
+        m_arm->SetWristGoal(physical::kWristPassiveAngle);
     } else {
       if(m_intake->HasNote() ) {
-        m_arm->GoToWristAngle( 130_deg );
+        m_arm->SetWristGoal( 130_deg );
       } else {
-        m_arm->GoToWristAngle(physical::kWristPassiveAngle);
+        m_arm->SetWristGoal(physical::kWristPassiveAngle);
       }
     }
   }
@@ -49,5 +48,5 @@ void GoToRestPosition::Ending(bool interrupted) {}
 
 // Returns true when the command should end.
 bool GoToRestPosition::IsFinished() {
-  return m_arm->IsAtGoal() && m_elev->IsAtGoal();
+  return m_arm->AtGoal() && m_elev->AtGoal();
 }

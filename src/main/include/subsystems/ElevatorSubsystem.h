@@ -21,13 +21,19 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  void GoToHeight(units::meter_t elevatorHeightGoal);
+  void SetGoal( units::meter_t elevatorHeightGoal );
 
   void NudgeHeight(units::meter_t deltaHeight);
 
   units::meter_t GetHeight();
 
-  bool IsAtGoal();
+  bool AtGoal();
+
+/**
+   *  Create a command to move the arm and wrist to the specified angles.
+   */
+  [[nodiscard]]
+  frc2::CommandPtr ChangeHeight( units::meter_t elevatorHeightGoal );
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

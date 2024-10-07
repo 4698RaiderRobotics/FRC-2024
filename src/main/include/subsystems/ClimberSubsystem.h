@@ -5,45 +5,44 @@
 #pragma once
 
 #include <units/length.h>
+#include <frc/DigitalInput.h>
+#include <frc/controller/PIDController.h>
 #include <frc2/command/SubsystemBase.h>
 
 #include <rev/CANSparkFlex.h>
-#include <frc/DigitalInput.h>
 
 
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
   ClimberSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
   void Periodic() override;
 
-  void SetSpeed(double speed);
-
-  void Home();
-
   units::inch_t GetHeight();
-
-  void Climb();
+  void SetGoal(  units::inch_t goal );
 
   bool AtLimit();
+  bool AtGoal();
+
+  /**
+   *  Create a command to move the climber hooks to a height.
+   */
+  [[nodiscard]]
+  frc2::CommandPtr MoveHooks( units::inch_t h );
 
  private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+  void Home();
+  void TrackGoal();
 
   rev::CANSparkFlex m_climberMotor;
-
   rev::SparkRelativeEncoder m_climberEncoder = m_climberMotor.GetEncoder();
-
+  frc::PIDController m_pid{ 0.05, 0.0, 0.0 };
   frc::DigitalInput m_limit{1};
 
   bool isZeroed{ false };
   bool isHoming{ false };
-  bool isRaising{ false };
 
+  units::inch_t m_goal;
 
   const double kHomingSpeed = 0.1;
   const units::inch_t kSpoolDiameter = 1.0_in;

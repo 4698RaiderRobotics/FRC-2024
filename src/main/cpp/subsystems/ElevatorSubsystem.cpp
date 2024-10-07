@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/DriverStation.h>
-#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc2/command/Commands.h>
 
 #include "DataLogger.h"
 #include "subsystems/ElevatorSubsystem.h"
@@ -46,7 +46,7 @@ void ElevatorSubsystem::Periodic() {
 
     DataLogger::SendNT( "ElevatorSubsys/Goal Height", units::inch_t(m_elevatorGoal.position).value() );
     DataLogger::SendNT( "ElevatorSubsys/Spt Velocity(mps)", m_elevatorSetpoint.velocity.value() );
-    DataLogger::SendNT( "ElevatorSubsys/IsAtGoal", IsAtGoal() );
+    DataLogger::SendNT( "ElevatorSubsys/IsAtGoal", AtGoal() );
     DataLogger::SendNT( "ElevatorSubsys/Current", m_elevatorMotor.GetOutputCurrent());
 
     m_elevatorSetpoint = m_elevatorProfile.Calculate(physical::kDt, m_elevatorSetpoint, m_elevatorGoal);
@@ -59,7 +59,7 @@ void ElevatorSubsystem::Periodic() {
     m_elevatorMotor.Set(elevatorOutput + elevatorFFOutput / 12);
 }
 
-void ElevatorSubsystem::GoToHeight(units::meter_t elevatorHeightGoal) {
+void ElevatorSubsystem::SetGoal(units::meter_t elevatorHeightGoal) {
     if(elevatorHeightGoal > physical::kElevatorMaxHeight) {elevatorHeightGoal = physical::kElevatorMaxHeight;}
     if(elevatorHeightGoal < physical::kElevatorMinHeight) {elevatorHeightGoal = physical::kElevatorMinHeight;}
 
@@ -67,13 +67,19 @@ void ElevatorSubsystem::GoToHeight(units::meter_t elevatorHeightGoal) {
 }
 
 void ElevatorSubsystem::NudgeHeight(units::meter_t deltaHeight) {
-    GoToHeight( m_elevatorGoal.position + deltaHeight );
+    SetGoal( m_elevatorGoal.position + deltaHeight );
 }
 
 units::meter_t ElevatorSubsystem::GetHeight() {
     return m_elevatorPosition;
 }
 
-bool ElevatorSubsystem::IsAtGoal() {
+bool ElevatorSubsystem::AtGoal() {
     return units::math::abs( m_elevatorGoal.position - m_elevatorPosition ) < 1_in;
+}
+
+frc2::CommandPtr ElevatorSubsystem::ChangeHeight( units::meter_t goal ) {
+    return Run( [this, goal] { 
+        SetGoal( goal );
+    }).Until( [this] { return AtGoal(); } ).WithTimeout( 3_s ).WithName( "ChangeHeight" );
 }
