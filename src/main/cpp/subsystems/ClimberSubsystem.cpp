@@ -66,7 +66,7 @@ void ClimberSubsystem::SetSpeed(double speed) {
         }
     }
     
-    if( speed < 0.0 && AtLimit() ) {
+    if( speed < 0.0 && ( AtLimit() || GetHeight() <= physical::kClimberMinHeight ) ) {
         // We are trying to go down and the bottom limit is tripped!
         // Stop the motor...
         fmt::print("   ClimberSubsystem::SetSpeed() STOPPED MOTOR from Bottoming.\n");
