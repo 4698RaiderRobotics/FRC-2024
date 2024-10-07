@@ -28,7 +28,8 @@ ElevatorSubsystem::ElevatorSubsystem() :
 // This method will be called once per scheduler run
 void ElevatorSubsystem::Periodic() {
 
-    m_elevatorPosition = m_elevatorEncoder.GetPosition() / 15.0 * units::constants::detail::PI_VAL * 1.1235 * 2.0 * 0.0254_m;
+        // Elevator distance is twice (2x) the chain distance because it is two-stage.
+    m_elevatorPosition = m_elevatorEncoder.GetPosition() * units::constants::detail::PI_VAL * kSprocketlDiameter * 2.0 / kGearRatio;
     DataLogger::GetInstance().SendNT( "ElevatorSubsys/Height", units::inch_t(m_elevatorPosition).value() );
 
     if (frc::DriverStation::IsDisabled()) {
@@ -41,6 +42,9 @@ void ElevatorSubsystem::Periodic() {
         return;
     }
 
+    units::meters_per_second_t mech_velocity = units::revolutions_per_minute_t(m_elevatorEncoder.GetVelocity())
+                                               * kSprocketlDiameter * 2.0 * units::constants::detail::PI_VAL / ( kGearRatio * 1_tr );
+    DataLogger::GetInstance().SendNT( "ElevatorSubsys/Velocity(m/s)", mech_velocity.value() );
     DataLogger::GetInstance().SendNT( "ElevatorSubsys/Goal Height", units::inch_t(m_elevatorGoal.position).value() );
     DataLogger::GetInstance().SendNT( "ElevatorSubsys/IsAtGoal", IsAtGoal() );
 

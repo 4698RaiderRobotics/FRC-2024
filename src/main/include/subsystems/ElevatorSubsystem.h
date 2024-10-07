@@ -44,4 +44,7 @@ class ElevatorSubsystem : public frc2::SubsystemBase {
   frc::TrapezoidProfile<units::meters>::State m_elevatorSetpoint;
 
   units::meter_t m_elevatorPosition;
+
+  const units::inch_t kSprocketlDiameter = 1.1235_in;  // ??? Where did this come from
+  const double kGearRatio = 15;
 };
