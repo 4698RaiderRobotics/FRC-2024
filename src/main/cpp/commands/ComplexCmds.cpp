@@ -45,38 +45,6 @@ frc2::CommandPtr DriverPlaceInAmp( ArmSubsystem* arm, ElevatorSubsystem *elevato
   ).WithName( "DriverPlaceInAmp");
 }
 
-
-frc2::CommandPtr MoveToAndPlaceInAmpImpl(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator,
-                                        VisionSubsystem* vision) {
-  frc::Pose2d targetPose;
-
-  if(frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
-    targetPose = {72.5_in, 323_in - 20_in, 90_deg};
-  } else {
-    targetPose = {578.77_in, 323_in - 20_in, 90_deg};
-  }
-
-  return frc2::cmd::Sequence( 
-    ProfiledDriveToPose(drive, vision, targetPose).ToPtr(),
-    arm->MoveJoints( physical::kArmAmpAngle, physical::kWristAmpAngle),
-    elevator->ChangeHeight( 19_in ),
-    frc2::cmd::RunOnce([drive] {drive->Drive({0_mps, 1_mps, 0_deg_per_s});}, {drive}),
-    frc2::cmd::Wait(0.5_s),
-    frc2::cmd::RunOnce([drive] {drive->Drive({0_mps, 0_mps, 0_deg_per_s});}, {drive}),
-    arm->MoveJoints( physical::kArmAmpAngle, physical::kWristAmpSpitAngle),
-    frc2::cmd::RunOnce([intake] {intake->SpinIntake(0.75);}, {intake}),
-    frc2::cmd::Wait(0.5_s),
-    frc2::cmd::RunOnce([intake] {intake->SpinIntake(0.0);}, {intake}),
-    frc2::cmd::Parallel(
-      arm->MoveJoints( physical::kArmAmpDropAngle, physical::kWristAmpDropAngle),
-      ProfiledDriveToPose( drive, vision, {targetPose.X(), targetPose.Y() - 3_in, targetPose.Rotation()} ).ToPtr()
-    ),
-    elevator->ChangeHeight( 0_m ),
-    GoToRestPosition( arm, elevator, intake ).ToPtr()
-  ).WithName( "MoveToAndPlaceInAmp" );
-}
-
-
 frc2::CommandPtr ClimbAndTrap(ShooterSubsystem* shooter, IntakeSubsystem* intake, ClimberSubsystem *climber, 
                       ArmSubsystem* arm, ElevatorSubsystem *elevator) {
   return frc2::cmd::Sequence(
@@ -91,8 +59,37 @@ frc2::CommandPtr ClimbAndTrap(ShooterSubsystem* shooter, IntakeSubsystem* intake
 }
 
 
-frc2::CommandPtr AutoClimbAndTrapImpl( SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator,
-                                   ClimberSubsystem *climb, ShooterSubsystem* shooter, VisionSubsystem *vision ) {
+frc2::CommandPtr MoveToAndPlaceInAmp::CommandFactory() {
+  frc::Pose2d targetPose;
+
+  if(frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kBlue) {
+    targetPose = {72.5_in, 323_in - 20_in, 90_deg};
+  } else {
+    targetPose = {578.77_in, 323_in - 20_in, 90_deg};
+  }
+
+  return frc2::cmd::Sequence( 
+    ProfiledDriveToPose(drive, vision, targetPose).ToPtr(),
+    arm->MoveJoints( physical::kArmAmpAngle, physical::kWristAmpAngle),
+    elevator->ChangeHeight( 19_in ),
+    frc2::cmd::RunOnce([this] {drive->Drive({0_mps, 1_mps, 0_deg_per_s});}, {drive}),
+    frc2::cmd::Wait(0.5_s),
+    frc2::cmd::RunOnce([this] {drive->Drive({0_mps, 0_mps, 0_deg_per_s});}, {drive}),
+    arm->MoveJoints( physical::kArmAmpAngle, physical::kWristAmpSpitAngle),
+    frc2::cmd::RunOnce([this] {intake->SpinIntake(0.75);}, {intake}),
+    frc2::cmd::Wait(0.5_s),
+    frc2::cmd::RunOnce([this] {intake->SpinIntake(0.0);}, {intake}),
+    frc2::cmd::Parallel(
+      arm->MoveJoints( physical::kArmAmpDropAngle, physical::kWristAmpDropAngle),
+      ProfiledDriveToPose( drive, vision, {targetPose.X(), targetPose.Y() - 3_in, targetPose.Rotation()} ).ToPtr()
+    ),
+    elevator->ChangeHeight( 0_m ),
+    GoToRestPosition( arm, elevator, intake ).ToPtr()
+  ).WithName( "MoveToAndPlaceInAmp" );
+}
+
+
+frc2::CommandPtr AutoClimbAndTrap::CommandFactory() {
 
   frc::Pose2d targetPose;
   frc::Pose2d hook_pose;
@@ -154,9 +151,9 @@ frc2::CommandPtr AutoClimbAndTrapImpl( SwerveDriveSubsystem* drive, IntakeSubsys
     arm->MoveJoints( 70_deg, 63_deg ),
 
     frc2::cmd::Wait(2_s),
-    frc2::cmd::RunOnce([intake] {intake->SpinIntake(-0.5);}, {intake}),
+    frc2::cmd::RunOnce([this] {intake->SpinIntake(-0.5);}, {intake}),
     frc2::cmd::Wait(5_s),
-    frc2::cmd::RunOnce([intake] {intake->SpinIntake(0.0);}, {intake})
+    frc2::cmd::RunOnce([this] {intake->SpinIntake(0.0);}, {intake})
   ).WithName( "AutoClimbAndTrap" );
 }
 

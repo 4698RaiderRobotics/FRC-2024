@@ -15,23 +15,18 @@ frc2::CommandPtr PickUpNote( IntakeSubsystem* intake, ArmSubsystem* arm, Elevato
 
 frc2::CommandPtr DriverPlaceInAmp( ArmSubsystem* arm, ElevatorSubsystem *elevator, IntakeSubsystem* intake );
 
-frc2::CommandPtr MoveToAndPlaceInAmpImpl(SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator,
-                                        VisionSubsystem* vision);
-
 frc2::CommandPtr ClimbAndTrap(ShooterSubsystem* shooter, IntakeSubsystem* intake, ClimberSubsystem *climber, 
                       ArmSubsystem* arm, ElevatorSubsystem *elevator);
 
-frc2::CommandPtr AutoClimbAndTrapImpl( SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem *elevator,
-                                   ClimberSubsystem *climb, ShooterSubsystem* shooter, VisionSubsystem *vision );
 
-class Stateful {
+class ConstructOnDemandCommand {
 public:
-    Stateful() {}
+    ConstructOnDemandCommand() = default;
     
-    void Schedule() { 
+    virtual void Schedule() final { 
         cmd = CommandFactory().Unwrap();
         cmd->Schedule();
-    }
+    } 
     
 private:
     virtual frc2::CommandPtr CommandFactory() = 0;
@@ -39,34 +34,35 @@ private:
     std::unique_ptr<frc2::Command> cmd;
 };
 
-class MoveToAndPlaceInAmp : public Stateful {
+class MoveToAndPlaceInAmp : public ConstructOnDemandCommand {
 public:
     MoveToAndPlaceInAmp( SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm,
                          ElevatorSubsystem *elevator, VisionSubsystem* vision) 
-                         : d{drive}, i{intake}, a{arm}, e{elevator}, v{vision} {}
-private:
-    frc2::CommandPtr CommandFactory() { return MoveToAndPlaceInAmpImpl(d,i,a,e,v);}
+                         : drive{drive}, intake{intake}, arm{arm}, elevator{elevator}, vision{vision} {}
 
-    SwerveDriveSubsystem* d;
-    IntakeSubsystem* i;
-    ArmSubsystem* a;
-    ElevatorSubsystem *e;
-    VisionSubsystem* v;
+private:
+    frc2::CommandPtr CommandFactory();
+
+    SwerveDriveSubsystem* drive;
+    IntakeSubsystem* intake;
+    ArmSubsystem* arm;
+    ElevatorSubsystem *elevator;
+    VisionSubsystem* vision;
 };
 
-class AutoClimbAndTrap : public Stateful {
+class AutoClimbAndTrap : public ConstructOnDemandCommand {
 public:
     AutoClimbAndTrap( SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm,
                          ElevatorSubsystem *elevator, ClimberSubsystem *climb, ShooterSubsystem* shooter, VisionSubsystem* vision) 
-                         : d{drive}, i{intake}, a{arm}, e{elevator}, c{climb}, s{shooter}, v{vision} {}
+                         : drive{drive}, intake{intake}, arm{arm}, elevator{elevator}, climb{climb}, shooter{shooter}, vision{vision} {}
 private:
-    frc2::CommandPtr CommandFactory() { return AutoClimbAndTrapImpl(d,i,a,e,c,s,v);}
+    frc2::CommandPtr CommandFactory();
 
-    SwerveDriveSubsystem* d;
-    IntakeSubsystem* i;
-    ArmSubsystem* a;
-    ElevatorSubsystem *e;
-    ClimberSubsystem *c;
-    ShooterSubsystem* s;
-    VisionSubsystem* v;
+    SwerveDriveSubsystem* drive;
+    IntakeSubsystem* intake;
+    ArmSubsystem* arm;
+    ElevatorSubsystem *elevator;
+    ClimberSubsystem *climb;
+    ShooterSubsystem* shooter;
+    VisionSubsystem* vision;
 };
