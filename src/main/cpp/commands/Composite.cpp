@@ -8,7 +8,7 @@
 
 #include "Constants.h"
 
-#include "commands/ComplexCmds.h"
+#include "commands/Composite.h"
 
 #include "subsystems/ArmSubsystem.h"
 #include "subsystems/ElevatorSubsystem.h"

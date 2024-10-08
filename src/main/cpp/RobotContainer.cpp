@@ -25,7 +25,6 @@
 #include "commands/GotoRestPosition.h"
 #include "commands/ProfiledDriveToPose.h"
 #include "commands/MoveMechanism.h"
-#include "commands/ComplexCmds.h"
 
 #include "Constants.h"
 

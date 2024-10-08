@@ -20,7 +20,7 @@
 #include "subsystems/VisionSubsystem.h"
 #include "subsystems/LEDSubsystem.h"
 
-#include "commands/ComplexCmds.h"
+#include "commands/Composite.h"
 
 
 class RobotContainer {
