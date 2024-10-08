@@ -97,7 +97,7 @@ void RobotContainer::ConfigureBindings() {
 
     // Resets the gyro when the robot is facing away from the driver
   (m_driverController.L1() && m_driverController.R1() )
-    .OnTrue(frc2::InstantCommand([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }).ToPtr());
+    .OnTrue(frc2::cmd::RunOnce([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }));
 
     // Eject Note into the amp.
   m_driverController.L2().OnTrue( DriverPlaceInAmp( &m_arm, &m_elevator, &m_intake ) );
@@ -107,8 +107,8 @@ void RobotContainer::ConfigureBindings() {
 
     // Manual eject of the Note
   m_driverController.Cross()
-    .OnTrue( frc2::InstantCommand([this] {m_intake.SpinIntake(-0.5);}, {&m_intake}).ToPtr().WithName("Driver X - Note Eject"))
-    .OnFalse(frc2::InstantCommand([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).ToPtr().WithName("Driver X - Note Eject Stop"));
+    .OnTrue( frc2::cmd::RunOnce([this] {m_intake.SpinIntake(-0.5);}, {&m_intake}).WithName("Driver X - Note Eject"))
+    .OnFalse(frc2::cmd::RunOnce([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).WithName("Driver X - Note Eject Stop"));
 
 
 

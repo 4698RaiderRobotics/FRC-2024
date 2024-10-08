@@ -132,10 +132,9 @@ bool ClimberSubsystem::AtGoal() {
 }
 
 frc2::CommandPtr ClimberSubsystem::MoveHooks( units::inch_t h ) {
-    return frc2::cmd::Run( [this, h] { 
-            SetGoal( h ); 
-        } )
-        .Until( [this] { return AtGoal(); } )
-        .WithName( "MoveHooks" );
+    return frc2::cmd::Sequence( 
+            RunOnce( [this, h] { SetGoal( h ); } ),
+            frc2::cmd::WaitUntil( [this] { return AtGoal(); } ).WithTimeout( 5_s )
+        ).WithName( "MoveHooks" );
 }
 
