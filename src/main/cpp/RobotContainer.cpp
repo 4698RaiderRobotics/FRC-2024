@@ -122,10 +122,10 @@ void RobotContainer::ConfigureBindings() {
   m_operatorController.B().OnTrue(
       frc2::cmd::Sequence(
         m_elevator.ChangeHeight( 0_in ), 
-        frc2::ParallelCommandGroup(
-          GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
-          frc2::InstantCommand([this] {m_intake.SpinIntake(0.0); m_shooter.SetRPMGoal(0_rpm);}, {&m_intake, &m_shooter})
-        ).ToPtr()
+        frc2::cmd::Parallel(
+          GoToRestPosition( &m_arm, &m_elevator, &m_intake ).ToPtr(),
+          frc2::cmd::RunOnce([this] {m_intake.SpinIntake(0.0); m_shooter.SetRPMGoal(0_rpm);}, {&m_intake, &m_shooter})
+        )
       ).WithName( "B Button - Rest Position" )
     );
 
