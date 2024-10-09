@@ -13,11 +13,9 @@ class SwerveDriveSubsystem;
 class VisionSubsystem;
 
 /**
- * An example command.
- *
- * <p>Note that this extends CommandHelper, rather extending Command
- * directly; this is crucially important, or else the decorator functions in
- * Command will *not* work!
+ * Drive the Robot to a Field coordinate position.
+ * 
+ * Use trapezoidal profiles for each of the x-axis, y-axis, and rotation.
  */
 class ProfiledDriveToPose
     : public frc2::CommandHelper<LoggedCommand, ProfiledDriveToPose> {

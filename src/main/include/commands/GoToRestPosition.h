@@ -10,8 +10,8 @@
 #include "LoggedCommand.h"
 
 class ArmSubsystem;
-class AIntakeSubsystem;
-class AElevatorSubsystem;
+class IntakeSubsystem;
+class ElevatorSubsystem;
 
 /**
  * An example command.

@@ -7,8 +7,9 @@
 #include "DataLogger.h"
 
 #include <frc/DriverStation.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Preferences.h>
+
+#include <frc2/command/Commands.h>
 
 #include "DeviceConstants.h"
 #include "Constants.h"
@@ -60,43 +61,17 @@ ArmSubsystem::ArmSubsystem() :
     ctre::phoenix6::configs::TalonFXConfiguration armConfigs{};
     armConfigs.MotorOutput.Inverted = true;
     m_armMotor.GetConfigurator().Apply(armConfigs, 50_ms);
-
-
-    // wristPosReference.SetUpdateFrequency(50_Hz);
-    // wristVelReference.SetUpdateFrequency(50_Hz);
-    // armVelReference.SetUpdateFrequency(50_Hz);
-    // armVel.SetUpdateFrequency(50_Hz);
 };
 
-// This method will be called once per scheduler run
 void ArmSubsystem::Periodic() {
-
-    // wristPos.Refresh();
-    // wristVel.Refresh();
-    // wristPosReference.Refresh();
-    // wristVelReference.Refresh();
-
-    // armPos.Refresh();
-    // armVel.Refresh();
-    // armPosReference.Refresh();
-    // armVelReference.Refresh();
 
     m_wristAngle = m_wristEncoder.GetPosition().GetValueAsDouble() * 360_deg;
     phi = m_armEncoder.GetPosition().GetValueAsDouble() * 360_deg;
 
     m_armAngle = m_wristAngle - phi;
 
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
- 
-    // frc::SmartDashboard::PutNumber("Wrist Velocity", wristVel.GetValueAsDouble());
-    // frc::SmartDashboard::PutNumber("Wrist Motion Magic Pos", wristPosReference.GetValueAsDouble() * 360.0);
-    // frc::SmartDashboard::PutNumber("Wrist Motion Magic Vel", wristVelReference.GetValueAsDouble());
-
-    // frc::SmartDashboard::PutNumber("Arm Velocity", armVel.GetValueAsDouble() * 360 / 60 );
-    // frc::SmartDashboard::PutNumber("Arm Setpoint Position", m_armSetpoint.position.value());
-    // frc::SmartDashboard::PutNumber("Arm Setpoint Velocity", m_armSetpoint.velocity.value());
-
+    DataLogger::SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_armSetpoint.position = m_armAngle;
@@ -109,13 +84,13 @@ void ArmSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/IsAtGoal", IsAtGoal() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Arm Mtr Current", m_armMotor.GetSupplyCurrent().GetValueAsDouble() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
-    DataLogger::GetInstance().SendNT( "ArmSubsys/Wrist Mtr Current", m_wristMotor.GetSupplyCurrent().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
+    DataLogger::SendNT( "ArmSubsys/IsAtGoal", AtGoal() );
+    DataLogger::SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Arm Mtr Current", m_armMotor.GetSupplyCurrent().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::SendNT( "ArmSubsys/Wrist Mtr Current", m_wristMotor.GetSupplyCurrent().GetValueAsDouble() );
 
     m_wristMotor.SetControl( m_wristPositionDC.WithPosition( m_wristGoal.position ) ); 
     
@@ -128,14 +103,14 @@ void ArmSubsystem::Periodic() {
     m_armMotor.Set( armOutput + armFeedforwardOut / 12.0 );
 }
 
-void ArmSubsystem::GoToArmAngle(units::degree_t armAngleGoal) {
+void ArmSubsystem::SetArmGoal(units::degree_t armAngleGoal) {
     if(armAngleGoal > physical::kArmMaxAngle) armAngleGoal = physical::kArmMaxAngle;
     if(armAngleGoal < physical::kArmMinAngle) armAngleGoal = physical::kArmMinAngle;
 
     m_armGoal.position = armAngleGoal;
 }
 
-void ArmSubsystem::GoToWristAngle(units::degree_t wristAngleGoal) {
+void ArmSubsystem::SetWristGoal(units::degree_t wristAngleGoal) {
     if (wristAngleGoal > physical::kWristMaxAngle) wristAngleGoal = physical::kWristMaxAngle;
     if (wristAngleGoal < physical::kWristMinAngle) wristAngleGoal = physical::kWristMinAngle;
 
@@ -143,11 +118,11 @@ void ArmSubsystem::GoToWristAngle(units::degree_t wristAngleGoal) {
 }
 
 void ArmSubsystem::NudgeArmAngle(units::degree_t deltaAngle) {
-    GoToArmAngle( m_armGoal.position + deltaAngle );
+    SetArmGoal( m_armGoal.position + deltaAngle );
 }
 
 void ArmSubsystem::NudgeWristAngle(units::degree_t deltaAngle) {
-    GoToWristAngle( m_wristGoal.position + deltaAngle );
+    SetWristGoal( m_wristGoal.position + deltaAngle );
 }
 
 units::degree_t ArmSubsystem::GetArmAngle() {
@@ -158,7 +133,7 @@ units::degree_t ArmSubsystem::GetWristAngle() {
     return m_wristAngle;
 }
 
-bool ArmSubsystem::IsAtGoal( units::degree_t arm_tol ) {
+bool ArmSubsystem::AtGoal( units::degree_t arm_tol ) {
     return units::math::abs(m_wristAngle - m_wristGoal.position) < arm_tol &&
            units::math::abs(m_armAngle - m_armGoal.position) < arm_tol;
 }
@@ -185,4 +160,14 @@ void ArmSubsystem::UpdateEncoderOffsets() {
     wristAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = offset;
     m_wristEncoder.GetConfigurator().Apply(wristAbsoluteEncoderConfigs, 50_ms);
 
+}
+
+frc2::CommandPtr ArmSubsystem::MoveJoints( units::degree_t armAngle, units::degree_t wristAngle ) {
+    return frc2::cmd::Sequence(
+        RunOnce( [this, armAngle, wristAngle] { 
+            SetArmGoal( armAngle );
+            SetWristGoal( wristAngle );
+        }),
+        frc2::cmd::WaitUntil( [this] { return AtGoal(); } ).WithTimeout( 3_s )
+    ).WithName( "MoveJoints" );
 }

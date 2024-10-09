@@ -13,10 +13,6 @@
 #include "subsystems/VisionSubsystem.h"
 #include "subsystems/ElevatorSubsystem.h"
 
-#include "commands/ChangeShooterAngle.h"
-#include "commands/ChangeArmAngle.h"
-#include "commands/ChangeWristAngle.h"
-
 #include <frc2/command/InstantCommand.h>
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/ParallelCommandGroup.h>
@@ -46,7 +42,7 @@ ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSub
 void ShootNoteTargeting::Init() {
     // Start the shooter motors and move to the correct arm and wrist positions.
   // m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
-      m_arm->GoToWristAngle( 180_deg - m_shooter->GetAngle() );
+      m_arm->SetWristGoal( 180_deg - m_shooter->GetAngle() );
 
   // fmt::print("Setting Arm / Wrist / Elevator to {}/{}/{}\n", 
   //             m_shooter->GetShooter_ArmAngle(), 180_deg - m_shooter->GetAngle(), 
@@ -62,7 +58,7 @@ void ShootNoteTargeting::Init() {
 
   frc::Pose2d robotPose = m_drive->GetPose();
   units::meter_t dist_to_speaker = (robotPose - targetLocation).Translation().Norm();
-  m_shooter->Spin( 1000_rpm + 200_rpm * dist_to_speaker.value() );
+  m_shooter->SetRPMGoal( 1000_rpm + 200_rpm * dist_to_speaker.value() );
 
   readyToShoot = false;
   noTargets = false;
@@ -82,7 +78,7 @@ void ShootNoteTargeting::Execute() {
 
     
 
-    DataLogger::GetInstance().SendNT( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
+    DataLogger::SendNT( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
 
     units::degree_t azimuthAngle;
     units::degree_t azimuthCorrAngle;
@@ -91,23 +87,23 @@ void ShootNoteTargeting::Execute() {
       azimuthAngle = units::math::atan2( 78_in, dist_to_speaker );
       azimuthCorrAngle = azimuthCorrection.lookup( dist_to_speaker.value() ) * 1_deg;
       shooterAngle = azimuthAngle + azimuthCorrAngle;
-      m_shooter->Spin( 1300_rpm + 225_rpm * dist_to_speaker.value() );
+      m_shooter->SetRPMGoal( 1300_rpm + 225_rpm * dist_to_speaker.value() );
     } else {
         // Lob shot from more than 6_m away
       azimuthAngle = 50_deg;
       shooterAngle = 50_deg;
-      m_shooter->Spin( 1000_rpm + 100_rpm * (dist_to_speaker - 6_m ).value() );
+      m_shooter->SetRPMGoal( 1000_rpm + 100_rpm * (dist_to_speaker - 6_m ).value() );
         // Bias toward the Amp
       delta_y += 50_in;
     }
     units::degree_t planeAngle =  units::math::atan2( delta_y, delta_x );
 
-    m_shooter->GoToAngle( shooterAngle );
+    m_shooter->SetAngleGoal( shooterAngle );
     if( m_arm->GetWristAngle() > 80_deg ) {
-      m_arm->GoToArmAngle( m_shooter->GetShooter_ArmAngle() );
-      m_elev->GoToHeight( m_shooter->GetShooter_ElevatorHeight() );
+      m_arm->SetArmGoal( m_shooter->GetShooter_ArmAngle() );
+      m_elev->SetGoal( m_shooter->GetShooter_ElevatorHeight() );
     }
-    m_arm->GoToWristAngle( 180_deg - shooterAngle );
+    m_arm->SetWristGoal( 180_deg - shooterAngle );
 
     
 
@@ -131,29 +127,29 @@ void ShootNoteTargeting::Execute() {
       m_drive->ArcadeDrive( 0, 0, turnCorrection );
     }
 
-    // DataLogger::GetInstance().SendNT( "ShootNote/Shooter Angle Goal", shooterAngle.value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle Goal", 180 - shooterAngle.value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Elevator Height", m_elev->GetHeight().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Elevator Goal",  m_shooter->GetShooter_ElevatorHeight().value() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
-    // DataLogger::GetInstance().SendNT( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Target Yaw", t_yaw.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/DeltaX", delta_x.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/DeltaY", delta_y.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Azimuth", azimuthAngle.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Azimuth Correction", azimuthCorrAngle.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Plane Angle", planeAngle.value() );
-    DataLogger::GetInstance().SendNT( "ShootNote/Turn Correction", turnCorrection );
+    // DataLogger::SendNT( "ShootNote/Shooter Angle Goal", shooterAngle.value() );
+    // DataLogger::SendNT( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Wrist Angle Goal", 180 - shooterAngle.value() );
+    // DataLogger::SendNT( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
+    // DataLogger::SendNT( "ShootNote/Elevator Height", m_elev->GetHeight().value() );
+    // DataLogger::SendNT( "ShootNote/Elevator Goal",  m_shooter->GetShooter_ElevatorHeight().value() );
+    // DataLogger::SendNT( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
+    // DataLogger::SendNT( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
+    // DataLogger::SendNT( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
+    DataLogger::SendNT( "ShootNote/Target Yaw", t_yaw.value() );
+    DataLogger::SendNT( "ShootNote/DeltaX", delta_x.value() );
+    DataLogger::SendNT( "ShootNote/DeltaY", delta_y.value() );
+    DataLogger::SendNT( "ShootNote/Azimuth", azimuthAngle.value() );
+    DataLogger::SendNT( "ShootNote/Azimuth Correction", azimuthCorrAngle.value() );
+    DataLogger::SendNT( "ShootNote/Plane Angle", planeAngle.value() );
+    DataLogger::SendNT( "ShootNote/Turn Correction", turnCorrection );
 
     // fmt::print( "    Arm/Wrist Angles:  atGoal({}), Curr_arm({}), Arm_target({}), Curr_wrist({}), Wrist_target({})\n", 
     //                 m_arm->IsAtGoal( arm_tolerance ), m_arm->GetArmAngle(), m_shooter->GetShooter_ArmAngle(),
     //                  m_arm->GetWristAngle(), 180_deg - targetAngle );
-    if( m_shooter->IsAtGoal() && m_arm->IsAtGoal( arm_tolerance ) && fabs(t_yaw.value() + yawOffset) < 1.5 ) {
+    if( m_shooter->AtGoal() && m_arm->AtGoal( arm_tolerance ) && fabs(t_yaw.value() + yawOffset) < 1.5 ) {
       // fmt::print( "ShootNoteTargeting(), pitch({}), Shooter({}), Arm({}), Wrist({})\n", t_pitch, targetAngle,
       //              m_shooter->GetShooter_ArmAngle(), 180_deg - targetAngle  );
       readyToShoot = true;
@@ -162,8 +158,7 @@ void ShootNoteTargeting::Execute() {
     }
     
     // else {
-    //   std::string mesg = fmt::format( "ShootNoteTargeting -- TOO Far from target dist = {}", dist_to_speaker );
-    //   DataLogger::GetInstance().Log( mesg);
+    //   DataLogger::Log( fmt::format( "ShootNoteTargeting -- TOO Far from target dist = {}", dist_to_speaker ));
     //   noTargets = true;
     // }
   } else {
@@ -182,19 +177,19 @@ void ShootNoteTargeting::Ending(bool interrupted) {
   // fmt::print( "ShootNoteTargeting::End interrupted({}), noTargets({})\n", interrupted, noTargets );
   if( m_shooter->GetAngle() > 50_deg ) {
     // Shooter is up too far.  It will hit the intake.
-    m_shooter->GoToAngle( 50_deg );
+    m_shooter->SetAngleGoal( 50_deg );
   }
 
     // Don't completely stop the shooter in auto mode.
   // if( frc::DriverStation::IsAutonomous() ) {
-  //   m_shooter->Spin( 1000_rpm );
+  //   m_shooter->SetRPMGoal( 1000_rpm );
   // } else {
-    m_shooter->Spin( 0_rpm );
+    m_shooter->SetRPMGoal( 0_rpm );
   // }
 
-  m_arm->GoToArmAngle( 170_deg );
-  m_arm->GoToWristAngle( 35_deg );
-  m_elev->GoToHeight(0_in);
+  m_arm->SetArmGoal( 170_deg );
+  m_arm->SetWristGoal( 35_deg );
+  m_elev->SetGoal(0_in);
 }
 
 // Returns true when the command should end.

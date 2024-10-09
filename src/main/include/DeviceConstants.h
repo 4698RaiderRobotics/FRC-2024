@@ -29,14 +29,14 @@ namespace pidf {
     constexpr double kWristA = 0.0;
     constexpr double kWristS = 0.005;
 
-    constexpr double kElevatorP = 6.666;
+    constexpr double kElevatorP = 5.5;
     constexpr double kElevatorI = 0.0;
-    constexpr double kElevatorD = 0.0;
+    constexpr double kElevatorD = 0.5;
 
-    constexpr double kElevatorG = 0.75;
-    constexpr double kElevatorV = 3.333;
+    constexpr double kElevatorG = 0.45;
+    constexpr double kElevatorV = 9.0;
     constexpr double kElevatorA = 0.0;
-    constexpr double kElevatorS = 0.0;
+    constexpr double kElevatorS = 0.1;
 
     constexpr double kSpeedP = 0.001;
     constexpr double kSpeedI = 0.0;

@@ -29,23 +29,23 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
   // Changes the setpoint for the shooter angle
-  void GoToAngle(units::degree_t shooterAngleGoal);
+  void SetAngleGoal(units::degree_t shooterAngleGoal);
 
   // Spins the shooter at a speed
-  void Spin(units::revolutions_per_minute_t speed);
+  void SetRPMGoal(units::revolutions_per_minute_t speed);
 
   units::degree_t GetAngle();
 
   void Nudge( units::degree_t deltaAngle );
 
     // Checks if the shooter is at the right speed
-  bool IsAtSpeed();
+  bool AtSpeed();
 
     // Checks if the shooter is at the right angle
-  bool IsAtAngle();
+  bool AtAngle();
 
     // Checks if the shooter is at the right speed and angle
-  bool IsAtGoal();
+  bool AtGoal();
 
   void UpdateEncoderOffset();
 
@@ -54,6 +54,17 @@ class ShooterSubsystem : public frc2::SubsystemBase {
   units::meter_t GetShooter_ElevatorHeight()
     { return elev_lut.lookup( m_shooterPosition.value() ) * 1_m; }
 
+/**
+   *  Create a command to move the shooter to the specified angle.
+   */
+  [[nodiscard]]
+  frc2::CommandPtr ChangeAngle( units::degree_t angle );
+
+/**
+   *  Create a command to spin the shooter to the specified RPM.
+   */
+  [[nodiscard]]
+  frc2::CommandPtr SetSpeed( units::revolutions_per_minute_t speed );
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

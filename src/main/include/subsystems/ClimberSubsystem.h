@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include <units/length.h>
 #include <frc/DigitalInput.h>
+#include <frc/controller/PIDController.h>
 #include <frc2/command/SubsystemBase.h>
 
 #include <frc/controller/SimpleMotorFeedforward.h>
@@ -13,24 +15,24 @@
 
 #include <rev/CANSparkFlex.h>
 
+
 class ClimberSubsystem : public frc2::SubsystemBase {
  public:
   ClimberSubsystem();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
   void Periodic() override;
 
-  void GoToHeight(units::meter_t heightGoal);
-
-  void NudgeHeight(units::meter_t deltaHeight);
-
   units::inch_t GetHeight();
-
-  bool IsAtGoal();
+  void SetGoal(  units::inch_t goal );
 
   bool AtLimit();
+  bool AtGoal();
+
+  /**
+   *  Create a command to move the climber hooks to a height.
+   */
+  [[nodiscard]]
+  frc2::CommandPtr MoveHooks( units::inch_t h );
 
  private:
   void Home();
@@ -56,7 +58,6 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   bool isZeroed{ false };
   bool isHoming{ false };
   bool homingCanceled{ false };
-
 
   const double kHomingSpeed = 0.15;
   const units::inch_t kSpoolDiameter = 1.0_in;

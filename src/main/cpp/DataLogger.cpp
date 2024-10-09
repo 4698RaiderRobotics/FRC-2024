@@ -8,6 +8,9 @@
 #include <frc/DataLogManager.h>
 #include <networktables/DoubleTopic.h>
 #include <networktables/DoubleArrayTopic.h>
+#include <networktables/IntegerTopic.h>
+#include <networktables/BooleanTopic.h>
+#include <networktables/StringTopic.h>
 
 #include "DataLogger.h"
 
@@ -17,68 +20,92 @@ DataLogger& DataLogger::GetInstance() {
         // If there is no instance of class
         // then we can create an instance.
     if (singleton == nullptr)  {
-    singleton = new DataLogger();
-    singleton->log = &frc::DataLogManager::GetLog();
-    singleton->nt_inst = nt::NetworkTableInstance::GetDefault();
+        singleton = new DataLogger();
+        singleton->log = &frc::DataLogManager::GetLog();
+        singleton->nt_table = nt::NetworkTableInstance::GetDefault().GetTable("");
     }
         
     return *singleton;
 }
 
-void DataLogger::Send( std::string_view s, double val ) { 
-    wpi::log::DoubleLogEntry le{ *(log), s };
+void DataLogger::Send( const std::string &s, double val ) { 
+    wpi::log::DoubleLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
-void DataLogger::Send( std::string_view s, std::span<const double> a ) { 
-    wpi::log::DoubleArrayLogEntry le{ *(log), s };
+void DataLogger::Send( const std::string &s, std::span<const double> a ) { 
+    wpi::log::DoubleArrayLogEntry le{ *(GetInstance().log), s };
     le.Append( a );
 }
 
-void DataLogger::Send( std::string_view s, int val ) { 
-    wpi::log::IntegerLogEntry le{ *(log), s };
+void DataLogger::Send( const std::string &s, int val ) { 
+    wpi::log::IntegerLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
-void DataLogger::Send( std::string_view s, std::string_view val ) { 
-    wpi::log::StringLogEntry le{ *(log), s };
+void DataLogger::Send( const std::string &s, const std::string &val ) { 
+    wpi::log::StringLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
-void DataLogger::Send( std::string_view s, bool val ) {
-    wpi::log::BooleanLogEntry le{ *(log), s };
+void DataLogger::Send( const std::string &s, bool val ) {
+    wpi::log::BooleanLogEntry le{ *(GetInstance().log), s };
     le.Append( val );
 }
 
-void DataLogger::Send( std::string_view s, frc::Pose2d p ) {
-    wpi::log::DoubleArrayLogEntry le{ *(log), s };
+void DataLogger::Send( const std::string &s, frc::Pose2d p ) {
+    wpi::log::DoubleArrayLogEntry le{ *(GetInstance().log), s };
     le.Append( {p.X().value(),
                 p.Y().value(),
                 p.Rotation().Degrees().value()} );
 }
 
-void DataLogger::SendNT( std::string s, double val ) {
-    if( !nt_map.contains( s ) ) {
-        nt_map[s] = nt_inst.GetDoubleTopic( s ).GenericPublish( "double" );
+void DataLogger::SendNT( const std::string &s, double val ) {
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetDoubleTopic( s ).GenericPublish( "double" );
     }
-    nt_map[s].SetDouble( val );
+    GetInstance().nt_map[s].SetDouble( val );
 }
 
-void DataLogger::SendNT( std::string s, std::span<const double> a ) {
-    if( !nt_map.contains( s ) ) {
-        nt_map[s] = nt_inst.GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
+void DataLogger::SendNT( const std::string &s, std::span<const double> a ) {
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
     }
-    nt_map[s].SetDoubleArray( a );
+    GetInstance().nt_map[s].SetDoubleArray( a );
 }
 
-void DataLogger::SendNT( std::string s, frc::Pose2d p ) {
-    double a[] = {p.X().value(),
-                  p.Y().value(),
-                  p.Rotation().Degrees().value()};
-    SendNT( s, a );
+void DataLogger::SendNT( const std::string &s, const std::string &val ) {
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetStringTopic( s ).GenericPublish( "string" );
+    }
+    GetInstance().nt_map[s].SetString( val );
 }
 
-void DataLogger::Log( std::string s ) {
+void DataLogger::SendNT( const std::string &s, int val ) {
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetIntegerTopic( s ).GenericPublish( "integer" );
+    }
+    GetInstance().nt_map[s].SetInteger( val );
+}
+
+void DataLogger::SendNT( const std::string &s, bool val ) {
+    if( !GetInstance().nt_map.contains( s ) ) {
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetBooleanTopic( s ).GenericPublish( "boolean" );
+    }
+    GetInstance().nt_map[s].SetBoolean( val );
+}
+
+void DataLogger::SendNT( const std::string &s, frc::Pose2d p ) {
+    static double a[3];
+    
+    a[0] = p.X().value();
+    a[1] = p.Y().value();
+    a[2] = p.Rotation().Degrees().value();
+
+    SendNT( s, std::span{a} );
+}
+
+void DataLogger::Log( const std::string &s ) {
     frc::DataLogManager::Log( s );
 }
 
@@ -92,13 +119,13 @@ void DataLogger::LogMetadata( void ) {
     binfo.open( path, std::ios::in );
     if( binfo.is_open() ) {
         binfo.getline( line, 255 );
-        this->SendMetadata( "BUILD_DATE", line );
+        GetInstance().SendMetadata( "BUILD_DATE", line );
         binfo.getline( line, 255 );
-        this->SendMetadata( "GIT_REPO", line );
+        GetInstance().SendMetadata( "GIT_REPO", line );
         binfo.getline( line, 255 );
-        this->SendMetadata( "GIT_BRANCH", line );
+        GetInstance().SendMetadata( "GIT_BRANCH", line );
         binfo.getline( line, 255 );
-        this->SendMetadata( "GIT_VERSION", line );
+        GetInstance().SendMetadata( "GIT_VERSION", line );
         binfo.close();
     } else {
         Log( "Cannot open METADATA file: " + path );
@@ -106,7 +133,7 @@ void DataLogger::LogMetadata( void ) {
 
 }
 
-void DataLogger::SendMetadata( std::string_view s, std::string_view val ) {
+void DataLogger::SendMetadata( const std::string &s, const std::string &val ) {
         // AdvantageScope Chops off leading Character of the name so we add an underscore.
         // Not sure why
     std::string id = "RealMetadata/_";
