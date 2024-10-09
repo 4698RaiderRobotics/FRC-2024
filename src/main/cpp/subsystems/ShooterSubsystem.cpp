@@ -3,8 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include <frc/DriverStation.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Preferences.h>
+#include <frc2/command/Commands.h>
 
 #include "DataLogger.h"
 #include "subsystems/ShooterSubsystem.h"
@@ -70,8 +70,8 @@ void ShooterSubsystem::Periodic() {
     DataLogger::SendNT( "ShooterSubsys/SpeedGoal", m_speed.value() );
     DataLogger::SendNT( "ShooterSubsys/left Current", m_leftShooterMotor.GetOutputCurrent() );
     DataLogger::SendNT( "ShooterSubsys/right Current", m_rightShooterMotor.GetOutputCurrent() );
-    DataLogger::SendNT( "ShooterSubsys/IsAtSpeed", IsAtSpeed() );
-    DataLogger::SendNT( "ShooterSubsys/IsAtAngle", IsAtAngle() );
+    DataLogger::SendNT( "ShooterSubsys/IsAtSpeed", AtSpeed() );
+    DataLogger::SendNT( "ShooterSubsys/IsAtAngle", AtAngle() );
 
     m_shooterSetpoint = m_shooterProfile.Calculate(physical::kDt, m_shooterSetpoint, m_shooterGoal);
 
@@ -87,14 +87,14 @@ void ShooterSubsystem::Periodic() {
     }
 }
 
-void ShooterSubsystem::GoToAngle(units::degree_t shooterAngleGoal) {
+void ShooterSubsystem::SetAngleGoal(units::degree_t shooterAngleGoal) {
     m_shooterGoal.position = shooterAngleGoal;
 
     if(m_shooterGoal.position > physical::kShooterMaxAngle) {m_shooterGoal.position = physical::kShooterMaxAngle;}
     if(m_shooterGoal.position < physical::kShooterMinAngle) {m_shooterGoal.position = physical::kShooterMinAngle;}
 }
 
-void ShooterSubsystem::Spin(units::revolutions_per_minute_t speed) {
+void ShooterSubsystem::SetRPMGoal(units::revolutions_per_minute_t speed) {
     m_speed = speed;
 }
 
@@ -103,19 +103,19 @@ units::degree_t ShooterSubsystem::GetAngle() {
 }
 
 void ShooterSubsystem::Nudge( units::degree_t deltaAngle ) {
-     GoToAngle( m_shooterGoal.position + deltaAngle );
+     SetAngleGoal( m_shooterGoal.position + deltaAngle );
 }
 
-bool ShooterSubsystem::IsAtSpeed() {
+bool ShooterSubsystem::AtSpeed() {
     return m_rightEncoder.GetVelocity() >= m_speed.value() - 200;
 }
 
-bool ShooterSubsystem::IsAtAngle() {
+bool ShooterSubsystem::AtAngle() {
     return units::math::abs( m_shooterGoal.position - m_shooterPosition ) < 3_deg;
 }
 
-bool ShooterSubsystem::IsAtGoal() {
-    return IsAtSpeed() && IsAtAngle();
+bool ShooterSubsystem::AtGoal() {
+    return AtSpeed() && AtAngle();
 }
 
 void ShooterSubsystem::UpdateEncoderOffset() {
@@ -128,4 +128,18 @@ void ShooterSubsystem::UpdateEncoderOffset() {
 
     shooterAbsoluteEncoderConfigs.MagnetSensor.MagnetOffset = offset;
     m_shooterAngleEncoder.GetConfigurator().Apply(shooterAbsoluteEncoderConfigs, 50_ms);
+}
+
+frc2::CommandPtr ShooterSubsystem::ChangeAngle( units::degree_t angle ) {
+    return frc2::cmd::Sequence(
+        RunOnce( [this, angle] { SetAngleGoal( angle ); }),
+        frc2::cmd::WaitUntil( [this] { return AtAngle(); } ).WithTimeout( 3_s )
+    ).WithName( "ShooterSubsystem::ChangeAngle" );
+}
+
+frc2::CommandPtr ShooterSubsystem::SetSpeed( units::revolutions_per_minute_t speed ) {
+    return frc2::cmd::Sequence(
+        RunOnce( [this, speed] { SetRPMGoal( speed ); }),
+        frc2::cmd::WaitUntil( [this] { return AtSpeed(); } ).WithTimeout( 3_s )
+    ).WithName( "ShooterSubsystem::SetSpeed" );
 }

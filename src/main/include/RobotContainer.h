@@ -20,6 +20,8 @@
 #include "subsystems/VisionSubsystem.h"
 #include "subsystems/LEDSubsystem.h"
 
+#include "commands/Composite.h"
+
 
 class RobotContainer {
  public:
@@ -42,16 +44,18 @@ class RobotContainer {
 
   LEDSubsystem m_leds;
   SwerveDriveSubsystem m_swerveDrive;
-  ClimberSubsystem m_climber;
   ElevatorSubsystem m_elevator;
   IntakeSubsystem m_intake;
+  ClimberSubsystem m_climber;
   VisionSubsystem m_vision;
 
   frc2::CommandPS5Controller m_driverController{0};
   frc2::CommandXboxController m_operatorController{1};
 
-  frc2::Command *m_climbAndTrapCmd{nullptr};
-  frc2::Command *m_moveToAmpCmd{nullptr};
+  AutoClimbAndTrap m_climbAndTrapCmd{ &m_swerveDrive, &m_intake, &m_arm,
+                         &m_elevator, &m_climber, &m_shooter, &m_vision};
+  MoveToAndPlaceInAmp m_moveToAmpCmd{ &m_swerveDrive, &m_intake, &m_arm,
+                         &m_elevator, &m_vision};
 
   ControllerAxis vx_axis{m_driverController, frc::PS5Controller::Axis::kLeftY, true};
   ControllerAxis vy_axis{m_driverController, frc::PS5Controller::Axis::kLeftX, true};
@@ -61,6 +65,7 @@ class RobotContainer {
   ControllerAxis elevator_axis{ m_operatorController, frc::XboxController::Axis::kLeftX, true };
 
 public:
+    // Subsystems that need offsets stored in preferences...
   ArmSubsystem m_arm;
   ShooterSubsystem m_shooter;
 };
