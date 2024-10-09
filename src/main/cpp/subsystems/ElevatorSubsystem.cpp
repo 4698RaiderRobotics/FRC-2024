@@ -80,7 +80,7 @@ bool ElevatorSubsystem::AtGoal() {
 
 frc2::CommandPtr ElevatorSubsystem::ChangeHeight( units::meter_t goal ) {
     return frc2::cmd::Sequence(
-            RunOnce( [this, goal] { SetGoal( goal ); }),
-            frc2::cmd::WaitUntil( [this] { return AtGoal(); } ).WithTimeout( 3_s )
-        ).WithName( "ChangeHeight" );
+        RunOnce( [this, goal] { SetGoal( goal ); }),
+        frc2::cmd::WaitUntil( [this] { return AtGoal(); } ).WithTimeout( 3_s )
+    ).WithName( "ChangeHeight" );
 }

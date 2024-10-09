@@ -76,21 +76,21 @@ void DataLogger::SendNT( const std::string &s, std::span<const double> a ) {
 
 void DataLogger::SendNT( const std::string &s, const std::string &val ) {
     if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetStringTopic( s ).GetGenericEntry();
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetStringTopic( s ).GenericPublish( "string" );
     }
     GetInstance().nt_map[s].SetString( val );
 }
 
 void DataLogger::SendNT( const std::string &s, int val ) {
     if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetIntegerTopic( s ).GetGenericEntry();
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetIntegerTopic( s ).GenericPublish( "integer" );
     }
     GetInstance().nt_map[s].SetInteger( val );
 }
 
 void DataLogger::SendNT( const std::string &s, bool val ) {
     if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetBooleanTopic( s ).GetGenericEntry();
+        GetInstance().nt_map[s] = GetInstance().nt_table->GetBooleanTopic( s ).GenericPublish( "boolean" );
     }
     GetInstance().nt_map[s].SetBoolean( val );
 }

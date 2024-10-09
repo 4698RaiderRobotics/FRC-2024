@@ -163,11 +163,11 @@ void ArmSubsystem::UpdateEncoderOffsets() {
 }
 
 frc2::CommandPtr ArmSubsystem::MoveJoints( units::degree_t armAngle, units::degree_t wristAngle ) {
-    return frc2::cmd::Sequence( 
-            RunOnce( [this, armAngle, wristAngle] { 
-                SetArmGoal( armAngle );
-                SetWristGoal( wristAngle );
-            }),
-            frc2::cmd::WaitUntil( [this] { return AtGoal(); } ).WithTimeout( 3_s )
-        ).WithName( "MoveJoints" );
+    return frc2::cmd::Sequence(
+        RunOnce( [this, armAngle, wristAngle] { 
+            SetArmGoal( armAngle );
+            SetWristGoal( wristAngle );
+        }),
+        frc2::cmd::WaitUntil( [this] { return AtGoal(); } ).WithTimeout( 3_s )
+    ).WithName( "MoveJoints" );
 }

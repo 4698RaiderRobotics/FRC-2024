@@ -132,14 +132,14 @@ void ShooterSubsystem::UpdateEncoderOffset() {
 
 frc2::CommandPtr ShooterSubsystem::ChangeAngle( units::degree_t angle ) {
     return frc2::cmd::Sequence(
-            RunOnce( [this, angle] { SetAngleGoal( angle ); }),
-            frc2::cmd::WaitUntil( [this] { return AtAngle(); } ).WithTimeout( 3_s )
-        ).WithName( "ShooterSubsystem::ChangeAngle" );
+        RunOnce( [this, angle] { SetAngleGoal( angle ); }),
+        frc2::cmd::WaitUntil( [this] { return AtAngle(); } ).WithTimeout( 3_s )
+    ).WithName( "ShooterSubsystem::ChangeAngle" );
 }
 
 frc2::CommandPtr ShooterSubsystem::SetSpeed( units::revolutions_per_minute_t speed ) {
     return frc2::cmd::Sequence(
-            Run( [this, speed] { SetRPMGoal( speed ); }),
-            frc2::cmd::WaitUntil( [this] { return AtSpeed(); } ).WithTimeout( 3_s )
-        ).WithName( "ShooterSubsystem::SetSpeed" );
+        RunOnce( [this, speed] { SetRPMGoal( speed ); }),
+        frc2::cmd::WaitUntil( [this] { return AtSpeed(); } ).WithTimeout( 3_s )
+    ).WithName( "ShooterSubsystem::SetSpeed" );
 }
