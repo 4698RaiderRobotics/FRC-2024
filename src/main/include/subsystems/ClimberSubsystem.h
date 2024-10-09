@@ -58,7 +58,7 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   bool homingCanceled{ false };
 
 
-  const double kHomingSpeed = 0.05;
+  const double kHomingSpeed = 0.15;
   const units::inch_t kSpoolDiameter = 1.0_in;
   const double kGearRatio = 25;
 };

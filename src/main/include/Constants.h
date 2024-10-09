@@ -117,9 +117,9 @@ namespace physical {
     // *****************     CLIMBER SUBSYSTEM      **********************
 
     // Maximum velocity for the climber motion TrapezoidProfile
-    constexpr units::meters_per_second_t kClimberMaxSpeed = 2_mps;
+    constexpr units::meters_per_second_t kClimberMaxSpeed = 0.75_mps;
     // Maximum acceleration for the climber motion TrapezoidProfile
-    constexpr units::meters_per_second_squared_t kClimberMaxAcceleration = 4_mps_sq;
+    constexpr units::meters_per_second_squared_t kClimberMaxAcceleration = 1_mps_sq;
 
     // Maximum height for the climber position
     constexpr units::inch_t kClimberMaxHeight = 18.5_in;

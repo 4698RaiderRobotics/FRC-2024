@@ -43,13 +43,13 @@ namespace pidf {
     constexpr double kSpeedD = 0.0;
     constexpr double kSpeedFF = 0.00018;
 
-    constexpr double kClimberP = 0.0;
+    constexpr double kClimberP = 3.0;
     constexpr double kClimberI = 0.0;
-    constexpr double kClimberD = 0.0;
+    constexpr double kClimberD = 0.1;
 
-    constexpr double kClimberS = 0.0;
-    constexpr double kClimberV = 0.0;
-    constexpr double kClimberA = 0.0;
+    constexpr double kClimberS = 2.0;
+    constexpr double kClimberV = 38.5;
+    constexpr double kClimberA = 4.0;
 }
 
 namespace deviceIDs {

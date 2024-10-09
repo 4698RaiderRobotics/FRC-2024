@@ -45,7 +45,7 @@ void ClimberSubsystem::Periodic() {
 
     units::meters_per_second_t mech_velocity = units::revolutions_per_minute_t(m_Encoder.GetVelocity())
                                                * kSpoolDiameter * units::constants::detail::PI_VAL / ( kGearRatio * 1_tr );
-    DataLogger::GetInstance().SendNT( "ClimberSubsys/Velocity(m/s)", mech_velocity.value() );
+    DataLogger::GetInstance().SendNT( "ClimberSubsys/Velocity(mps)", mech_velocity.value() );
     DataLogger::GetInstance().SendNT( "ClimberSubsys/Climber Current", m_Motor.GetOutputCurrent());
 
     if( !isZeroed && !homingCanceled ) {
@@ -65,7 +65,7 @@ void ClimberSubsystem::Periodic() {
     DataLogger::GetInstance().SendNT( "ClimberSubsys/Goal Height", units::inch_t(m_Goal.position).value() );
     DataLogger::GetInstance().SendNT( "ClimberSubsys/IsAtGoal", IsAtGoal() );
     DataLogger::GetInstance().SendNT( "ClimberSubsys/Spt Position", units::inch_t(m_Setpoint.position).value() );
-    DataLogger::GetInstance().SendNT( "ClimberSubsys/Spt Velocity(m/s)", m_Setpoint.velocity.value() );
+    DataLogger::GetInstance().SendNT( "ClimberSubsys/Spt Velocity(mps)", m_Setpoint.velocity.value() );
 
         // We are not homing.  Track the goal height....
     m_Setpoint = m_Profile.Calculate(physical::kDt, m_Setpoint, m_Goal);

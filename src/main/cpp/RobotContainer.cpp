@@ -83,9 +83,9 @@ RobotContainer::RobotContainer()
     [this] {
 
       if( m_operatorController.GetPOV() == 0 ) {
-        m_climber.NudgeHeight( 0.1_in ); 
+        m_climber.NudgeHeight( 0.05_in ); 
       } else if( m_operatorController.GetPOV() == 180 ) {
-        m_climber.NudgeHeight( -0.1_in );
+        m_climber.NudgeHeight( -0.05_in );
       } 
     },
     { &m_climber }
