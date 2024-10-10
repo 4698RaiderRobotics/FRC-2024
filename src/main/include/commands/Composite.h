@@ -1,6 +1,7 @@
 #pragma once
 
 #include <frc2/command/CommandPtr.h>
+#include <frc2/command/CommandScheduler.h>
 
 class SwerveDriveSubsystem;
 class IntakeSubsystem;
@@ -19,45 +20,33 @@ frc2::CommandPtr ClimbAndTrap(ShooterSubsystem* shooter, IntakeSubsystem* intake
                       ArmSubsystem* arm, ElevatorSubsystem *elevator);
 
 
-class ConstructOnDemandCommand {
-public:
-    ConstructOnDemandCommand() = default;
-    
-    virtual void Schedule() final { 
-        cmd = CommandFactory().Unwrap();
-        cmd->Schedule();
-    } 
-    
-private:
-    virtual frc2::CommandPtr CommandFactory() = 0;
-
-    std::unique_ptr<frc2::Command> cmd;
-};
-
-class MoveToAndPlaceInAmp : public ConstructOnDemandCommand {
+class MoveToAndPlaceInAmp {
 public:
     MoveToAndPlaceInAmp( SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm,
-                         ElevatorSubsystem *elevator, VisionSubsystem* vision) 
-                         : drive{drive}, intake{intake}, arm{arm}, elevator{elevator}, vision{vision} {}
+                         ElevatorSubsystem *elevator, VisionSubsystem* vision);
+
+    void Schedule();
 
 private:
-    frc2::CommandPtr CommandFactory();
-
     SwerveDriveSubsystem* drive;
     IntakeSubsystem* intake;
     ArmSubsystem* arm;
     ElevatorSubsystem *elevator;
     VisionSubsystem* vision;
+
+    frc::Pose2d amp_tags[2];
+
+    std::vector<frc2::CommandPtr> commands;
 };
 
-class AutoClimbAndTrap : public ConstructOnDemandCommand {
+class AutoClimbAndTrap {
 public:
     AutoClimbAndTrap( SwerveDriveSubsystem* drive, IntakeSubsystem* intake, ArmSubsystem* arm,
-                         ElevatorSubsystem *elevator, ClimberSubsystem *climb, ShooterSubsystem* shooter, VisionSubsystem* vision) 
-                         : drive{drive}, intake{intake}, arm{arm}, elevator{elevator}, climb{climb}, shooter{shooter}, vision{vision} {}
-private:
-    frc2::CommandPtr CommandFactory();
+                      ElevatorSubsystem *elevator, ClimberSubsystem *climb, ShooterSubsystem* shooter, VisionSubsystem* vision);
 
+    void Schedule();
+
+private:
     SwerveDriveSubsystem* drive;
     IntakeSubsystem* intake;
     ArmSubsystem* arm;
@@ -65,4 +54,9 @@ private:
     ClimberSubsystem *climb;
     ShooterSubsystem* shooter;
     VisionSubsystem* vision;
+
+    frc::Pose2d stage_tags[6];
+
+        // Map the April Tag number to a command.
+    std::vector<frc2::CommandPtr> commands;
 };

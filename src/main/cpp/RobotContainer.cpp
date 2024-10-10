@@ -101,7 +101,10 @@ void RobotContainer::ConfigureBindings() {
   m_driverController.L2().OnTrue( DriverPlaceInAmp( &m_arm, &m_elevator, &m_intake ) );
 
     // Automatically move to the amp and place piece
-  m_driverController.R2().OnTrue( frc2::cmd::RunOnce( [this] { m_moveToAmpCmd.Schedule(); } ) );
+  m_driverController.R2().OnTrue( 
+    frc2::cmd::RunOnce( [this] { m_moveToAmpCmd.Schedule(); } )
+    .WithName( "R2 -- MoeToAndPlaceInAmp") 
+  );
 
     // Manual eject of the Note
   m_driverController.Cross()
@@ -159,7 +162,10 @@ void RobotContainer::ConfigureBindings() {
   );
 
     // Auto Climb and Trap
-  m_operatorController.LeftTrigger().OnTrue( frc2::cmd::RunOnce( [this] { m_climbAndTrapCmd.Schedule(); } ) );
+  m_operatorController.LeftTrigger().OnTrue( 
+    frc2::cmd::RunOnce( [this] { m_climbAndTrapCmd.Schedule(); })
+    .WithName("LeftTrigger -- Auto Climb and Trap") 
+  );
 
     // Climb and Trap after Pre-setup with Button Y
   m_operatorController.RightTrigger().OnTrue(ClimbAndTrap(&m_shooter, &m_intake, &m_climber, &m_arm, &m_elevator));
