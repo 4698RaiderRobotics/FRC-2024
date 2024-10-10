@@ -18,11 +18,9 @@ ClimberSubsystem::ClimberSubsystem() :
     m_Feedforward{units::volt_t{pidf::kClimberS}, 
                   units::unit_t<Feedforward::kv_unit> {pidf::kClimberV}, 
                   units::unit_t<Feedforward::ka_unit> {pidf::kClimberA}},
-    m_Profile{{physical::kClimberMaxSpeed, physical::kClimberMaxAcceleration}}
+    m_Profile{{pidf::kClimberMaxSpeed, pidf::kClimberMaxAcceleration}}
 {
     m_Motor.EnableVoltageCompensation(12);
-
-    m_Goal.position = -1_in; /* value while homing */
 
     DataLogger::SendNT( "ClimberSubsys/isZeroed", isZeroed);
     DataLogger::SendNT( "ClimberSubsys/isHoming", isHoming);
@@ -49,6 +47,7 @@ void ClimberSubsystem::Periodic() {
                                                * kSpoolDiameter * units::constants::detail::PI_VAL / ( kGearRatio * 1_tr );
     DataLogger::SendNT( "ClimberSubsys/Velocity(mps)", mech_velocity.value() );
     DataLogger::SendNT( "ClimberSubsys/Climber Current", m_Motor.GetOutputCurrent());
+    DataLogger::SendNT( "ClimberSubsys/Goal Height", units::inch_t(m_Goal.position).value() );
 
     if( !isZeroed && !homingCanceled ) {
         if( isHoming ) {
@@ -57,6 +56,7 @@ void ClimberSubsystem::Periodic() {
         } else  {
                 // Start homing ...
             fmt::print("   ClimberSubsystem::Periodic() -- Starting homing routine...\n");
+            m_Goal.position = -1_in; /* value while homing */
             isHoming = true;
             DataLogger::SendNT( "ClimberSubsys/isHoming", isHoming);
             SetOpenloopSpeed(-kHomingSpeed);
@@ -64,7 +64,6 @@ void ClimberSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::SendNT( "ClimberSubsys/Goal Height", units::inch_t(m_Goal.position).value() );
     DataLogger::SendNT( "ClimberSubsys/AtGoal", AtGoal() );
     DataLogger::SendNT( "ClimberSubsys/Spt Position", units::inch_t(m_Setpoint.position).value() );
     DataLogger::SendNT( "ClimberSubsys/Spt Velocity(mps)", m_Setpoint.velocity.value() );
@@ -91,14 +90,14 @@ void ClimberSubsystem::SetOpenloopSpeed(double percent) {
     if( percent < 0.0 && AtLimit() ) {
         // We are trying to go down and the bottom limit is tripped!
         // Stop the motor...
-        fmt::print("   ClimberSubsystem::SetOpenloopSpeed() STOPPED MOTOR from Bottoming.\n");
+        // fmt::print("   ClimberSubsystem::SetOpenloopSpeed() STOPPED MOTOR from Bottoming.\n");
 
         m_Motor.Set( 0.0 );
         return;
     } else if( percent > 0.0 && GetHeight() > physical::kClimberMaxHeight ) {
         // We are trying to go up and we are at the max height
         // Ignore the request
-        fmt::print("   ClimberSubsystem::SetOpenloopSpeed() Climber at MAX HEIGHT.\n");
+        // fmt::print("   ClimberSubsystem::SetOpenloopSpeed() Climber at MAX HEIGHT.\n");
 
         m_Motor.Set( 0.0 );
         return;
@@ -112,11 +111,13 @@ void ClimberSubsystem::Home() {
             // Goal was set to non-zero value during homing (Nudge was probably done)
             // Stop homing routine.  Call the current position zero.
         isHoming = false;
-        isZeroed = true;
+        isZeroed = false;
+        homingCanceled = true;
         m_Goal.position = 0.0_in;
         m_Encoder.SetPosition(0.0);
         DataLogger::SendNT( "ClimberSubsys/isHoming", isHoming);
         DataLogger::SendNT( "ClimberSubsys/isZeroed", isZeroed);
+        DataLogger::SendNT( "ClimberSubsys/homingCanceled", homingCanceled);
         DataLogger::Log( "ClimberSubsystem::SetSpeed() -- Homing interrupted by Nudge.\n" ); 
         return;
     }
@@ -141,6 +142,10 @@ units::inch_t ClimberSubsystem::GetHeight() {
 
 bool ClimberSubsystem::AtLimit() {
     return !m_limit.Get();
+}
+
+void ClimberSubsystem::Nudge( units::inch_t delta ) {
+    SetGoal( m_Goal.position + delta );
 }
 
 bool ClimberSubsystem::AtGoal() {

@@ -23,7 +23,8 @@ class ClimberSubsystem : public frc2::SubsystemBase {
   void Periodic() override;
 
   units::inch_t GetHeight();
-  void SetGoal(  units::inch_t goal );
+  void SetGoal( units::inch_t goal );
+  void Nudge( units::inch_t delta );
 
   bool AtLimit();
   bool AtGoal();

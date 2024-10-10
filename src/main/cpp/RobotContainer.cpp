@@ -72,11 +72,10 @@ RobotContainer::RobotContainer()
 
   m_climber.SetDefaultCommand(frc2::RunCommand(
     [this] {
-
       if( m_operatorController.GetPOV() == 0 ) {
-        m_climber.SetGoal( m_climber.GetHeight() + 0.1_in ); 
+        m_climber.Nudge( 0.1_in ); 
       } else if( m_operatorController.GetPOV() == 180 ) {
-        m_climber.SetGoal( m_climber.GetHeight() - 0.1_in );
+        m_climber.Nudge( -0.1_in );
       }
     },
     { &m_climber }
@@ -131,7 +130,7 @@ void RobotContainer::ConfigureBindings() {
     // Prepare to Place in Amp
   m_operatorController.X().OnTrue(
     frc2::cmd::Sequence(
-      m_arm.MoveJoints( physical::kArmAmpAngle, physical::kWristAmpAngle ),
+      m_arm.MoveJoints( physical::kArmRaiseAngle, physical::kWristRaiseAngle ),
       m_elevator.ChangeHeight( physical::kElevatorAmpHeight )
     ).WithName("Button X -- Prepare for Amp")
   );
@@ -140,7 +139,7 @@ void RobotContainer::ConfigureBindings() {
   m_operatorController.Y().OnTrue(
     frc2::cmd::Sequence(
       frc2::cmd::Parallel(
-        m_arm.MoveJoints( physical::kArmAmpAngle, physical::kWristAmpAngle ),
+        m_arm.MoveJoints( physical::kArmRaiseAngle, physical::kWristRaiseAngle ),
         m_shooter.ChangeAngle( 60_deg )
       ), 
       m_elevator.ChangeHeight( physical::kElevatorTrapHeight )
