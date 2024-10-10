@@ -45,15 +45,15 @@ void StageNoteInShooter::Execute() {
     m_arm->SetWristGoal( 180_deg - m_shooter->GetAngle( ) );
       
 
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Shooter Angle", m_shooter->GetAngle().value() );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm Angle", m_arm->GetArmAngle().value() );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Wrist Angle Goal", 180 - m_shooter->GetAngle().value() );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Wrist Angle", m_arm->GetWristAngle().value() );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Elevator Height", m_elev->GetHeight().value() );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Shooter IsAtAngle", m_shooter->IsAtAngle() );
-    // DataLogger::GetInstance().SendNT( "StageNoteInShooter/Elevator IsAtGoal", m_elev->IsAtGoal() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Shooter Angle", m_shooter->GetAngle().value() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Arm Angle", m_arm->GetArmAngle().value() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Wrist Angle Goal", 180 - m_shooter->GetAngle().value() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Wrist Angle", m_arm->GetWristAngle().value() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Elevator Height", m_elev->GetHeight().value() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Shooter IsAtAngle", m_shooter->IsAtAngle() );
+    // DataLogger::GetInstance().Log( "StageNoteInShooter/Elevator IsAtGoal", m_elev->IsAtGoal() );
 
 }
 

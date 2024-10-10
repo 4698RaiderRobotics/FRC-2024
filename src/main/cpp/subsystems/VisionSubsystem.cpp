@@ -82,8 +82,8 @@ void UpdatePoseEstimator( std::string camName,
                 sd_dev = 0.4;
             }
 
-            DataLogger::SendNT( id_base + "Pose2d", pose->estimatedPose.ToPose2d() );
-            DataLogger::SendNT( id_base + "Stdev", sd_dev );
+            DataLogger::Log( id_base + "Pose2d", pose->estimatedPose.ToPose2d() );
+            DataLogger::Log( id_base + "Stdev", sd_dev );
 
             if(frc::DriverStation::IsEnabled() && odometry.GetEstimatedPosition().RelativeTo(pose->estimatedPose.ToPose2d()).Translation().Norm() > 3_m) {
                 return;
@@ -94,11 +94,11 @@ void UpdatePoseEstimator( std::string camName,
             
         } else {
                 // We got a bad pose. Log -10, -10, 0
-            DataLogger::SendNT( id_base + "Pose2d", frc::Pose2d{-10_m, -10_m, 0_deg} );
+            DataLogger::Log( id_base + "Pose2d", frc::Pose2d{-10_m, -10_m, 0_deg} );
         }
     } else {
             // We don't have a result.  Log -20, -20, 0
-        DataLogger::SendNT( id_base + "Pose2d", frc::Pose2d{-20_m, -20_m, 0_deg} );
+        DataLogger::Log( id_base + "Pose2d", frc::Pose2d{-20_m, -20_m, 0_deg} );
     }
 
 }

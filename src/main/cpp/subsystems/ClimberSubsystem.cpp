@@ -22,16 +22,16 @@ ClimberSubsystem::ClimberSubsystem() :
 {
     m_Motor.EnableVoltageCompensation(12);
 
-    DataLogger::SendNT( "ClimberSubsys/isZeroed", isZeroed);
-    DataLogger::SendNT( "ClimberSubsys/isHoming", isHoming);
-    DataLogger::SendNT( "ClimberSubsys/homingCanceled", homingCanceled);
+    DataLogger::Log( "ClimberSubsys/isZeroed", isZeroed);
+    DataLogger::Log( "ClimberSubsys/isHoming", isHoming);
+    DataLogger::Log( "ClimberSubsys/homingCanceled", homingCanceled);
 };
 
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {
     m_Position = GetHeight();
-    DataLogger::SendNT( "ClimberSubsys/Height", units::inch_t(m_Position).value() );
-    DataLogger::SendNT( "ClimberSubsys/Limit Switch", AtLimit());
+    DataLogger::Log( "ClimberSubsys/Height", units::inch_t(m_Position).value(), true );
+    DataLogger::Log( "ClimberSubsys/Limit Switch", AtLimit());
 
     if (frc::DriverStation::IsDisabled()) {
         m_Setpoint.position = m_Position;
@@ -45,9 +45,9 @@ void ClimberSubsystem::Periodic() {
 
     units::meters_per_second_t mech_velocity = units::revolutions_per_minute_t(m_Encoder.GetVelocity())
                                                * kSpoolDiameter * units::constants::detail::PI_VAL / ( kGearRatio * 1_tr );
-    DataLogger::SendNT( "ClimberSubsys/Velocity(mps)", mech_velocity.value() );
-    DataLogger::SendNT( "ClimberSubsys/Climber Current", m_Motor.GetOutputCurrent());
-    DataLogger::SendNT( "ClimberSubsys/Goal Height", units::inch_t(m_Goal.position).value() );
+    DataLogger::Log( "ClimberSubsys/Velocity(mps)", mech_velocity.value() );
+    DataLogger::Log( "ClimberSubsys/Climber Current", m_Motor.GetOutputCurrent());
+    DataLogger::Log( "ClimberSubsys/Goal Height", units::inch_t(m_Goal.position).value(), true );
 
     if( !isZeroed && !homingCanceled ) {
         if( isHoming ) {
@@ -58,15 +58,15 @@ void ClimberSubsystem::Periodic() {
             fmt::print("   ClimberSubsystem::Periodic() -- Starting homing routine...\n");
             m_Goal.position = -1_in; /* value while homing */
             isHoming = true;
-            DataLogger::SendNT( "ClimberSubsys/isHoming", isHoming);
+            DataLogger::Log( "ClimberSubsys/isHoming", isHoming);
             SetOpenloopSpeed(-kHomingSpeed);
         }
         return;
     }
 
-    DataLogger::SendNT( "ClimberSubsys/AtGoal", AtGoal() );
-    DataLogger::SendNT( "ClimberSubsys/Spt Position", units::inch_t(m_Setpoint.position).value() );
-    DataLogger::SendNT( "ClimberSubsys/Spt Velocity(mps)", m_Setpoint.velocity.value() );
+    DataLogger::Log( "ClimberSubsys/AtGoal", AtGoal() );
+    DataLogger::Log( "ClimberSubsys/Spt Position", units::inch_t(m_Setpoint.position).value() );
+    DataLogger::Log( "ClimberSubsys/Spt Velocity(mps)", m_Setpoint.velocity.value() );
 
         // We are not homing.  Track the goal height....
     m_Setpoint = m_Profile.Calculate(physical::kDt, m_Setpoint, m_Goal);
@@ -115,9 +115,9 @@ void ClimberSubsystem::Home() {
         homingCanceled = true;
         m_Goal.position = 0.0_in;
         m_Encoder.SetPosition(0.0);
-        DataLogger::SendNT( "ClimberSubsys/isHoming", isHoming);
-        DataLogger::SendNT( "ClimberSubsys/isZeroed", isZeroed);
-        DataLogger::SendNT( "ClimberSubsys/homingCanceled", homingCanceled);
+        DataLogger::Log( "ClimberSubsys/isHoming", isHoming);
+        DataLogger::Log( "ClimberSubsys/isZeroed", isZeroed);
+        DataLogger::Log( "ClimberSubsys/homingCanceled", homingCanceled);
         DataLogger::Log( "ClimberSubsystem::SetSpeed() -- Homing interrupted by Nudge.\n" ); 
         return;
     }
@@ -130,8 +130,8 @@ void ClimberSubsystem::Home() {
         m_Setpoint.position = 0.0_in;
         isZeroed = true;
         isHoming = false;
-        DataLogger::SendNT( "ClimberSubsys/isZeroed", isZeroed);
-        DataLogger::SendNT( "ClimberSubsys/isHoming", isHoming);
+        DataLogger::Log( "ClimberSubsys/isZeroed", isZeroed);
+        DataLogger::Log( "ClimberSubsys/isHoming", isHoming);
         SetGoal( physical::kClimberRestHeight );
     }
 }

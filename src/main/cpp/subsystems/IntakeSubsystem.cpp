@@ -25,7 +25,7 @@ IntakeSubsystem::IntakeSubsystem(LEDSubsystem* leds) :
 // This method will be called once per scheduler run
 void IntakeSubsystem::Periodic() {
 
-    DataLogger::SendNT( "IntakeSubsys/BeamBroken", IsBeamBroken() );
+    DataLogger::Log( "IntakeSubsys/BeamBroken", IsBeamBroken(), true );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_intakeMotor.Set(0);
@@ -37,14 +37,14 @@ void IntakeSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::SendNT( "IntakeSubsys/Speed", m_intakeMotor.Get() );
-    DataLogger::SendNT( "IntakeSubsys/Current", m_intakeMotor.GetOutputCurrent() );
-    DataLogger::SendNT( "IntakeSubsys/HasNote", m_hasNote );
-    DataLogger::SendNT( "IntakeSubsys/Centered", m_centered );
-    DataLogger::SendNT( "IntakeSubsys/Reversing", m_reversing );
-    DataLogger::SendNT( "IntakeSubsys/isIndexed", m_isIndexed );
-    DataLogger::SendNT( "IntakeSubsys/start Pos", m_startPos );
-    DataLogger::SendNT( "IntakeSubsys/Rotations", GetRotations() );
+    DataLogger::Log( "IntakeSubsys/Speed", m_intakeMotor.Get() );
+    DataLogger::Log( "IntakeSubsys/Current", m_intakeMotor.GetOutputCurrent() );
+    DataLogger::Log( "IntakeSubsys/HasNote", m_hasNote );
+    DataLogger::Log( "IntakeSubsys/Centered", m_centered );
+    DataLogger::Log( "IntakeSubsys/Reversing", m_reversing );
+    DataLogger::Log( "IntakeSubsys/isIndexed", m_isIndexed );
+    DataLogger::Log( "IntakeSubsys/start Pos", m_startPos );
+    DataLogger::Log( "IntakeSubsys/Rotations", GetRotations() );
 
         // For some reason this condition happens some times ????
         // Probably when IntakeNote is interrupted.

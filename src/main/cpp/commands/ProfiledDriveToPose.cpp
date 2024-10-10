@@ -37,9 +37,9 @@ void ProfiledDriveToPose::Init() {
 
   m_startTime = frc::Timer::GetFPGATimestamp();
 
-  DataLogger::SendNT( "Profiled Drive/xGoal",m_xGoal.position.value() );
-  DataLogger::SendNT( "Profiled Drive/yGoal",m_yGoal.position.value() );
-  DataLogger::SendNT( "Profiled Drive/omegaGoal",m_omegaGoal.position.value() );
+  DataLogger::Log( "Profiled Drive/xGoal",m_xGoal.position.value() );
+  DataLogger::Log( "Profiled Drive/yGoal",m_yGoal.position.value() );
+  DataLogger::Log( "Profiled Drive/omegaGoal",m_omegaGoal.position.value() );
 
   // fmt::print( "Initial profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
 }
@@ -64,7 +64,7 @@ void ProfiledDriveToPose::Execute() {
   frc::SmartDashboard::PutNumber( "ProfileY", m_ySetpoint.position.value() );
   frc::SmartDashboard::PutNumber( "ProfileVX", m_xSetpoint.velocity.value() );
   frc::SmartDashboard::PutNumber( "ProfileVY", m_ySetpoint.velocity.value() );
-  DataLogger::SendNT( "Profiled Drive/Pose",m_swerve->GetPose() );
+  DataLogger::Log( "Profiled Drive/Pose",m_swerve->GetPose() );
 
   // fmt::print( "Profile lengths : {} {} {}\n", m_xProfile.TotalTime(), m_yProfile.TotalTime(), m_omegaProfile.TotalTime());
 

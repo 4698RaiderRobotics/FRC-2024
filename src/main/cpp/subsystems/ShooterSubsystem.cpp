@@ -55,7 +55,8 @@ ShooterSubsystem::ShooterSubsystem() :
 void ShooterSubsystem::Periodic() {
     m_shooterPosition = m_shooterAngleEncoder.GetPosition().GetValueAsDouble() * 360_deg;
 
-    DataLogger::SendNT( "ShooterSubsys/Angle", m_shooterPosition.value() );
+    DataLogger::Log( "ShooterSubsys/Angle", m_shooterPosition.value(), true );
+    DataLogger::Log( "ShooterSubsys/Angle Goal", m_shooterGoal.position.value(), true );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_shooterSetpoint.position = m_shooterPosition;
@@ -66,12 +67,12 @@ void ShooterSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::SendNT( "ShooterSubsys/Speed", m_rightEncoder.GetVelocity() );
-    DataLogger::SendNT( "ShooterSubsys/SpeedGoal", m_speed.value() );
-    DataLogger::SendNT( "ShooterSubsys/left Current", m_leftShooterMotor.GetOutputCurrent() );
-    DataLogger::SendNT( "ShooterSubsys/right Current", m_rightShooterMotor.GetOutputCurrent() );
-    DataLogger::SendNT( "ShooterSubsys/IsAtSpeed", AtSpeed() );
-    DataLogger::SendNT( "ShooterSubsys/IsAtAngle", AtAngle() );
+    DataLogger::Log( "ShooterSubsys/Speed", m_rightEncoder.GetVelocity(), true );
+    DataLogger::Log( "ShooterSubsys/SpeedGoal", m_speed.value(), true );
+    DataLogger::Log( "ShooterSubsys/left Current", m_leftShooterMotor.GetOutputCurrent() );
+    DataLogger::Log( "ShooterSubsys/right Current", m_rightShooterMotor.GetOutputCurrent() );
+    DataLogger::Log( "ShooterSubsys/IsAtSpeed", AtSpeed() );
+    DataLogger::Log( "ShooterSubsys/IsAtAngle", AtAngle() );
 
     m_shooterSetpoint = m_shooterProfile.Calculate(physical::kDt, m_shooterSetpoint, m_shooterGoal);
 

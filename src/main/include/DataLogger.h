@@ -26,20 +26,12 @@ class DataLogger {
   public:
       // delete copy constructor
     DataLogger(const DataLogger& obj) = delete; 
-
-    static void Send( const std::string &s, double val );
-    static void Send( const std::string &s, std::span<const double> a );
-    static void Send( const std::string &s, const std::string &val );
-    static void Send( const std::string &s, int val );
-    static void Send( const std::string &s, bool val );
-    static void Send( const std::string &s, frc::Pose2d p );
-
-    static void SendNT( const std::string &s, double val );
-    static void SendNT( const std::string &s, std::span<const double> a );
-    static void SendNT( const std::string &s, const std::string &val );
-    static void SendNT( const std::string &s, int val );
-    static void SendNT( const std::string &s, bool val );
-    static void SendNT( const std::string &s, frc::Pose2d p );
+    static void Log( const std::string &s, double val, bool alwaysNT=false );
+    static void Log( const std::string &s, std::span<const double> a, bool alwaysNT=false );
+    static void Log( const std::string &s, const std::string &val, bool alwaysNT=false );
+    static void Log( const std::string &s, int val, bool alwaysNT=false );
+    static void Log( const std::string &s, bool val, bool alwaysNT=false );
+    static void Log( const std::string &s, frc::Pose2d p, bool alwaysNT=false );
 
     static void Log( const std::string &s );
     static void LogMetadata( void );
@@ -48,6 +40,20 @@ class DataLogger {
     wpi::log::DataLog *log;
     std::shared_ptr<nt::NetworkTable> nt_table;
     std::map<std::string, nt::GenericPublisher> nt_map;
+
+    void Send( const std::string &s, double val );
+    void Send( const std::string &s, std::span<const double> a );
+    void Send( const std::string &s, const std::string &val );
+    void Send( const std::string &s, int val );
+    void Send( const std::string &s, bool val );
+    void Send( const std::string &s, frc::Pose2d p );
+
+    void SendNT( const std::string &s, double val );
+    void SendNT( const std::string &s, std::span<const double> a );
+    void SendNT( const std::string &s, const std::string &val );
+    void SendNT( const std::string &s, int val );
+    void SendNT( const std::string &s, bool val );
+    void SendNT( const std::string &s, frc::Pose2d p );
 
     void SendMetadata( const std::string &s, const std::string &val );
 

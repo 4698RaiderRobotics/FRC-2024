@@ -128,17 +128,17 @@ void SwerveDriveSubsystem::ArcadeDrive( double xPercent, double yPercent, double
 void SwerveDriveSubsystem::Drive( frc::ChassisSpeeds speeds, bool fieldRelative ) {
     if(fieldRelative) {
         m_robotRelativeSpeeds = speeds.FromFieldRelativeSpeeds(speeds.vx, speeds.vy, speeds.omega, m_gyro.GetYaw().GetValue() + field_offset );
-        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Field Rel X", speeds.vx.value() );
-        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Field Rel Y", speeds.vy.value() );
-        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Field Rel Omega", static_cast<units::revolutions_per_minute_t>(speeds.omega).value() );
-        // DataLogger::GetInstance().SendNT( "Swerve/Drive/Gyro Angle", m_gyro.GetYaw().GetValue().value() );
+        // DataLogger::GetInstance().Log( "Swerve/Drive/Field Rel X", speeds.vx.value() );
+        // DataLogger::GetInstance().Log( "Swerve/Drive/Field Rel Y", speeds.vy.value() );
+        // DataLogger::GetInstance().Log( "Swerve/Drive/Field Rel Omega", static_cast<units::revolutions_per_minute_t>(speeds.omega).value() );
+        // DataLogger::GetInstance().Log( "Swerve/Drive/Gyro Angle", m_gyro.GetYaw().GetValue().value() );
     } else {
         m_robotRelativeSpeeds = speeds;
     }
 
-    // DataLogger::GetInstance().SendNT( "Swerve/Drive/Robot Rel X", m_robotRelativeSpeeds.vx.value() );
-    // DataLogger::GetInstance().SendNT( "Swerve/Drive/Robot Rel Y", m_robotRelativeSpeeds.vy.value() );
-    // DataLogger::GetInstance().SendNT( "Swerve/Drive/Robot Rel Omega", static_cast<units::revolutions_per_minute_t>(m_robotRelativeSpeeds.omega).value() );
+    // DataLogger::GetInstance().Log( "Swerve/Drive/Robot Rel X", m_robotRelativeSpeeds.vx.value() );
+    // DataLogger::GetInstance().Log( "Swerve/Drive/Robot Rel Y", m_robotRelativeSpeeds.vy.value() );
+    // DataLogger::GetInstance().Log( "Swerve/Drive/Robot Rel Omega", static_cast<units::revolutions_per_minute_t>(m_robotRelativeSpeeds.omega).value() );
 
 
     // An array of SwerveModuleStates computed from the ChassisSpeeds object
@@ -203,7 +203,7 @@ void SwerveDriveSubsystem::Periodic( void ) {
     // Updates the odometry of the robot given the SwerveModules' states
     //needs to be an array
 
-    frc::SmartDashboard::PutNumber("Gyro Angle", m_gyro.GetYaw().GetValueAsDouble() );
+    DataLogger::Log( "Swerve/Gyro Angle", m_gyro.GetYaw().GetValueAsDouble(), true );
 
     m_odometry.Update( m_gyro.GetYaw().GetValue(),
     {
@@ -215,18 +215,18 @@ void SwerveDriveSubsystem::Periodic( void ) {
 
     if( frc::DriverStation::IsEnabled() ) {
         for(int i = 0; i < 4; i++) {
-            DataLogger::SendNT( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
-            DataLogger::SendNT( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 360 );
-            DataLogger::SendNT( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
-            DataLogger::SendNT( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
+            DataLogger::Log( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
+            DataLogger::Log( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 360 );
+            DataLogger::Log( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
+            DataLogger::Log( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
 
-            DataLogger::SendNT( m_modules[i].m_name + "/Delta Theta", m_modules[i].dTheta.value() );
-            DataLogger::SendNT( m_modules[i].m_name + "/Desired RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].speed).value() );
-            DataLogger::SendNT( m_modules[i].m_name + "/Optimized RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].opSpeed).value() );
-            DataLogger::SendNT( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
-            DataLogger::SendNT( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
-            DataLogger::SendNT( m_modules[i].m_name + "/Drive Motor RPM", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() * 60 );
-            DataLogger::SendNT( m_modules[i].m_name + "/Turn Motor RPM", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() * 60 );
+            DataLogger::Log( m_modules[i].m_name + "/Delta Theta", m_modules[i].dTheta.value() );
+            DataLogger::Log( m_modules[i].m_name + "/Desired RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].speed).value() );
+            DataLogger::Log( m_modules[i].m_name + "/Optimized RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].opSpeed).value() );
+            DataLogger::Log( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
+            DataLogger::Log( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
+            DataLogger::Log( m_modules[i].m_name + "/Drive Motor RPM", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() * 60 );
+            DataLogger::Log( m_modules[i].m_name + "/Turn Motor RPM", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() * 60 );
         }
     }
 

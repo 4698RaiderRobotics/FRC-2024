@@ -14,6 +14,29 @@
 
 #include "DataLogger.h"
 
+
+/********************************************************************************/
+// Define TUNING_MODE to log everything to Network Tables which makes it much
+// easier to debug things in practice.  It has the potential to overload the
+// Wireless connection during competition when there is a bandwidth limit.
+//
+// FOR COMPETITION comment out the #define line below. 
+
+// #define TUNING_MODE
+
+/********************************************************************************/
+
+#ifdef TUNING_MODE 
+    #define LOG_DATA( s, val, alwaysNT ) \
+       GetInstance().SendNT( s, val )
+#else
+    #define LOG_DATA( s, val, alwaysNT ) \
+        if( alwaysNT ) { \
+            GetInstance().SendNT( s, val ); \
+        } \
+        GetInstance().Send( s, val ); 
+#endif
+
 DataLogger* DataLogger::singleton = nullptr; 
 
 DataLogger& DataLogger::GetInstance() {
@@ -28,71 +51,97 @@ DataLogger& DataLogger::GetInstance() {
     return *singleton;
 }
 
+void DataLogger::Log( const std::string &s, double val, bool alwayNT ) { 
+    LOG_DATA( s, val, alwayNT );
+}
+
+void DataLogger::Log( const std::string &s, std::span<const double> a, bool alwayNT ) { 
+    LOG_DATA( s, a, alwayNT );
+}
+
+void DataLogger::Log( const std::string &s, int val, bool alwayNT ) { 
+    LOG_DATA( s, val, alwayNT );
+}
+
+void DataLogger::Log( const std::string &s, const std::string &val, bool alwayNT ) { 
+    LOG_DATA( s, val, alwayNT );
+}
+
+void DataLogger::Log( const std::string &s, bool val, bool alwayNT ) {
+    LOG_DATA( s, val, alwayNT );
+}
+
+void DataLogger::Log( const std::string &s, frc::Pose2d p, bool alwayNT ) {
+    LOG_DATA( s, p, alwayNT );
+}
+
+
+
 void DataLogger::Send( const std::string &s, double val ) { 
-    wpi::log::DoubleLogEntry le{ *(GetInstance().log), s };
+    wpi::log::DoubleLogEntry le{ *log, s };
     le.Append( val );
 }
 
 void DataLogger::Send( const std::string &s, std::span<const double> a ) { 
-    wpi::log::DoubleArrayLogEntry le{ *(GetInstance().log), s };
+    wpi::log::DoubleArrayLogEntry le{ *log, s };
     le.Append( a );
 }
 
 void DataLogger::Send( const std::string &s, int val ) { 
-    wpi::log::IntegerLogEntry le{ *(GetInstance().log), s };
+    wpi::log::IntegerLogEntry le{ *log, s };
     le.Append( val );
 }
 
 void DataLogger::Send( const std::string &s, const std::string &val ) { 
-    wpi::log::StringLogEntry le{ *(GetInstance().log), s };
+    wpi::log::StringLogEntry le{ *log, s };
     le.Append( val );
 }
 
 void DataLogger::Send( const std::string &s, bool val ) {
-    wpi::log::BooleanLogEntry le{ *(GetInstance().log), s };
+    wpi::log::BooleanLogEntry le{ *log, s };
     le.Append( val );
 }
 
 void DataLogger::Send( const std::string &s, frc::Pose2d p ) {
-    wpi::log::DoubleArrayLogEntry le{ *(GetInstance().log), s };
+    wpi::log::DoubleArrayLogEntry le{ *log, s };
     le.Append( {p.X().value(),
                 p.Y().value(),
                 p.Rotation().Degrees().value()} );
 }
 
 void DataLogger::SendNT( const std::string &s, double val ) {
-    if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetDoubleTopic( s ).GenericPublish( "double" );
+    if( !nt_map.contains( s ) ) {
+        nt_map[s] = nt_table->GetDoubleTopic( s ).GenericPublish( "double" );
     }
-    GetInstance().nt_map[s].SetDouble( val );
+    nt_map[s].SetDouble( val );
 }
 
 void DataLogger::SendNT( const std::string &s, std::span<const double> a ) {
-    if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
+    if( !nt_map.contains( s ) ) {
+        nt_map[s] = nt_table->GetDoubleArrayTopic( s ).GenericPublish( "double[]" );
     }
-    GetInstance().nt_map[s].SetDoubleArray( a );
+    nt_map[s].SetDoubleArray( a );
 }
 
 void DataLogger::SendNT( const std::string &s, const std::string &val ) {
-    if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetStringTopic( s ).GenericPublish( "string" );
+    if( !nt_map.contains( s ) ) {
+        nt_map[s] = nt_table->GetStringTopic( s ).GenericPublish( "string" );
     }
-    GetInstance().nt_map[s].SetString( val );
+    nt_map[s].SetString( val );
 }
 
 void DataLogger::SendNT( const std::string &s, int val ) {
-    if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetIntegerTopic( s ).GenericPublish( "integer" );
+    if( !nt_map.contains( s ) ) {
+        nt_map[s] = nt_table->GetIntegerTopic( s ).GenericPublish( "integer" );
     }
-    GetInstance().nt_map[s].SetInteger( val );
+    nt_map[s].SetInteger( val );
 }
 
 void DataLogger::SendNT( const std::string &s, bool val ) {
-    if( !GetInstance().nt_map.contains( s ) ) {
-        GetInstance().nt_map[s] = GetInstance().nt_table->GetBooleanTopic( s ).GenericPublish( "boolean" );
+    if( !nt_map.contains( s ) ) {
+        nt_map[s] = nt_table->GetBooleanTopic( s ).GenericPublish( "boolean" );
     }
-    GetInstance().nt_map[s].SetBoolean( val );
+    nt_map[s].SetBoolean( val );
 }
 
 void DataLogger::SendNT( const std::string &s, frc::Pose2d p ) {
@@ -105,6 +154,9 @@ void DataLogger::SendNT( const std::string &s, frc::Pose2d p ) {
     SendNT( s, std::span{a} );
 }
 
+/**
+ * Pass thru to the frc::DataLogManager::Log() command.
+*/
 void DataLogger::Log( const std::string &s ) {
     frc::DataLogManager::Log( s );
 }
@@ -138,6 +190,6 @@ void DataLogger::SendMetadata( const std::string &s, const std::string &val ) {
         // Not sure why
     std::string id = "RealMetadata/_";
     id += s;
-    wpi::log::StringLogEntry le{ *(log), id };
+    wpi::log::StringLogEntry le{ *log, id };
     le.Append( val );
 }

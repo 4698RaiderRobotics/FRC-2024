@@ -70,8 +70,8 @@ void ArmSubsystem::Periodic() {
 
     m_armAngle = m_wristAngle - phi;
 
-    DataLogger::SendNT( "ArmSubsys/Arm Angle", m_armAngle.value() );
-    DataLogger::SendNT( "ArmSubsys/Wrist Angle", m_wristAngle.value() );
+    DataLogger::Log( "ArmSubsys/Arm Angle", m_armAngle.value(), true );
+    DataLogger::Log( "ArmSubsys/Wrist Angle", m_wristAngle.value(), true );
 
     if ( frc::DriverStation::IsDisabled() ) {
         m_armSetpoint.position = m_armAngle;
@@ -84,13 +84,13 @@ void ArmSubsystem::Periodic() {
         return;
     }
 
-    DataLogger::SendNT( "ArmSubsys/Arm Goal", m_armGoal.position.value() );
-    DataLogger::SendNT( "ArmSubsys/Wrist Goal", m_wristGoal.position.value() );
-    DataLogger::SendNT( "ArmSubsys/IsAtGoal", AtGoal() );
-    DataLogger::SendNT( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
-    DataLogger::SendNT( "ArmSubsys/Arm Mtr Current", m_armMotor.GetSupplyCurrent().GetValueAsDouble() );
-    DataLogger::SendNT( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
-    DataLogger::SendNT( "ArmSubsys/Wrist Mtr Current", m_wristMotor.GetSupplyCurrent().GetValueAsDouble() );
+    DataLogger::Log( "ArmSubsys/Arm Goal", m_armGoal.position.value(), true );
+    DataLogger::Log( "ArmSubsys/Wrist Goal", m_wristGoal.position.value(), true );
+    DataLogger::Log( "ArmSubsys/IsAtGoal", AtGoal() );
+    DataLogger::Log( "ArmSubsys/Arm Mtr Voltage", m_armMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::Log( "ArmSubsys/Arm Mtr Current", m_armMotor.GetSupplyCurrent().GetValueAsDouble() );
+    DataLogger::Log( "ArmSubsys/Wrist Mtr Voltage", m_wristMotor.GetMotorVoltage().GetValueAsDouble() );
+    DataLogger::Log( "ArmSubsys/Wrist Mtr Current", m_wristMotor.GetSupplyCurrent().GetValueAsDouble() );
 
     m_wristMotor.SetControl( m_wristPositionDC.WithPosition( m_wristGoal.position ) ); 
     

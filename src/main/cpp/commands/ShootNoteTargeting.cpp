@@ -76,7 +76,7 @@ void ShootNoteTargeting::Execute() {
 
     units::meter_t dist_to_speaker = (robotPose - targetLocation).Translation().Norm();
 
-    DataLogger::SendNT( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
+    DataLogger::Log( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
 
     units::degree_t azimuthAngle;
     units::degree_t azimuthCorrAngle;
@@ -125,24 +125,24 @@ void ShootNoteTargeting::Execute() {
       m_drive->ArcadeDrive( 0, 0, turnCorrection );
     }
 
-    // DataLogger::SendNT( "ShootNote/Shooter Angle Goal", shooterAngle.value() );
-    // DataLogger::SendNT( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
-    // DataLogger::SendNT( "ShootNote/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
-    // DataLogger::SendNT( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
-    // DataLogger::SendNT( "ShootNote/Wrist Angle Goal", 180 - shooterAngle.value() );
-    // DataLogger::SendNT( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
-    // DataLogger::SendNT( "ShootNote/Elevator Height", m_elev->GetHeight().value() );
-    // DataLogger::SendNT( "ShootNote/Elevator Goal",  m_shooter->GetShooter_ElevatorHeight().value() );
-    // DataLogger::SendNT( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
-    // DataLogger::SendNT( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
-    // DataLogger::SendNT( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
-    DataLogger::SendNT( "ShootNote/Target Yaw", t_yaw.value() );
-    DataLogger::SendNT( "ShootNote/DeltaX", delta_x.value() );
-    DataLogger::SendNT( "ShootNote/DeltaY", delta_y.value() );
-    DataLogger::SendNT( "ShootNote/Azimuth", azimuthAngle.value() );
-    DataLogger::SendNT( "ShootNote/Azimuth Correction", azimuthCorrAngle.value() );
-    DataLogger::SendNT( "ShootNote/Plane Angle", planeAngle.value() );
-    DataLogger::SendNT( "ShootNote/Turn Correction", turnCorrection );
+    // DataLogger::Log( "ShootNote/Shooter Angle Goal", shooterAngle.value() );
+    // DataLogger::Log( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
+    // DataLogger::Log( "ShootNote/Arm Angle Goal", m_shooter->GetShooter_ArmAngle().value() );
+    // DataLogger::Log( "ShootNote/Arm Angle", m_arm->GetArmAngle().value() );
+    // DataLogger::Log( "ShootNote/Wrist Angle Goal", 180 - shooterAngle.value() );
+    // DataLogger::Log( "ShootNote/Wrist Angle", m_arm->GetWristAngle().value() );
+    // DataLogger::Log( "ShootNote/Elevator Height", m_elev->GetHeight().value() );
+    // DataLogger::Log( "ShootNote/Elevator Goal",  m_shooter->GetShooter_ElevatorHeight().value() );
+    // DataLogger::Log( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
+    // DataLogger::Log( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
+    // DataLogger::Log( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
+    DataLogger::Log( "ShootNote/Target Yaw", t_yaw.value() );
+    DataLogger::Log( "ShootNote/DeltaX", delta_x.value() );
+    DataLogger::Log( "ShootNote/DeltaY", delta_y.value() );
+    DataLogger::Log( "ShootNote/Azimuth", azimuthAngle.value() );
+    DataLogger::Log( "ShootNote/Azimuth Correction", azimuthCorrAngle.value() );
+    DataLogger::Log( "ShootNote/Plane Angle", planeAngle.value() );
+    DataLogger::Log( "ShootNote/Turn Correction", turnCorrection );
 
     // fmt::print( "    Arm/Wrist Angles:  atGoal({}), Curr_arm({}), Arm_target({}), Curr_wrist({}), Wrist_target({})\n", 
     //                 m_arm->IsAtGoal( arm_tolerance ), m_arm->GetArmAngle(), m_shooter->GetShooter_ArmAngle(),
