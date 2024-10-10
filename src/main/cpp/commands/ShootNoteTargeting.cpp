@@ -76,8 +76,6 @@ void ShootNoteTargeting::Execute() {
 
     units::meter_t dist_to_speaker = (robotPose - targetLocation).Translation().Norm();
 
-    
-
     DataLogger::SendNT( "ShootNote/SpeakerToRobot dist", dist_to_speaker.value() );
 
     units::degree_t azimuthAngle;
@@ -94,7 +92,7 @@ void ShootNoteTargeting::Execute() {
       shooterAngle = 50_deg;
       m_shooter->SetRPMGoal( 1000_rpm + 100_rpm * (dist_to_speaker - 6_m ).value() );
         // Bias toward the Amp
-      delta_y += 50_in;
+      delta_y -= 50_in;
     }
     units::degree_t planeAngle =  units::math::atan2( delta_y, delta_x );
 

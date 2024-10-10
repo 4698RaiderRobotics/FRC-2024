@@ -197,7 +197,7 @@ void SwerveDriveSubsystem::Periodic( void ) {
     } else if( !frc::DriverStation::IsDisabled() && !m_have_driver_offset ) {
             // Only get a driver offset on the first enabling..
         m_have_driver_offset = true;
-         fmt::print( "Stop getting offset has {} = {:.5}\n", m_have_driver_offset, driver_offset.value() );
+         fmt::print( "SwerveDriveSubsystem::Periodic -- Stop getting offset has {} = {:.5}\n", m_have_driver_offset, driver_offset.value() );
     }
 
     // Updates the odometry of the robot given the SwerveModules' states

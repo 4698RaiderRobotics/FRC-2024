@@ -35,7 +35,7 @@ frc2::CommandPtr PickUpNote( IntakeSubsystem* intake, ArmSubsystem* arm, Elevato
 
 frc2::CommandPtr DriverPlaceInAmp( ArmSubsystem* arm, ElevatorSubsystem *elevator, IntakeSubsystem* intake ) {
   return frc2::cmd::Sequence(
-    arm->MoveJoints( physical::kArmAmpAngle, physical::kWristAmpSpitAngle),
+    arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristAmpSpitAngle),
     frc2::cmd::RunOnce([intake] {intake->SpinIntake(0.5);}, {intake}),
     frc2::cmd::Wait(0.5_s),
     frc2::cmd::RunOnce([intake] {intake->SpinIntake(0.0);}, {intake}),
@@ -70,12 +70,12 @@ frc2::CommandPtr MoveToAndPlaceInAmp::CommandFactory() {
 
   return frc2::cmd::Sequence( 
     ProfiledDriveToPose(drive, vision, targetPose).ToPtr(),
-    arm->MoveJoints( physical::kArmAmpAngle, physical::kWristAmpAngle),
-    elevator->ChangeHeight( 19_in ),
+    arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristRaiseAngle),
+    elevator->ChangeHeight( physical::kElevatorAmpHeight ),
     frc2::cmd::RunOnce([this] {drive->Drive({0_mps, 1_mps, 0_deg_per_s});}, {drive}),
     frc2::cmd::Wait(0.5_s),
     frc2::cmd::RunOnce([this] {drive->Drive({0_mps, 0_mps, 0_deg_per_s});}, {drive}),
-    arm->MoveJoints( physical::kArmAmpAngle, physical::kWristAmpSpitAngle),
+    arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristAmpSpitAngle),
     frc2::cmd::RunOnce([this] {intake->SpinIntake(0.75);}, {intake}),
     frc2::cmd::Wait(0.5_s),
     frc2::cmd::RunOnce([this] {intake->SpinIntake(0.0);}, {intake}),
@@ -133,7 +133,7 @@ frc2::CommandPtr AutoClimbAndTrap::CommandFactory() {
     ),
 
     // Put the arm up and in
-    arm->MoveJoints( 110_deg, 95_deg ),
+    arm->MoveJoints( physical::kArmPreClimbAngle, physical::kWristPreClimbAngle ),
 
       // Drive forward and then drop the climber hooks.
     ProfiledDriveToPose(drive, vision, hook_pose).ToPtr(),
@@ -141,14 +141,14 @@ frc2::CommandPtr AutoClimbAndTrap::CommandFactory() {
     climb->MoveHooks( physical::kClimberMidHeight ),
 
       // Put the arm up
-    arm->MoveJoints( 70_deg, 90_deg ),
+    arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristRaiseAngle),
     elevator->ChangeHeight( physical::kElevatorTrapHeight ),
 
       // Climb the rest of the way and deposit the note.
-    climb->MoveHooks( 0_in ),
+    climb->MoveHooks( physical::kClimberMinHeight ),
 
       // Put tip the intake toward the trap
-    arm->MoveJoints( 70_deg, 63_deg ),
+    arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristTrapSpitAngle ),
 
     frc2::cmd::Wait(2_s),
     frc2::cmd::RunOnce([this] {intake->SpinIntake(-0.5);}, {intake}),

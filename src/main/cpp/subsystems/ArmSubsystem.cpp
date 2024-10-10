@@ -23,7 +23,7 @@ ArmSubsystem::ArmSubsystem() :
     m_armFeedforward{units::volt_t{pidf::kArmS}, units::volt_t{pidf::kArmG}, 
                      units::unit_t<frc::ArmFeedforward::kv_unit> {pidf::kArmV}, 
                      units::unit_t<frc::ArmFeedforward::ka_unit> {pidf::kArmA} },
-    m_armProfile{{physical::kArmMaxSpeed, physical::kArmMaxAcceleration}}
+    m_armProfile{{pidf::kArmMaxSpeed, pidf::kArmMaxAcceleration}}
 
 {
     frc::Preferences::InitDouble("ArmOffset", 0.0);
@@ -46,8 +46,8 @@ ArmSubsystem::ArmSubsystem() :
     wristConfigs.Feedback.FeedbackRemoteSensorID = m_wristEncoder.GetDeviceID();
     wristConfigs.Feedback.FeedbackSensorSource = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
     wristConfigs.Feedback.RotorToSensorRatio = kWristGearRatio;
-    wristConfigs.MotionMagic.MotionMagicAcceleration = physical::kWristMaxSpeed;
-    wristConfigs.MotionMagic.MotionMagicCruiseVelocity = physical::kWristMaxAcceleration;
+    wristConfigs.MotionMagic.MotionMagicAcceleration = pidf::kWristMaxSpeed;
+    wristConfigs.MotionMagic.MotionMagicCruiseVelocity = pidf::kWristMaxAcceleration;
     m_wristMotor.GetConfigurator().Apply(wristConfigs, 50_ms);
 
 

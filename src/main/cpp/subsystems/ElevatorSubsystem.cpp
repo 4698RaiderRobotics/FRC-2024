@@ -18,7 +18,7 @@ ElevatorSubsystem::ElevatorSubsystem() :
     m_elevatorFeedforward{units::volt_t{pidf::kElevatorS}, units::volt_t{pidf::kElevatorG}, 
                           units::unit_t<frc::ElevatorFeedforward::kv_unit> {pidf::kElevatorV}, 
                           units::unit_t<frc::ElevatorFeedforward::ka_unit> {pidf::kElevatorA}},
-    m_elevatorProfile{{physical::kElevatorMaxSpeed, physical::kElevatorMaxAcceleration}}
+    m_elevatorProfile{{pidf::kElevatorMaxSpeed, pidf::kElevatorMaxAcceleration}}
 {
     m_elevatorMotor.EnableVoltageCompensation(12);
     m_elevatorMotor.SetInverted(true);

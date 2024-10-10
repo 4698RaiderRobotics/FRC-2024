@@ -32,36 +32,17 @@ namespace physical {
 
     // *****************     SHOOTER SUBSYSTEM      **********************
 
-    // Maximum velocity for the shooter angle TrapezoidProfile
-    constexpr units::degrees_per_second_t kShooterMaxSpeed = 360_deg_per_s;
-    // Maximum acceleration for the shooter angle TrapezoidProfile
-    constexpr units::degrees_per_second_squared_t kShooterMaxAcceleration = 360_deg_per_s_sq;
-
     // Maximum angle for the shooter position
     constexpr units::degree_t kShooterMaxAngle = 75_deg;
     // Minimum angle for the shooter position
     constexpr units::degree_t kShooterMinAngle = 0_deg;
 
-    // Angle for the shooter to shoot from speaker
-    constexpr units::degree_t kShooterSpeakerAngle = 60_deg;
-    // Angle for the shooter to shoot from podium
-    constexpr units::degree_t kShooterPodiumAngle = 22_deg;
+    // Angle for the shooter during the climb
+    constexpr units::degree_t kShooterClimbAngle = 65_deg;
 
 
 
     // *****************     ARM SUBSYSTEM      **********************
-
-    // Maximum velocity for the arm angle TrapezoidProfile
-    constexpr units::degrees_per_second_t kArmMaxSpeed = 540_deg_per_s;
-    // Maximum acceleration for the arm angle TrapezoidProfile
-    constexpr units::degrees_per_second_squared_t kArmMaxAcceleration = 720_deg_per_s_sq;
-
-    // Maximum velocity for the wrist MotionMagic profile
-    // Units in rotations per second
-    constexpr double kWristMaxSpeed = 1.5;
-    // Maximum acceleration for the wrist MotionMagic profile
-    // Units in rotations per second squared
-    constexpr double kWristMaxAcceleration = 3;
 
     // Maximum angle for the arm position
     constexpr units::degree_t kArmMaxAngle = 180_deg;
@@ -83,10 +64,12 @@ namespace physical {
     // Angle for the arm to rest at
     constexpr units::degree_t kArmPassiveAngle = 155_deg;
 
-    // Angle for the wrist to place in amp
-    constexpr units::degree_t kWristAmpAngle = 90_deg;
-    // Angle for the arm to place in amp
-    constexpr units::degree_t kArmAmpAngle = 60_deg;
+    // Angle for the wrist to raise the elevator up
+    constexpr units::degree_t kWristRaiseAngle = 90_deg;
+    // Angle for the arm to raise the elevator up
+    constexpr units::degree_t kArmRaiseAngle = 60_deg;
+
+
     // Angle for the wrist to spit note in amp
     constexpr units::degree_t kWristAmpSpitAngle = 112_deg;
      // Angle for the wrist to drop down from amp
@@ -94,13 +77,16 @@ namespace physical {
     // Angle for the arm to drop down from amp
     constexpr units::degree_t kArmAmpDropAngle = 70_deg;
 
+    // Angle for the wrist to miss the speaker on initial climb
+    constexpr units::degree_t kWristPreClimbAngle = 95_deg;
+    // Angle for the arm to miss the speaker on initial climb
+    constexpr units::degree_t kArmPreClimbAngle = 70_deg;
+    // Angle for the wrist to eject into trap
+    constexpr units::degree_t kWristTrapSpitAngle = 63_deg;
+
+
 
     // *****************     ELEVATOR SUBSYSTEM      **********************
-
-    // Maximum velocity for the elevator height TrapezoidProfile
-    constexpr units::meters_per_second_t kElevatorMaxSpeed = 2_mps;
-    // Maximum acceleration for the elevator height TrapezoidProfile
-    constexpr units::meters_per_second_squared_t kElevatorMaxAcceleration = 4_mps_sq;
 
     // Maximum height for the elevator position
     constexpr units::inch_t kElevatorMaxHeight = 27_in;
@@ -116,11 +102,6 @@ namespace physical {
 
     // *****************     CLIMBER SUBSYSTEM      **********************
 
-    // Maximum velocity for the climber motion TrapezoidProfile
-    constexpr units::meters_per_second_t kClimberMaxSpeed = 0.75_mps;
-    // Maximum acceleration for the climber motion TrapezoidProfile
-    constexpr units::meters_per_second_squared_t kClimberMaxAcceleration = 1_mps_sq;
-
     // Maximum height for the climber position
     constexpr units::inch_t kClimberMaxHeight = 18.5_in;
     // Minimum height for the climber position
@@ -129,7 +110,7 @@ namespace physical {
     constexpr units::inch_t kClimberRestHeight = 13_in;
 
     // Intermediate height for the auto climb and trap command
-    constexpr units::inch_t kClimberMidHeight = 7_in;
+    constexpr units::inch_t kClimberMidHeight = 4_in;
 
     constexpr units::second_t kDt = 20_ms;
 }

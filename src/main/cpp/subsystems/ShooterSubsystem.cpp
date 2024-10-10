@@ -21,7 +21,7 @@ ShooterSubsystem::ShooterSubsystem() :
     m_shooterFeedforward{units::volt_t{pidf::kShooterS}, units::volt_t{pidf::kShooterG}, 
                          units::unit_t<frc::ArmFeedforward::kv_unit> {pidf::kShooterV}, 
                          units::unit_t<frc::ArmFeedforward::ka_unit> {pidf::kShooterA}},
-    m_shooterProfile{{physical::kShooterMaxSpeed, physical::kShooterMaxAcceleration}}
+    m_shooterProfile{{pidf::kShooterMaxSpeed, pidf::kShooterMaxAcceleration}}
 {
     frc::Preferences::InitDouble("ShooterOffset", 0.0);
 
