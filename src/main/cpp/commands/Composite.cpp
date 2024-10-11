@@ -82,7 +82,12 @@ MoveToAndPlaceInAmp::MoveToAndPlaceInAmp( SwerveDriveSubsystem* d, IntakeSubsyst
       frc2::cmd::RunOnce([this] {intake->SpinIntake(0.0);}, {intake}),
       frc2::cmd::Parallel(
         arm->MoveJoints( physical::kArmAmpDropAngle, physical::kWristAmpDropAngle),
-        ProfiledDriveToPose( drive, vision, {targetPose.X(), targetPose.Y() - 3_in, targetPose.Rotation()} ).ToPtr()
+        frc2::cmd::Sequence(
+          frc2::cmd::RunOnce([this] {drive->Drive({0_mps, -1_mps, 0_deg_per_s});}, {drive}),
+          frc2::cmd::Wait(0.25_s),
+          frc2::cmd::RunOnce([this] {drive->Drive({0_mps, 0_mps, 0_deg_per_s});}, {drive})
+        )
+        // ProfiledDriveToPose( drive, vision, {targetPose.X(), targetPose.Y() - 3_in, targetPose.Rotation()} ).ToPtr()
       ),
       elevator->ChangeHeight( 0_m ),
       GoToRestPosition( arm, elevator, intake ).ToPtr()
@@ -118,7 +123,7 @@ AutoClimbAndTrap::AutoClimbAndTrap( SwerveDriveSubsystem* d, IntakeSubsystem* i,
   frc::Pose2d targetPose;
   frc::Pose2d hookPose;
   units::inch_t starting_offset = 20_in;
-  units::inch_t hook_offset = 8_in;
+  units::inch_t hook_offset = 4_in;
 
   for( int i=0; i<6; ++i ) {
     frc::Pose2d tagPose = stage_tags[i];
@@ -142,20 +147,22 @@ AutoClimbAndTrap::AutoClimbAndTrap( SwerveDriveSubsystem* d, IntakeSubsystem* i,
 
           // Drive forward and then drop the climber hooks.
         ProfiledDriveToPose(drive, vision, hookPose).ToPtr(),
-        frc2::cmd::Wait(1_s),
+        frc2::cmd::Wait(0.25_s),
+        climb->MoveHooks( physical::kClimberMaxHeight - 5.5_in ),
+        frc2::cmd::Wait(0.25_s),
         climb->MoveHooks( physical::kClimberMidHeight ),
 
           // Put the arm up
-        arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristRaiseAngle),
+        arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristTrapSpitAngle),
         elevator->ChangeHeight( physical::kElevatorTrapHeight ),
 
           // Climb the rest of the way and deposit the note.
         climb->MoveHooks( physical::kClimberMinHeight ),
 
           // Put tip the intake toward the trap
-        arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristTrapSpitAngle ),
+        // arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristTrapSpitAngle ),
 
-        frc2::cmd::Wait(2_s),
+        // frc2::cmd::Wait(1_s),
         frc2::cmd::RunOnce([this] {intake->SpinIntake(-0.5);}, {intake}),
         frc2::cmd::Wait(5_s),
         frc2::cmd::RunOnce([this] {intake->SpinIntake(0.0);}, {intake})

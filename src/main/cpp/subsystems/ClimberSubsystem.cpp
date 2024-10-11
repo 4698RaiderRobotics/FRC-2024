@@ -157,7 +157,7 @@ bool ClimberSubsystem::AtGoal() {
   units::inch_t height_error = units::math::abs( GetHeight() - m_Goal.position );
 
       // Within 0.5 inch is at target
-  return height_error < 0.5_in;
+  return height_error < 0.75_in;
 }
 
 frc2::CommandPtr ClimberSubsystem::MoveHooks( units::inch_t h ) {

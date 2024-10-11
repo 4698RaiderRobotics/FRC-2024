@@ -71,7 +71,7 @@ namespace physical {
 
 
     // Angle for the wrist to spit note in amp
-    constexpr units::degree_t kWristAmpSpitAngle = 112_deg;
+    constexpr units::degree_t kWristAmpSpitAngle = 120_deg;
      // Angle for the wrist to drop down from amp
     constexpr units::degree_t kWristAmpDropAngle = 80_deg;
     // Angle for the arm to drop down from amp
@@ -94,7 +94,7 @@ namespace physical {
     constexpr units::inch_t kElevatorMinHeight = 0_in;
 
     // Height for the elevator to place in amp
-    constexpr units::inch_t kElevatorAmpHeight = 19_in;
+    constexpr units::inch_t kElevatorAmpHeight = 20.5_in;
 
     // Height for the elevator to place in trap
     constexpr units::inch_t kElevatorTrapHeight = 25_in;
