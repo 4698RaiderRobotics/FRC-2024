@@ -59,12 +59,23 @@ void ShooterSubsystem::Periodic() {
     DataLogger::Log( "ShooterSubsys/Angle Goal", m_shooterGoal.position.value(), true );
 
     if ( frc::DriverStation::IsDisabled() ) {
+        m_IsDisabled = true;
         m_shooterSetpoint.position = m_shooterPosition;
         m_shooterSetpoint.velocity = 0_deg_per_s;
         m_shooterGoal.position = m_shooterPosition;
         m_shooterGoal.velocity = 0_deg_per_s;
         m_speed = 0_rpm;
         return;
+    }
+
+        // We are Enabled.
+    if( m_IsDisabled == true ) {
+            // We were just Disabled and are now Enabled.
+        if( m_shooterPosition > 50_deg ) {
+            // Shooter is up too far.  It will hit the intake.
+            SetAngleGoal( 50_deg );
+        }
+        m_IsDisabled = false;
     }
 
     DataLogger::Log( "ShooterSubsys/Speed", m_rightEncoder.GetVelocity(), true );

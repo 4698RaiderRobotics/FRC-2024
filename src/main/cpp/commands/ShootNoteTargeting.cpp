@@ -185,8 +185,8 @@ void ShootNoteTargeting::Ending(bool interrupted) {
     m_shooter->SetRPMGoal( 0_rpm );
   // }
 
-  m_arm->SetArmGoal( 170_deg );
-  m_arm->SetWristGoal( 35_deg );
+  m_arm->SetArmGoal( physical::kArmPassiveAngle );
+  m_arm->SetWristGoal( physical::kWristPassiveAngle );
   m_elev->SetGoal(0_in);
 }
 

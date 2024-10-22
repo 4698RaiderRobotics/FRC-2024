@@ -189,7 +189,8 @@ void SwerveDriveSubsystem::Periodic( void ) {
     if(frc::DriverStation::IsDisabled() && !m_have_driver_offset ) {
         auto pose = m_odometry.GetEstimatedPosition();
         field_offset = pose.Rotation().Degrees();
-        if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
+        if(frc::DriverStation::GetAlliance().has_value() &&
+           frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
             driver_offset = field_offset + 180_deg;
         } else {
             driver_offset = field_offset;

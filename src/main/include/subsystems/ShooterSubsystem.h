@@ -95,6 +95,8 @@ class ShooterSubsystem : public frc2::SubsystemBase {
 
   double m_shooterSpeed;
 
+  bool m_IsDisabled{true};
+
     // Arm and Wrist lookup tables: maps shooter angle to arm and wrist angles
   // LUT arm_lut{ {25.0, 45.0}, {145.0, 180.0} };
   // LUT wrist_lut{ {25.0, 45.0}, {150.0, 130.0} };
