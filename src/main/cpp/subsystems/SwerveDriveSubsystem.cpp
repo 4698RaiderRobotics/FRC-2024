@@ -189,8 +189,7 @@ void SwerveDriveSubsystem::Periodic( void ) {
     if(frc::DriverStation::IsDisabled() && !m_have_driver_offset ) {
         auto pose = m_odometry.GetEstimatedPosition();
         field_offset = pose.Rotation().Degrees();
-        if(frc::DriverStation::GetAlliance().has_value() &&
-           frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kRed) {
+        if(frc::DriverStation::GetAlliance() == frc::DriverStation::Alliance::kRed) {
             driver_offset = field_offset + 180_deg;
         } else {
             driver_offset = field_offset;
@@ -205,6 +204,8 @@ void SwerveDriveSubsystem::Periodic( void ) {
     //needs to be an array
 
     DataLogger::Log( "Swerve/Gyro Angle", m_gyro.GetYaw().GetValueAsDouble(), true );
+    DataLogger::Log( "Swerve/Driver Offset", driver_offset.value(), true );
+    DataLogger::Log( "Swerve/Field Offset", field_offset.value(), true );
 
     m_odometry.Update( m_gyro.GetYaw().GetValue(),
     {
@@ -217,7 +218,8 @@ void SwerveDriveSubsystem::Periodic( void ) {
     if( frc::DriverStation::IsEnabled() ) {
         for(int i = 0; i < 4; i++) {
             DataLogger::Log( m_modules[i].m_name + "/Turn Setpoint", m_modules[i].state.angle.Degrees().value() );
-            DataLogger::Log( m_modules[i].m_name + "/Turn Position", m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 360 );
+            DataLogger::Log( m_modules[i].m_name + "/Turn Position", 
+                    units::degree_t{m_modules[i].m_turnAbsEncoder.GetPosition().GetValueAsDouble()  * 1_tr}.value() );
             DataLogger::Log( m_modules[i].m_name + "/Turn Raw Position", m_modules[i].m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble() );
             DataLogger::Log( m_modules[i].m_name + "/Turn pidoutput", m_modules[i].pidOutput );
 
@@ -226,6 +228,8 @@ void SwerveDriveSubsystem::Periodic( void ) {
             DataLogger::Log( m_modules[i].m_name + "/Optimized RPM", static_cast<units::revolutions_per_minute_t>(m_modules[i].opSpeed).value() );
             DataLogger::Log( m_modules[i].m_name + "/Drive Current", m_modules[i].m_driveMotor.GetSupplyCurrent().GetValueAsDouble() );
             DataLogger::Log( m_modules[i].m_name + "/Turn Current", m_modules[i].m_turnMotor.GetSupplyCurrent().GetValueAsDouble() );
+            DataLogger::Log( m_modules[i].m_name + "/Drive Position (m)",
+                    (units::turn_t{m_modules[i].m_driveMotor.GetPosition().GetValueAsDouble()} * swerve::physical::kDriveMetersPerRotation).value() );
             DataLogger::Log( m_modules[i].m_name + "/Drive Motor RPM", m_modules[i].m_driveMotor.GetVelocity().GetValueAsDouble() * 60 );
             DataLogger::Log( m_modules[i].m_name + "/Turn Motor RPM", m_modules[i].m_turnMotor.GetVelocity().GetValueAsDouble() * 60 );
         }
@@ -263,20 +267,23 @@ frc::Pose2d SwerveDriveSubsystem::GetPose( void ) {
 
 // Resets the gyro to an angle
 void SwerveDriveSubsystem::ResetGyro( units::degree_t angle ) {
+    DataLogger::Log( "Swerve/Status", fmt::format("Reseting Gyro to {}..", angle ) );
     driver_offset -= angle;
     field_offset -= angle;
-    // fmt::print( "   RESET GYRO, angle ({:.5}), driver_offset ({:.5})\n", angle, driver_offset );
     m_gyro.SetYaw(angle);
 }
 
 // Resets the gyro to an angle
 void SwerveDriveSubsystem::ResetDriverOrientation( units::degree_t angle ) {
+    DataLogger::Log( "Swerve/Status", fmt::format("Reseting Driver Orientation to {}..", angle ) );
     driver_offset = 0_deg;
     ResetGyro(angle);
 }
 
 // Resets the pose to a position
 void SwerveDriveSubsystem::ResetPose( frc::Pose2d pose ) {
+    DataLogger::Log( "Swerve/Status", fmt::format("Reseting Pose to <{},{},{}> with GyroYaw {}..", 
+                    pose.X(), pose.Y(), pose.Rotation().Degrees(), m_gyro.GetYaw().GetValue() ) );
     m_odometry.ResetPosition(
         m_gyro.GetYaw().GetValue(),
         {
