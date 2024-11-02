@@ -82,16 +82,28 @@ void UpdatePoseEstimator( std::string camName,
                 sd_dev = 0.4;
             }
 
+                // Linear distance between the current robot pose and the vision pose
+            units::meter_t vision_pose_delta = odometry.GetEstimatedPosition().RelativeTo(pose->estimatedPose.ToPose2d()).Translation().Norm();
             DataLogger::Log( id_base + "Pose2d", pose->estimatedPose.ToPose2d() );
+            DataLogger::Log( id_base + "Tag Distance", dist_to_tag );
+            DataLogger::Log( id_base + "Pose Delta", vision_pose_delta.value() );
             DataLogger::Log( id_base + "Stdev", sd_dev );
+            DataLogger::Log( id_base + "timestamp", pose->timestamp.value() );
 
-            if(frc::DriverStation::IsEnabled() && odometry.GetEstimatedPosition().RelativeTo(pose->estimatedPose.ToPose2d()).Translation().Norm() > 3_m) {
+            std::string ids="";
+            for( int i=0; i<pose->targetsUsed.size()-1; ++i ) {
+                ids += fmt::format( "{}, ", pose->targetsUsed[i].GetFiducialId() );
+            }
+            ids += fmt::format( "{}", pose->targetsUsed[pose->targetsUsed.size()-1].GetFiducialId() );
+
+            DataLogger::Log( id_base + "Tag IDs", ids );
+
+            if(frc::DriverStation::IsEnabled() && vision_pose_delta > 6_m) {
+                // Ignore poses far away from the current robot pose while Enabled
                 return;
             }
-            odometry.SetVisionMeasurementStdDevs( {sd_dev, sd_dev, sd_dev} );
-            odometry.AddVisionMeasurement( pose->estimatedPose.ToPose2d(), pose->timestamp );
-                // Log the pose
-            
+            odometry.AddVisionMeasurement( pose->estimatedPose.ToPose2d(), pose->timestamp, {sd_dev, sd_dev, sd_dev} );
+
         } else {
                 // We got a bad pose. Log -10, -10, 0
             DataLogger::Log( id_base + "Pose2d", frc::Pose2d{-10_m, -10_m, 0_deg} );
@@ -103,16 +115,16 @@ void UpdatePoseEstimator( std::string camName,
 
 }
 
-frc::Pose2d VisionSubsystem::GetRelativePose() {
-    auto result = m_frontRightPoseEstimator.GetCamera()->GetLatestResult();
+// frc::Pose2d VisionSubsystem::GetRelativePose() {
+//     auto result = m_frontRightPoseEstimator.GetCamera()->GetLatestResult();
 
-    if(result.HasTargets()) {
-        photon::PhotonTrackedTarget target = result.GetBestTarget();
+//     if(result.HasTargets()) {
+//         photon::PhotonTrackedTarget target = result.GetBestTarget();
 
-        if(target.GetPoseAmbiguity() < 0.2) {
-            return frc::Pose3d{target.GetBestCameraToTarget().Translation(), target.GetBestCameraToTarget().Rotation()}.ToPose2d();
-        }
-    }
+//         if(target.GetPoseAmbiguity() < 0.2) {
+//             return frc::Pose3d{target.GetBestCameraToTarget().Translation(), target.GetBestCameraToTarget().Rotation()}.ToPose2d();
+//         }
+//     }
 
-    return frc::Pose2d{};
-}
+//     return frc::Pose2d{};
+// }
