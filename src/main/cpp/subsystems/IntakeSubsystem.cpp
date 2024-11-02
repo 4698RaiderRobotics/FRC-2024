@@ -91,7 +91,7 @@ void IntakeSubsystem::Periodic() {
 }
 
 void IntakeSubsystem::SpinIntake(double speed) {
-    if(m_hasNote) {
+    if(m_hasNote && fabs(speed) > 0.01) {
         m_hasNote = false;
         m_leds->SetColor(0, 0, 0);
     }
