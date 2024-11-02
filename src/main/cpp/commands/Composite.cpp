@@ -162,7 +162,7 @@ AutoClimbAndTrap::AutoClimbAndTrap( SwerveDriveSubsystem* d, IntakeSubsystem* i,
           // Put tip the intake toward the trap
         // arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristTrapSpitAngle ),
 
-        // frc2::cmd::Wait(1_s),
+        frc2::cmd::Wait(1_s),
         frc2::cmd::RunOnce([this] {intake->SpinIntake(-0.5);}, {intake}),
         frc2::cmd::Wait(5_s),
         frc2::cmd::RunOnce([this] {intake->SpinIntake(0.0);}, {intake})
