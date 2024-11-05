@@ -12,7 +12,9 @@
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/GenericEntry.h>
 
+#include <wpi/array.h>
 #include <frc/geometry/Pose2d.h>
+#include <frc/kinematics/SwerveModuleState.h>
 
 class DataLogger {
   private:
@@ -31,7 +33,10 @@ class DataLogger {
     static void Log( const std::string &s, const std::string &val, bool alwaysNT=false );
     static void Log( const std::string &s, int val, bool alwaysNT=false );
     static void Log( const std::string &s, bool val, bool alwaysNT=false );
-    static void Log( const std::string &s, frc::Pose2d p, bool alwaysNT=false );
+
+      // WPILib Specific types
+    static void Log( const std::string &s, const frc::Pose2d &p, bool alwaysNT=false );
+    static void Log( const std::string &s, const wpi::array<frc::SwerveModuleState, 4U> &sms, bool alwaysNT=false );
 
     static void Log( const std::string &s );
     static void LogMetadata( void );
@@ -46,14 +51,16 @@ class DataLogger {
     void Send( const std::string &s, const std::string &val );
     void Send( const std::string &s, int val );
     void Send( const std::string &s, bool val );
-    void Send( const std::string &s, frc::Pose2d p );
+    void Send( const std::string &s, const frc::Pose2d &p );
+    void Send( const std::string &s, const wpi::array<frc::SwerveModuleState, 4U> &sms );
 
     void SendNT( const std::string &s, double val );
     void SendNT( const std::string &s, std::span<const double> a );
     void SendNT( const std::string &s, const std::string &val );
     void SendNT( const std::string &s, int val );
     void SendNT( const std::string &s, bool val );
-    void SendNT( const std::string &s, frc::Pose2d p );
+    void SendNT( const std::string &s, const frc::Pose2d &p );
+    void SendNT( const std::string &s, const wpi::array<frc::SwerveModuleState, 4U> &sms );
 
     void SendMetadata( const std::string &s, const std::string &val );
 

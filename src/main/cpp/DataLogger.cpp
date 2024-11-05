@@ -71,8 +71,12 @@ void DataLogger::Log( const std::string &s, bool val, bool alwayNT ) {
     LOG_DATA( s, val, alwayNT );
 }
 
-void DataLogger::Log( const std::string &s, frc::Pose2d p, bool alwayNT ) {
+void DataLogger::Log( const std::string &s, const frc::Pose2d &p, bool alwayNT ) {
     LOG_DATA( s, p, alwayNT );
+}
+
+void DataLogger::Log( const std::string &s, const wpi::array<frc::SwerveModuleState, 4U> &sms, bool alwayNT ) {
+    LOG_DATA( s, sms, alwayNT );
 }
 
 
@@ -102,12 +106,31 @@ void DataLogger::Send( const std::string &s, bool val ) {
     le.Append( val );
 }
 
-void DataLogger::Send( const std::string &s, frc::Pose2d p ) {
+void DataLogger::Send( const std::string &s, const frc::Pose2d &p ) {
+    static double a[3];
+
     wpi::log::DoubleArrayLogEntry le{ *log, s };
-    le.Append( {p.X().value(),
-                p.Y().value(),
-                p.Rotation().Degrees().value()} );
+
+    a[0] = p.X().value();
+    a[0] = p.Y().value();
+    a[0] = p.Rotation().Radians().value();
+
+    le.Append( a );
 }
+
+void DataLogger::Send( const std::string &s, const wpi::array<frc::SwerveModuleState, 4U> &sms ) {
+    static double a[8];
+
+    wpi::log::DoubleArrayLogEntry le{ *log, s };
+
+    for( int i=0; i<4; ++i ) {
+        a[2*i] = sms[i].angle.Radians().value(); 
+        a[2*i + 1] = sms[i].speed.value();
+    }
+
+    le.Append( a );
+}
+
 
 void DataLogger::SendNT( const std::string &s, double val ) {
     if( !nt_map.contains( s ) ) {
@@ -144,15 +167,27 @@ void DataLogger::SendNT( const std::string &s, bool val ) {
     nt_map[s].SetBoolean( val );
 }
 
-void DataLogger::SendNT( const std::string &s, frc::Pose2d p ) {
+void DataLogger::SendNT( const std::string &s, const frc::Pose2d &p ) {
     static double a[3];
     
     a[0] = p.X().value();
     a[1] = p.Y().value();
-    a[2] = p.Rotation().Degrees().value();
+    a[2] = p.Rotation().Radians().value();
 
     SendNT( s, std::span{a} );
 }
+
+void DataLogger::SendNT( const std::string &s, const wpi::array<frc::SwerveModuleState, 4U> &sms ) {
+    static double a[8];
+
+    for( int i=0; i<4; ++i ) {
+        a[2*i] = sms[i].angle.Radians().value(); 
+        a[2*i + 1] = sms[i].speed.value();
+    }
+    
+    SendNT( s, std::span{a} );
+}
+
 
 /**
  * Pass thru to the frc::DataLogManager::Log() command.
