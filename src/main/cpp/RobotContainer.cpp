@@ -119,14 +119,15 @@ void RobotContainer::ConfigureBindings() {
     // Pickup Note
   m_operatorController.A().OnTrue( PickUpNote(&m_intake, &m_arm, &m_elevator) );
 
-    // Goto Rest Position
+    // Goto Rest Position and cancel all active commands
   m_operatorController.B().OnTrue(
       frc2::cmd::Sequence(
-        m_elevator.ChangeHeight( 0_in ), 
         frc2::cmd::Parallel(
-          GoToRestPosition( &m_arm, &m_elevator, &m_intake ).ToPtr(),
-          frc2::cmd::RunOnce([this] {m_intake.SpinIntake(0.0); m_shooter.SetRPMGoal(0_rpm);}, {&m_intake, &m_shooter})
-        )
+          MoveMechanism( &m_arm, &m_elevator, physical::kArmPassiveAngle, physical::kWristPassiveAngle, 0_in ).ToPtr(), 
+          frc2::cmd::RunOnce([this] {m_intake.SpinIntake(0.0);}, {&m_intake}),
+          frc2::cmd::RunOnce([this] {m_shooter.SetRPMGoal(0_rpm);}, {&m_shooter})
+        ),
+        GoToRestPosition( &m_arm, &m_elevator, &m_intake ).ToPtr()
       ).WithName( "B Button - Rest Position" )
     );
 
@@ -134,7 +135,8 @@ void RobotContainer::ConfigureBindings() {
   m_operatorController.X().OnTrue(
     frc2::cmd::Sequence(
       m_arm.MoveJoints( physical::kArmRaiseAngle, physical::kWristRaiseAngle ),
-      m_elevator.ChangeHeight( physical::kElevatorAmpHeight )
+      m_elevator.ChangeHeight( physical::kElevatorAmpHeight ),
+      m_arm.MoveJoints( physical::kArmRaiseAngle, physical::kWristAmpSpitAngle)
     ).WithName("Button X -- Prepare for Amp")
   );
 
@@ -151,14 +153,18 @@ void RobotContainer::ConfigureBindings() {
 
     // Shoot Note
   (m_operatorController.RightBumper() && !m_operatorController.LeftStick()).OnTrue(
-    frc2::ConditionalCommand(
-      frc2::SequentialCommandGroup(
-        frc2::InstantCommand( [this] { m_shooter.SetRPMGoal( 1000_rpm ); m_swerveDrive.ArcadeDrive( 0, 0, 0 ); }, {&m_swerveDrive, &m_shooter} ),
-        GoToRestPosition( &m_arm, &m_elevator, &m_intake ),
-        ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis )),
-      frc2::InstantCommand(), 
+    frc2::cmd::Either(
+      frc2::cmd::Sequence(
+        frc2::cmd::RunOnce( [this] { m_shooter.SetRPMGoal( 1000_rpm ); }, {&m_shooter} ),
+        frc2::cmd::Race( 
+          frc2::cmd::Run( [this] { m_swerveDrive.ArcadeDrive( vx_axis.GetAxis(), vy_axis.GetAxis(), omega_axis.GetAxis() ); }, {&m_swerveDrive} ),
+          GoToRestPosition( &m_arm, &m_elevator, &m_intake ).ToPtr()
+        ),
+        ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis ).ToPtr()
+      ),
+      frc2::cmd::None(), 
       [this] {return m_intake.HasNote();}
-    ).ToPtr().WithName( "Right Bumper  - ShootNoteTargeting")
+    ).WithName( "Right Bumper  - ShootNoteTargeting")
   );
 
     // Auto Climb and Trap

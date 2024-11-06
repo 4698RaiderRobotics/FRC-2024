@@ -38,16 +38,18 @@ ArmSubsystem::ArmSubsystem() :
 
     ctre::phoenix6::configs::TalonFXConfiguration wristConfigs{};
     wristConfigs.Slot0.GravityType = ctre::phoenix6::signals::GravityTypeValue::Arm_Cosine;
+    wristConfigs.Slot0.kS = pidf::kWristS;
     wristConfigs.Slot0.kG = pidf::kWristG;
     wristConfigs.Slot0.kV = pidf::kWristV;
+    wristConfigs.Slot0.kA = pidf::kWristA;
     wristConfigs.Slot0.kP = pidf::kWristP;
     wristConfigs.Slot0.kI = pidf::kWristI;
     wristConfigs.Slot0.kD = pidf::kWristD;
     wristConfigs.Feedback.FeedbackRemoteSensorID = m_wristEncoder.GetDeviceID();
     wristConfigs.Feedback.FeedbackSensorSource = ctre::phoenix6::signals::FeedbackSensorSourceValue::RemoteCANcoder;
     wristConfigs.Feedback.RotorToSensorRatio = kWristGearRatio;
-    wristConfigs.MotionMagic.MotionMagicAcceleration = pidf::kWristMaxSpeed;
-    wristConfigs.MotionMagic.MotionMagicCruiseVelocity = pidf::kWristMaxAcceleration;
+    wristConfigs.MotionMagic.MotionMagicAcceleration = pidf::kWristMaxAcceleration;
+    wristConfigs.MotionMagic.MotionMagicCruiseVelocity = pidf::kWristMaxSpeed;
     m_wristMotor.GetConfigurator().Apply(wristConfigs, 50_ms);
 
 
@@ -99,6 +101,9 @@ void ArmSubsystem::Periodic() {
     double armOutput = m_armPID.Calculate( m_armAngle.value(), m_armSetpoint.position.value() );
     double armFeedforwardOut = m_armFeedforward.Calculate( m_armSetpoint.position, m_armSetpoint.velocity).value() 
                                 + pidf::kArmWristG * units::math::cos(m_wristAngle).value();
+
+    DataLogger::Log( "ArmSubsys/Arm PID output", armOutput );
+    DataLogger::Log( "ArmSubsys/Arm FF Output", armFeedforwardOut/12.0 );
 
     m_armMotor.Set( armOutput + armFeedforwardOut / 12.0 );
 }

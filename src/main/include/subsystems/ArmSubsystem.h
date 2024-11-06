@@ -41,7 +41,7 @@ class ArmSubsystem : public frc2::SubsystemBase {
   frc2::CommandPtr MoveJoints( units::degree_t armAngle, units::degree_t wristAngle );
 
  private:
-  const double kWristGearRatio = 36.0 * 42 / 38;
+  const double kWristGearRatio = 20.0 * 42 / 38;
 
   ctre::phoenix6::hardware::TalonFX m_wristMotor;
   ctre::phoenix6::hardware::CANcoder m_wristEncoder;

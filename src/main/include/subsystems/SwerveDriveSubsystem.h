@@ -47,13 +47,7 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
     void ResetPose( frc::Pose2d pose );
 
-    void StartLogging( wpi::log::DataLog& log );
-
   private:
-    void LogSwerveStateArray(  wpi::log::DoubleArrayLogEntry& logEntry, wpi::array<frc::SwerveModuleState, 4U> states );
-    void TuneSwerveDrive();
-
-  
     VisionSubsystem *m_vision;
 
     SwerveModule m_modules[4];
@@ -74,13 +68,6 @@ class SwerveDriveSubsystem : public frc2::SubsystemBase {
 
     // Drive controller for driving a trajectory
     frc::HolonomicDriveController m_controller;
-
-
-    wpi::log::DoubleArrayLogEntry m_actualLogEntry;
-    wpi::log::DoubleArrayLogEntry m_desiredLogEntry;
-    wpi::log::DoubleArrayLogEntry m_poseLogEntry;
-    wpi::log::DoubleLogEntry m_gyroYawLogEntry;
-    bool m_logging{ false };
 
     units::degree_t field_offset;
     units::degree_t driver_offset;

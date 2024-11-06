@@ -50,8 +50,6 @@ SwerveModule::SwerveModule( const int turnMotorChannel,
     absoluteEncoderConfigs.MagnetSensor.MagnetOffset = absoluteEncoderOffset;
     m_turnAbsEncoder.GetConfigurator().Apply(absoluteEncoderConfigs, 50_ms);
 
-    //m_turnAbsEncoder.SetPosition(units::turn_t{m_turnAbsEncoder.GetAbsolutePosition().GetValueAsDouble()} - units::turn_t{absoluteEncoderOffset});
-
     m_name = fmt::format( "/Swerve Module({}-{})", turnMotorChannel, driveMotorChannel );
 }
 
@@ -73,23 +71,19 @@ void SwerveModule::SetDesiredState( const frc::SwerveModuleState& referenceState
 
 
     m_driveVelocity.Slot = 0;
-    m_driveMotor.SetControl(m_driveVelocity.WithVelocity(speed / 360_deg * 1_tr));
-    //m_driveMotor.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, opSpeed.value());
+    m_driveMotor.SetControl( m_driveVelocity.WithVelocity(speed) );
 
     m_turnPosition.Slot = 0;
-    m_turnMotor.SetControl(m_turnPosition.WithPosition(units::turn_t{state.angle.Degrees()}));
-
-    // Use the software PID and FF to move to the correct angle.
-    //pidOutput = m_turnPIDController.Calculate( turn_angle.value(), state.angle.Degrees().value() );
+    m_turnMotor.SetControl( m_turnPosition.WithPosition(state.angle.Degrees()) );
 }
 
 // Returns the current state of the SwerveModule
 frc::SwerveModuleState SwerveModule::GetState( void ) {
-    units::meters_per_second_t velocity = units::turns_per_second_t{m_driveMotor.GetVelocity().GetValueAsDouble()} * swerve::physical::kDriveMetersPerRotation;
-    return {velocity, units::degree_t{m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 1_tr}};
+    return { m_driveMotor.GetVelocity().GetValue() * swerve::physical::kDriveMetersPerRotation,
+             m_turnAbsEncoder.GetPosition().GetValue() };
 }
 
 frc::SwerveModulePosition SwerveModule::GetPosition( void ) {
-    return {units::turn_t{ m_driveMotor.GetPosition().GetValueAsDouble() } * swerve::physical::kDriveMetersPerRotation, 
-            units::degree_t{m_turnAbsEncoder.GetPosition().GetValueAsDouble() * 1_tr}};
+    return { m_driveMotor.GetPosition().GetValue() * swerve::physical::kDriveMetersPerRotation, 
+             m_turnAbsEncoder.GetPosition().GetValue() };
 }

@@ -71,35 +71,44 @@ void MoveMechanism::Execute() {
       // The arm is back and the elevator needs to go up
       // start with the arm / wrist move forward.
       if( FlipArmForward() ) {
-          m_elev->SetGoal( m_height_target );
+        m_elev->SetGoal( m_height_target );
+        if( m_elev->AtGoal() ) {
+          m_arm_going_forward = false;
+        }
       }
     } else {
         // Should be safe to move everything at once.
       m_elev->SetGoal( m_height_target );
       m_arm->SetArmGoal( m_arm_target );
       m_arm->SetWristGoal( m_wrist_target );
+      m_elev_is_done = true;
     }
   } else if( m_elev_going_down ) {
       // If the elevator needs to come down
-    if( m_arm_going_back ) {
-      // The elevator is up and the arm needs to go back
-      // start with the elevator move down.
-      if( !m_elev_is_done ) {
-        m_elev->SetGoal( m_height_target );
-        m_arm->SetArmGoal( 75_deg );
-        m_arm->SetWristGoal( 90_deg );
-        if( m_elev->GetHeight() - 4_in < 0_in ) {
-          // We got the elevator low enough. Retracting the wrist
-          m_elev_is_done = true;
+    if( m_arm->GetWristAngle() > 95_deg && !m_elev_is_done ) {
+       // The wrist is over the cross bar and needs to extend.
+      m_arm->SetWristGoal( 90_deg );
+    } else {
+      if( m_arm_going_back ) {
+        // The elevator is up and the arm needs to go back
+        // start with the elevator move down.
+        if( !m_elev_is_done ) {
+          m_elev->SetGoal( m_height_target );
+          m_arm->SetArmGoal( 75_deg );
+          m_arm->SetWristGoal( 90_deg );
+          if( m_elev->GetHeight() - 4_in < 0_in ) {
+            // We got the elevator low enough. Retracting the wrist
+            m_elev_is_done = true;
+          }
+        } else {
+          FlipArmBackward();
         }
       } else {
-        FlipArmBackward();
+          // Should be safe to move everything at once.
+        m_elev->SetGoal( m_height_target );
+        m_arm->SetArmGoal( m_arm_target );
+        m_arm->SetWristGoal( m_wrist_target );
       }
-    } else {
-        // Should be safe to move everything at once.
-      m_elev->SetGoal( m_height_target );
-      m_arm->SetArmGoal( m_arm_target );
-      m_arm->SetWristGoal( m_wrist_target );
     }
   } else if( m_arm_going_forward ) {
       // Transitioning from backward to forward with the arm.
@@ -129,8 +138,8 @@ bool MoveMechanism::FlipArmForward() {
 
   if( !m_wrist_retracted ) {
       // The wrist hasn't retracted yet.
-    m_arm->SetWristGoal( 35_deg );
-    if( units::math::abs( m_arm->GetWristAngle() - 35_deg ) < 5_deg ) {
+    m_arm->SetWristGoal( 40_deg );
+    if( m_arm->GetWristAngle() < 60_deg ) {
       // We got the wrist to the correct place.
       m_wrist_retracted = true;
       m_arm->SetArmGoal( m_arm_target );
@@ -151,15 +160,16 @@ bool MoveMechanism::FlipArmBackward() {
 
   if( !m_wrist_retracted ) {
     m_arm->SetArmGoal( m_arm_target );
-    m_arm->SetWristGoal( 35_deg );
+    m_arm->SetWristGoal( 40_deg );
     if( m_arm->GetArmAngle() - m_arm->GetWristAngle() < 20_deg ) {
         // The wrist has caught the arm.  Slow down the wrist.
       m_arm->SetWristGoal( m_arm->GetArmAngle() - 20_deg );
     }
-    if( units::math::abs( m_arm->GetWristAngle() - 35_deg ) < 5_deg ) {
+    if( units::math::abs( m_arm->GetWristAngle() - 40_deg ) < 5_deg ) {
       // We got the wrist to the correct place.
       m_wrist_retracted = true;
       m_arm->SetArmGoal( m_arm_target );
+      m_arm->SetWristGoal( m_wrist_target );
     } 
   } else {
       // The wrist is retracted but the arm still needs to move backward.

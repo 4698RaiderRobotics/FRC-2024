@@ -58,13 +58,14 @@ namespace swerve {
     }
 
     namespace physical {
-        // Max drive speed of Mk3 swerve modules * a scalar value
-        constexpr units::meters_per_second_t kMaxDriveSpeed = 15.7_fps;
+        // The wheel diameter.
+        constexpr units::inch_t kWheelDiameter = 4_in;
 
-        // The max speed of the turn motors
-        constexpr auto kMaxTurnSpeed =  5_rad_per_s;
+        // The max RPM of the drive motors (Falcon 500s)
+        constexpr units::revolutions_per_minute_t kDriveRPM = 6380_rpm;
 
-        // Gear ratio of the drive motors. 6.86 rotations of the drive motor is one rotation of the wheel.
+        // Gear ratio of the drive motors for a SDS Mk4i L2
+        // 6.75 rotations of the drive motor is one rotation of the wheel.
         constexpr double kDriveGearRatio = 6.75;
 
         // Compound unit for the meter per revolution constant.
@@ -73,14 +74,24 @@ namespace swerve {
 
         // The number of meters traveled per rotation of the drive motor
         // wheel circumference / gear ratio
-        constexpr meters_per_rev_t kDriveMetersPerRotation = std::numbers::pi * 4_in / (kDriveGearRatio *  1_tr );
+        constexpr meters_per_rev_t kDriveMetersPerRotation = std::numbers::pi * kWheelDiameter / (kDriveGearRatio *  1_tr );
 
-        // Gear ratio of the turn motors. 12.8 rotations of the turning motor is one rotation of the swerve module.
+        // Max drive speed of Mk4i swerve modules when motors turn maximum RPM.
+        constexpr units::meters_per_second_t kMaxDriveSpeed = kDriveRPM * kDriveMetersPerRotation;
+
+        // Gear ratio of the turn motors for SDS Mk4i.
         constexpr double kTurnGearRatio = 150.0 / 7.0;
 
         // The width of the drive base from the center of one module to another adjacent one.
         constexpr units::meter_t kDriveBaseWidth = 23.25_in * 1.08;
         constexpr units::meter_t kDriveBaseLength = 22.5_in * 1.08;
+
+        // The Maximum turning speed for the robot under Joystick control
+        constexpr units::revolutions_per_minute_t kTurnSpeedLimit =  60_rpm;
+
+        // The Maximum translation speed for the robot under Joystick control
+        constexpr units::meters_per_second_t kDriveSpeedLimit = kMaxDriveSpeed;
+
 
         constexpr double kFrontLeftAbsoluteOffset = -0.322;
         constexpr double kFrontRightAbsoluteOffset = 0.342;

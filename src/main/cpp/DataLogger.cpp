@@ -112,8 +112,8 @@ void DataLogger::Send( const std::string &s, const frc::Pose2d &p ) {
     wpi::log::DoubleArrayLogEntry le{ *log, s };
 
     a[0] = p.X().value();
-    a[0] = p.Y().value();
-    a[0] = p.Rotation().Radians().value();
+    a[1] = p.Y().value();
+    a[2] = p.Rotation().Radians().value();
 
     le.Append( a );
 }

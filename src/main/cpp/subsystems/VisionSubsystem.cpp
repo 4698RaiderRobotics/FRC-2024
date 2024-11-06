@@ -91,7 +91,7 @@ void UpdatePoseEstimator( std::string camName,
             DataLogger::Log( id_base + "timestamp", pose->timestamp.value() );
 
             std::string ids="";
-            for( int i=0; i<pose->targetsUsed.size()-1; ++i ) {
+            for( size_t i=0; i<pose->targetsUsed.size()-1; ++i ) {
                 ids += fmt::format( "{}, ", pose->targetsUsed[i].GetFiducialId() );
             }
             ids += fmt::format( "{}", pose->targetsUsed[pose->targetsUsed.size()-1].GetFiducialId() );
