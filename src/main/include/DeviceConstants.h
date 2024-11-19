@@ -37,37 +37,15 @@ namespace pidf {
     // Units in rotations per second squared
     constexpr double kWristMaxAcceleration = 4;
 
-        // Arm Gearbox 60:1
-    // constexpr double kArmP = 0.006;
-    // constexpr double kArmI = 0.0;
-    // constexpr double kArmD = 0.0;
-
-    // constexpr double kArmS = 0.0;
-    // constexpr double kArmG = 0.3;
-    // constexpr double kArmWristG = 0.01;
-    // constexpr double kArmV = 1.1;
-    // constexpr double kArmA = 0.0;
-
-
-    constexpr double kArmP = 0.002;
+    constexpr double kArmP = 0.01;
     constexpr double kArmI = 0.0;
-    constexpr double kArmD = 0.0001;
+    constexpr double kArmD = 0.0;
 
     constexpr double kArmS = 0.0;
-    constexpr double kArmG = 0.41;
+    constexpr double kArmG = 0.3;
     constexpr double kArmWristG = 0.01;
-    constexpr double kArmV = 0.45;
+    constexpr double kArmV = 0.46;
     constexpr double kArmA = 0.0;
-
-        // 36:1 gearbox
-    // constexpr double kWristP = 1.0;
-    // constexpr double kWristI = 0.0;
-    // constexpr double kWristD = 0.0;
-
-    // constexpr double kWristS = 0.005;
-    // constexpr double kWristG = 0.018;
-    // constexpr double kWristV = 0.38;
-    // constexpr double kWristA = 0.0;
 
     constexpr double kWristP = 1.5;
     constexpr double kWristI = 0.0;

@@ -115,14 +115,17 @@ void RobotContainer::ConfigureBindings() {
 
   //    **********************  OPERATOR CONTROLS *********************
 
-    // Pickup Note
+  //   // Pickup Note
+  // m_operatorController.A().OnTrue( PickUpNote(&m_intake, &m_arm, &m_elevator) );
+
+  //   // Pickup Note While A-Button is held down
   m_operatorController.A().OnTrue( PickUpNote(&m_intake, &m_arm, &m_elevator) )
     .OnFalse( frc2::cmd::Sequence(
         frc2::cmd::Parallel(
           MoveMechanism( &m_arm, &m_elevator, physical::kArmPassiveAngle, physical::kWristPassiveAngle, 0_in ).ToPtr(), 
-          frc2::cmd::RunOnce([this] {m_intake.SpinIntake(0.0);}, {&m_intake}),
-          frc2::cmd::RunOnce([this] {m_shooter.SetRPMGoal(0_rpm);}, {&m_shooter})
-        )
+          frc2::cmd::RunOnce([this] {m_intake.SpinIntake(0.0);}, {&m_intake})
+        ),
+        GoToRestPosition( &m_arm, &m_elevator, &m_intake ).ToPtr()
       )
     );
 
