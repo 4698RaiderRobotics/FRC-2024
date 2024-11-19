@@ -52,8 +52,12 @@ frc2::CommandPtr DriverPlaceInAmp( ArmSubsystem* arm, ElevatorSubsystem *elevato
 frc2::CommandPtr ClimbAndTrap(ShooterSubsystem* shooter, IntakeSubsystem* intake, ClimberSubsystem *climber, 
                       ArmSubsystem* arm, ElevatorSubsystem *elevator) {
   return frc2::cmd::Sequence(
+    frc2::cmd::Parallel(
+      arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristRaiseAngle ),
+      shooter->ChangeAngle( 60_deg )
+    ), 
+    elevator->ChangeHeight( physical::kElevatorTrapHeight ),
     climber->MoveHooks( physical::kClimberMinHeight ).WithTimeout(2.25_s),
-    shooter->ChangeAngle( 60_deg ),
     arm->MoveJoints( physical::kArmRaiseAngle, physical::kWristTrapSpitAngle),
     frc2::cmd::RunOnce([intake] {intake->SpinIntake(-0.5);}, {intake}),
     frc2::cmd::Wait(5_s),

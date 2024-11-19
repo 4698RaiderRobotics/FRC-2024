@@ -69,7 +69,7 @@ namespace pidf {
     // constexpr double kWristV = 0.38;
     // constexpr double kWristA = 0.0;
 
-    constexpr double kWristP = 1.0;
+    constexpr double kWristP = 1.5;
     constexpr double kWristI = 0.0;
     constexpr double kWristD = 0.1;
 

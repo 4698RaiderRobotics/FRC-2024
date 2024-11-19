@@ -64,6 +64,6 @@ private:
       // Correction to the shooter azimuth angle based on distance from speaker
     LUT azimuthCorrection{ 
                           {0.0, 3.0, 6.0},    // Distance in meters..
-                          {-2.0, -1.0, 1.0}     // Correction angle in degrees.
+                          {0.0, 0.5, 1.0}     // Correction angle in degrees.
     };
 };

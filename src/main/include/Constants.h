@@ -103,7 +103,7 @@ namespace physical {
     // *****************     CLIMBER SUBSYSTEM      **********************
 
     // Maximum height for the climber position
-    constexpr units::inch_t kClimberMaxHeight = 18.5_in;
+    constexpr units::inch_t kClimberMaxHeight = 19.5_in;
     // Minimum height for the climber position
     constexpr units::inch_t kClimberMinHeight = 0.0_in;
     // Resting height for the climber 
