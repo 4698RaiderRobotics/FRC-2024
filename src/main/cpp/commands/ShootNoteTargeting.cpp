@@ -58,8 +58,8 @@ void ShootNoteTargeting::Init() {
 
   frc::Pose2d robotPose = m_drive->GetPose();
   units::meter_t dist_to_speaker = (robotPose - targetLocation).Translation().Norm();
-  m_shooter->SetRPMGoal( 1000_rpm + 200_rpm * dist_to_speaker.value() );
-
+  //m_shooter->SetRPMGoal( 1000_rpm + 200_rpm * dist_to_speaker.value() );
+  m_shooter->SetRPMGoal(1000_rpm);
   readyToShoot = false;
   noTargets = false;
 }
@@ -81,7 +81,7 @@ void ShootNoteTargeting::Execute() {
     units::degree_t azimuthAngle;
     units::degree_t azimuthCorrAngle;
     units::degree_t shooterAngle;
-    if( dist_to_speaker < 6_m  ) {
+    /*if( dist_to_speaker < 6_m  ) {
       azimuthAngle = units::math::atan2( 78_in, dist_to_speaker );
       azimuthCorrAngle = azimuthCorrection.lookup( dist_to_speaker.value() ) * 1_deg;
       shooterAngle = azimuthAngle + azimuthCorrAngle;
@@ -93,7 +93,10 @@ void ShootNoteTargeting::Execute() {
       m_shooter->SetRPMGoal( 1000_rpm + 100_rpm * (dist_to_speaker - 6_m ).value() );
         // Bias toward the Amp
       delta_y -= 50_in;
-    }
+    }*/
+    azimuthAngle = 50_deg;
+    shooterAngle = 50_deg;
+    m_shooter->SetRPMGoal(1000_rpm);
     units::degree_t planeAngle =  units::math::atan2( delta_y, delta_x );
 
     m_shooter->SetAngleGoal( shooterAngle );
@@ -106,24 +109,24 @@ void ShootNoteTargeting::Execute() {
     
 
       // Yaw to target in degrees
-    units::degree_t t_yaw = planeAngle - robotPose.Rotation().Degrees();
+    /*units::degree_t t_yaw = planeAngle - robotPose.Rotation().Degrees();
     if( t_yaw > 180.0_deg ) {
       t_yaw -= 360.0_deg;
     } else if( t_yaw < -180_deg ) {
       t_yaw += 360_deg;
-    }
+    }*/
 
 
     // fmt::print( "Deltas ({:.5},{:.5}), plane angle ({:.5}), robot angle ({:.5}), t_taw = {:.5}\n", delta_x, 
     // delta_y, planeAngle, m_drive->GetPose().Rotation().Degrees(), t_yaw );
 
-    double turnCorrection = (t_yaw.value() + yawOffset) * 0.02;
+    //double turnCorrection = (t_yaw.value() + yawOffset) * 0.02;
 
-    if( allowDriving ) {
+    /*if( allowDriving ) {
       m_drive->ArcadeDrive( m_x_axis->GetAxis(), m_y_axis->GetAxis(), turnCorrection );
     } else {
       m_drive->ArcadeDrive( 0, 0, turnCorrection );
-    }
+    }*/
 
     // DataLogger::Log( "ShootNote/Shooter Angle Goal", shooterAngle.value() );
     // DataLogger::Log( "ShootNote/Shooter Angle", m_shooter->GetAngle().value() );
@@ -136,18 +139,19 @@ void ShootNoteTargeting::Execute() {
     // DataLogger::Log( "ShootNote/Arm IsAtGoal", m_arm->IsAtGoal( arm_tolerance ) );
     // DataLogger::Log( "ShootNote/Shooter IsAtGoal", m_shooter->IsAtGoal() );
     // DataLogger::Log( "ShootNote/Elevator IsAtGoal", m_elev->IsAtGoal() );
-    DataLogger::Log( "ShootNote/Target Yaw", t_yaw.value() );
+    
+    //DataLogger::Log( "ShootNote/Target Yaw", t_yaw.value() );
     DataLogger::Log( "ShootNote/DeltaX", delta_x.value() );
     DataLogger::Log( "ShootNote/DeltaY", delta_y.value() );
     DataLogger::Log( "ShootNote/Azimuth", azimuthAngle.value() );
     DataLogger::Log( "ShootNote/Azimuth Correction", azimuthCorrAngle.value() );
     DataLogger::Log( "ShootNote/Plane Angle", planeAngle.value() );
-    DataLogger::Log( "ShootNote/Turn Correction", turnCorrection );
+    //DataLogger::Log( "ShootNote/Turn Correction", turnCorrection );
 
     // fmt::print( "    Arm/Wrist Angles:  atGoal({}), Curr_arm({}), Arm_target({}), Curr_wrist({}), Wrist_target({})\n", 
     //                 m_arm->IsAtGoal( arm_tolerance ), m_arm->GetArmAngle(), m_shooter->GetShooter_ArmAngle(),
     //                  m_arm->GetWristAngle(), 180_deg - targetAngle );
-    if( m_shooter->AtGoal() && m_arm->AtGoal( arm_tolerance ) && fabs(t_yaw.value() + yawOffset) < 1.5 ) {
+    if( m_shooter->AtGoal() && m_arm->AtGoal( arm_tolerance )) {
       // fmt::print( "ShootNoteTargeting(), pitch({}), Shooter({}), Arm({}), Wrist({})\n", t_pitch, targetAngle,
       //              m_shooter->GetShooter_ArmAngle(), 180_deg - targetAngle  );
       readyToShoot = true;

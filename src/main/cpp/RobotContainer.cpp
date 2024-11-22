@@ -111,8 +111,6 @@ void RobotContainer::ConfigureBindings() {
     .OnTrue( frc2::cmd::RunOnce([this] {m_intake.SpinIntake(-0.5);}, {&m_intake}).WithName("Driver X - Note Eject"))
     .OnFalse(frc2::cmd::RunOnce([this] {m_intake.SpinIntake(0.0);}, {&m_intake}).WithName("Driver X - Note Eject Stop"));
 
-
-
     // Moving Opperator Controlls to Driver Controller
     //Intake Note
   m_driverController.Square()

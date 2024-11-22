@@ -90,7 +90,7 @@ namespace swerve {
         constexpr units::revolutions_per_minute_t kTurnSpeedLimit =  60_rpm;
 
         // The Maximum translation speed for the robot under Joystick control
-        constexpr units::meters_per_second_t kDriveSpeedLimit = kMaxDriveSpeed;
+        constexpr units::meters_per_second_t kDriveSpeedLimit = kMaxDriveSpeed * .25;
 
 
         constexpr double kFrontLeftAbsoluteOffset = -0.322;

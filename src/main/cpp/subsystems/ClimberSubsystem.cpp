@@ -29,6 +29,9 @@ ClimberSubsystem::ClimberSubsystem() :
 
 // This method will be called once per scheduler run
 void ClimberSubsystem::Periodic() {
+    // Disable Climb
+    return;
+
     m_Position = GetHeight();
     DataLogger::Log( "ClimberSubsys/Height", units::inch_t(m_Position).value(), true );
     DataLogger::Log( "ClimberSubsys/Limit Switch", AtLimit());
