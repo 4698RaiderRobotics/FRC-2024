@@ -94,7 +94,7 @@ void RobotContainer::ConfigureBindings() {
   //    **********************  DRIVER CONTROLS *********************
 
     // Resets the gyro when the robot is facing away from the driver
-  (m_driverController.L1() && m_driverController.R1() )
+  m_driverController.Options()
     .OnTrue(frc2::cmd::RunOnce([this] { m_swerveDrive.ResetDriverOrientation(0_deg); }, { &m_swerveDrive }));
 
     // Eject Note into the amp.
@@ -113,7 +113,7 @@ void RobotContainer::ConfigureBindings() {
 
     // Moving Opperator Controlls to Driver Controller
     //Intake Note
-  m_driverController.Square()
+  m_driverController.R2()
     .OnTrue (PickUpNote(&m_intake, &m_arm, &m_elevator))
     .OnFalse(frc2::cmd::Sequence(
       frc2::cmd::Parallel(
@@ -154,11 +154,27 @@ void RobotContainer::ConfigureBindings() {
             frc2::cmd::Run([this] { m_swerveDrive.ArcadeDrive( vx_axis.GetAxis(), vy_axis.GetAxis(), omega_axis.GetAxis() ); }, {&m_swerveDrive}),
             GoToRestPosition( &m_arm, &m_elevator, &m_intake ).ToPtr()
           ),
-          ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis ).ToPtr()
+          ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis).ToPtr()
         ),
         frc2::cmd::None(),
         [this] {return m_intake.HasNote();}
       ).WithName("Right Bumper - ShootNoteTargeting")
+    );
+
+  (m_driverController.R1() && m_driverController.L1())
+    .OnTrue(
+      frc2::cmd::Either(
+        frc2::cmd::Sequence(
+          frc2::cmd::RunOnce([this] {m_shooter.SetRPMGoal(1000_rpm);}, {&m_shooter}),
+          frc2::cmd::Race(
+            frc2::cmd::Run([this] { m_swerveDrive.ArcadeDrive( vx_axis.GetAxis(), vy_axis.GetAxis(), omega_axis.GetAxis() ); }, {&m_swerveDrive}),
+            GoToRestPosition( &m_arm, &m_elevator, &m_intake ).ToPtr()
+          ),
+          ShootNoteTargeting( &m_swerveDrive, &m_shooter, &m_intake, &m_arm, &m_elevator, &m_vision, &vx_axis, &vy_axis, true).ToPtr()
+        ),
+        frc2::cmd::None(),
+        [this] {return m_intake.HasNote();}
+      ).WithName("Right and Left Bumper - ShootNoteTargetingHard")
     );
   //    **********************  OPERATOR CONTROLS *********************
 

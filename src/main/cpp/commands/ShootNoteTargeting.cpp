@@ -23,9 +23,9 @@
 
 ShootNoteTargeting::ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, 
                       IntakeSubsystem* intake, ArmSubsystem* arm, ElevatorSubsystem* elev, 
-                      VisionSubsystem* vision, ControllerAxis *x_axis, ControllerAxis *y_axis ) :
+                      VisionSubsystem* vision, ControllerAxis *x_axis, ControllerAxis *y_axis, bool shootHard ) :
                       m_drive{swerve}, m_shooter{shooter}, m_intake{intake}, m_arm{arm}, m_elev{elev},
-                      m_vision{vision}, m_x_axis{x_axis}, m_y_axis{y_axis}
+                      m_vision{vision}, m_x_axis{x_axis}, m_y_axis{y_axis}, shootHard{shootHard}
 {
   SetName( "ShootNoteTargeting" );
 
@@ -96,7 +96,11 @@ void ShootNoteTargeting::Execute() {
     }*/
     azimuthAngle = 50_deg;
     shooterAngle = 50_deg;
-    m_shooter->SetRPMGoal(1000_rpm);
+    if(shootHard == true){
+      m_shooter->SetRPMGoal(2000_rpm);
+    } else{
+      m_shooter->SetRPMGoal(1000_rpm);
+    }
     units::degree_t planeAngle =  units::math::atan2( delta_y, delta_x );
 
     m_shooter->SetAngleGoal( shooterAngle );

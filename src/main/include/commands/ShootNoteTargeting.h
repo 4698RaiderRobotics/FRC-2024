@@ -25,7 +25,7 @@ class ShootNoteTargeting
 public:
   ShootNoteTargeting( SwerveDriveSubsystem* swerve, ShooterSubsystem* shooter, IntakeSubsystem* intake, 
                       ArmSubsystem* arm, ElevatorSubsystem* elev, VisionSubsystem* vision, 
-                      ControllerAxis *x_axis=nullptr, ControllerAxis *y_axis=nullptr );
+                      ControllerAxis *x_axis=nullptr, ControllerAxis *y_axis=nullptr, bool shootHard = false );
 
   void Init() override;
 
@@ -49,6 +49,7 @@ private:
     bool readyToShoot;
     bool noTargets;
     bool allowDriving;
+    bool shootHard;
 
     frc::Pose2d targetLocation;
 
